@@ -6,7 +6,7 @@ import './App.css';
 const Auth = function () {
     const [status, setStatus] = useState<string | null>(null);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = function (event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const email = formData.get('email');
