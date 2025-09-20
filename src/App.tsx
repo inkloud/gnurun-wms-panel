@@ -1,17 +1,10 @@
 import {useState} from 'react';
 
 import './App.css';
-
-type User = {
-    name: string;
-    email: string;
-};
-
-type Operation = {
-    name: string;
-    description: string;
-    id: string;
-};
+import type {Operation} from './entities/operation';
+import type {User} from './entities/user';
+import {Navbar} from './ui/navbar';
+import {OperationCard} from './ui/operation_card';
 
 const demoUser: User = {
     name: 'Alex Johnson',
@@ -49,28 +42,7 @@ const App = function () {
 
     return (
         <div className="app-shell d-flex flex-column min-vh-100">
-            <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
-                <div className="container py-2">
-                    <span className="navbar-brand fw-semibold">Warehouse Panel</span>
-                    <div className="ms-auto d-flex align-items-center gap-3">
-                        {user !== null ? (
-                            <>
-                                <div className="text-white small text-end">
-                                    <div className="fw-semibold">{user.name}</div>
-                                    <div className="opacity-75">{user.email}</div>
-                                </div>
-                                <button type="button" className="btn btn-outline-light btn-sm" onClick={handleLogout}>
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <button type="button" className="btn btn-outline-light btn-sm" onClick={handleLogin}>
-                                Sign in
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </nav>
+            <Navbar user={user} handleLogout={handleLogout} handleLogin={handleLogin} />
 
             <main className="flex-grow-1 py-5">
                 <div className="container">
@@ -83,20 +55,7 @@ const App = function () {
 
                             <div className="row g-4">
                                 {operations.map((operation) => (
-                                    <div className="col-12 col-md-6 col-xl-4" key={operation.id}>
-                                        <div className="card card-operation h-100">
-                                            <div className="card-body d-flex flex-column">
-                                                <h2 className="h5 mb-2 text-dark">{operation.name}</h2>
-                                                <p className="text-muted flex-grow-1">{operation.description}</p>
-                                                <a
-                                                    className="btn btn-success mt-3 align-self-start"
-                                                    href={`#${operation.id}`}
-                                                >
-                                                    Open {operation.name}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <OperationCard key={operation.id} operation={operation} />
                                 ))}
                             </div>
                         </>
