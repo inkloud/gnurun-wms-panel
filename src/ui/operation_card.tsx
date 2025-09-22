@@ -1,3 +1,5 @@
+import {Link} from 'react-router';
+
 import type {Operation} from '../entities/operation';
 
 export const OperationCard: React.FC<{operation: Operation}> = function ({operation}) {
@@ -7,9 +9,9 @@ export const OperationCard: React.FC<{operation: Operation}> = function ({operat
                 <div className="card-body d-flex flex-column">
                     <h2 className="h5 mb-2 text-dark">{operation.name}</h2>
                     <p className="text-muted flex-grow-1">{operation.description}</p>
-                    <a className="btn btn-success mt-3 align-self-start" href={`#${operation.id}`}>
+                    <Link className="btn btn-success mt-3 align-self-start" to={`/${operation.id}`}>
                         Open {operation.name}
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

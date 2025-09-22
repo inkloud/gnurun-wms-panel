@@ -3,8 +3,8 @@ import {useState} from 'react';
 import './App.css';
 import type {Operation} from './entities/operation';
 import type {User} from './entities/user';
-import {Navbar} from './ui/navbar';
 import {OperationCard} from './ui/operation_card';
+import {Page} from './ui/page';
 
 const demoUser: User = {
     name: 'Alex Johnson',
@@ -41,36 +41,30 @@ const App = function () {
     };
 
     return (
-        <div className="app-shell d-flex flex-column min-vh-100">
-            <Navbar user={user} handleLogout={handleLogout} handleLogin={handleLogin} />
+        <Page user={user} handleLogin={handleLogin} handleLogout={handleLogout}>
+            {user !== null ? (
+                <>
+                    <header className="mb-4">
+                        <h1 className="h2 mb-1 text-dark">Welcome back, {user.name.split(' ')[0]}!</h1>
+                        <p className="text-muted mb-0">Choose an operation below to manage your workspace.</p>
+                    </header>
 
-            <main className="flex-grow-1 py-5">
-                <div className="container">
-                    {user !== null ? (
-                        <>
-                            <header className="mb-4">
-                                <h1 className="h2 mb-1 text-dark">Welcome back, {user.name.split(' ')[0]}!</h1>
-                                <p className="text-muted mb-0">Choose an operation below to manage your workspace.</p>
-                            </header>
-
-                            <div className="row g-4">
-                                {operations.map((operation) => (
-                                    <OperationCard key={operation.id} operation={operation} />
-                                ))}
-                            </div>
-                        </>
-                    ) : (
-                        <div className="text-center py-5">
-                            <h2 className="h4 mb-3 text-dark">You are signed out</h2>
-                            <p className="text-muted">Sign back in to access administrative operations and tools.</p>
-                            <button type="button" className="btn btn-success" onClick={handleLogin}>
-                                Sign in again
-                            </button>
-                        </div>
-                    )}
+                    <div className="row g-4">
+                        {operations.map((operation) => (
+                            <OperationCard key={operation.id} operation={operation} />
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <div className="text-center py-5">
+                    <h2 className="h4 mb-3 text-dark">You are signed out</h2>
+                    <p className="text-muted">Sign back in to access administrative operations and tools.</p>
+                    <button type="button" className="btn btn-success" onClick={handleLogin}>
+                        Sign in again
+                    </button>
                 </div>
-            </main>
-        </div>
+            )}
+        </Page>
     );
 };
 
