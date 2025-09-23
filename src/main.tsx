@@ -1,21 +1,49 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {StrictMode} from 'react';
+import {StrictMode, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {HashRouter, Route, Routes} from 'react-router';
 
 import App from './App.tsx';
+import type {User} from './entities/user';
+import './index.css';
 import NotFound from './operations/NotFound.tsx';
 import Picker from './operations/Picker.tsx';
-import './index.css';
+
+const demoUser: User = {
+    name: 'Alex Johnson',
+    email: 'alex.johnson@example.com'
+};
+
+const Root = function () {
+    const [user, setUser] = useState<User | null>(demoUser);
+
+    const handleLogout = function () {
+        setUser(null);
+    };
+
+    const handleLogin = function () {
+        setUser(demoUser);
+    };
+
+    return (
+        <HashRouter>
+            <Routes>
+                <Route path="/" element={<App user={user} handleLogin={handleLogin} handleLogout={handleLogout} />} />
+                <Route
+                    path="/picker"
+                    element={<Picker user={user} handleLogin={handleLogin} handleLogout={handleLogout} />}
+                />
+                <Route
+                    path="*"
+                    element={<NotFound user={user} handleLogin={handleLogin} handleLogout={handleLogout} />}
+                />
+            </Routes>
+        </HashRouter>
+    );
+};
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <HashRouter>
-            <Routes>
-                <Route path="/" element={<App />} />
-                <Route path="/picker" element={<Picker />} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </HashRouter>
+        <Root />
     </StrictMode>
 );

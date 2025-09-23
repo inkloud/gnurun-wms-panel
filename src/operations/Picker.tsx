@@ -1,20 +1,11 @@
-import {useState} from 'react';
-
-import {demoUser} from '../App';
 import type {User} from '../entities/user';
 import {Page} from '../ui/page';
 
-const Picker = function () {
-    const [user, setUser] = useState<User | null>(demoUser);
-
-    const handleLogout = function () {
-        setUser(null);
-    };
-
-    const handleLogin = function () {
-        setUser(demoUser);
-    };
-
+const Picker: React.FC<{user: User | null; handleLogin: () => void; handleLogout: () => void}> = function ({
+    user,
+    handleLogin,
+    handleLogout
+}) {
     return (
         <Page user={user} handleLogin={handleLogin} handleLogout={handleLogout}>
             {user !== null ? (
@@ -23,6 +14,8 @@ const Picker = function () {
                         <h1 className="h2 mb-1 text-dark">Picker</h1>
                         <p className="text-muted mb-0">Select and coordinate resources for upcoming deployments.</p>
                     </header>
+
+                    <div className="text-muted text-center py-5">Picker workspace coming soon.</div>
                 </>
             ) : (
                 <div className="text-center py-5">

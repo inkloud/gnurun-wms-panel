@@ -1,15 +1,8 @@
-import {useState} from 'react';
-
 import './App.css';
 import type {Operation} from './entities/operation';
 import type {User} from './entities/user';
 import {OperationCard} from './ui/operation_card';
 import {Page} from './ui/page';
-
-export const demoUser: User = {
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com'
-};
 
 const operations: Operation[] = [
     {
@@ -29,17 +22,11 @@ const operations: Operation[] = [
     }
 ];
 
-const App = function () {
-    const [user, setUser] = useState<User | null>(demoUser);
-
-    const handleLogout = function () {
-        setUser(null);
-    };
-
-    const handleLogin = function () {
-        setUser(demoUser);
-    };
-
+const App: React.FC<{user: User | null; handleLogin: () => void; handleLogout: () => void}> = function ({
+    user,
+    handleLogin,
+    handleLogout
+}) {
     return (
         <Page user={user} handleLogin={handleLogin} handleLogout={handleLogout}>
             {user !== null ? (
