@@ -6,7 +6,7 @@ import type {User} from './entities/user';
 import {OperationCard} from './ui/operation_card';
 import {Page} from './ui/page';
 
-const demoUser: User = {
+export const demoUser: User = {
     name: 'Alex Johnson',
     email: 'alex.johnson@example.com'
 };
