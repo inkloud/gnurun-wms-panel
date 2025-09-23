@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {StrictMode, useState} from 'react';
+import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {HashRouter, Route, Routes} from 'react-router';
 
@@ -15,7 +15,7 @@ const demoUser: User = {
 };
 
 const Root = function () {
-    const [user, setUser] = useState<User | null>(demoUser);
+    const [user, setUser] = React.useState<User | null>(demoUser);
 
     const handleLogout = function () {
         setUser(null);
@@ -43,7 +43,7 @@ const Root = function () {
 };
 
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
+    <React.StrictMode>
         <Root />
-    </StrictMode>
+    </React.StrictMode>
 );
