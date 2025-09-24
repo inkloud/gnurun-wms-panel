@@ -10,7 +10,7 @@ const Navbar: React.FC<{user: User | null; handleLogout: () => void; handleLogin
         <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
             <div className="container py-2">
                 <Link className="navbar-brand fw-semibold" to="/">
-                    Warehouse Panel
+                    GnuRun WMS Panel
                 </Link>
                 <div className="ms-auto d-flex align-items-center gap-3">
                     {user !== null ? (
