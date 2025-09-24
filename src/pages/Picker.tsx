@@ -1,4 +1,5 @@
 import type {User} from '../entities/user';
+import {LoginPanel} from '../ui/login_panel';
 import {Page} from '../ui/page';
 
 const Picker: React.FC<{user: User | null; handleLogin: () => void; handleLogout: () => void}> = function ({
@@ -18,13 +19,7 @@ const Picker: React.FC<{user: User | null; handleLogin: () => void; handleLogout
                     <div className="text-muted text-center py-5">Picker workspace coming soon.</div>
                 </>
             ) : (
-                <div className="text-center py-5">
-                    <h2 className="h4 mb-3 text-dark">You are signed out</h2>
-                    <p className="text-muted">Sign back in to access administrative operations and tools.</p>
-                    <button type="button" className="btn btn-success" onClick={handleLogin}>
-                        Sign in again
-                    </button>
-                </div>
+                <LoginPanel handleLogin={handleLogin} />
             )}
         </Page>
     );

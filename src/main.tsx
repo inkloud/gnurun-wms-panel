@@ -6,8 +6,8 @@ import {HashRouter, Route, Routes} from 'react-router';
 import App from './App.tsx';
 import type {User} from './entities/user';
 import './index.css';
-import NotFound from './operations/NotFound.tsx';
-import Picker from './operations/Picker.tsx';
+import NotFound from './pages/NotFound.tsx';
+import Picker from './pages/Picker.tsx';
 
 const demoUser: User = {
     name: 'Alex Johnson',
