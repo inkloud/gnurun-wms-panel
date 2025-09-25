@@ -1,6 +1,9 @@
 import React from 'react';
 
-export const LoginPanel: React.FC<{handleLogin: () => void}> = function ({handleLogin}) {
+import {useAuth} from '../hooks/auth';
+
+export const LoginPanel = function () {
+    const {handleLogin, errorMessage} = useAuth();
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
 
@@ -10,7 +13,7 @@ export const LoginPanel: React.FC<{handleLogin: () => void}> = function ({handle
         e.preventDefault();
         if (isSubmitDisabled) return;
 
-        handleLogin();
+        handleLogin({username, password});
     };
 
     return (
@@ -23,6 +26,11 @@ export const LoginPanel: React.FC<{handleLogin: () => void}> = function ({handle
 
                 <form className="card shadow-sm border-0" onSubmit={handleSubmit} noValidate>
                     <div className="card-body p-4">
+                        {errorMessage !== null && (
+                            <div className="alert alert-danger" role="alert">
+                                {errorMessage}
+                            </div>
+                        )}
                         <div className="mb-3">
                             <label className="form-label" htmlFor="loginUsername">
                                 Username

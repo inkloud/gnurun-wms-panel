@@ -1,9 +1,12 @@
+import React from 'react';
 import {Link} from 'react-router';
-import type {User} from '../entities/user';
+
 import {useAuth} from '../hooks/auth';
 import {LoginPanel} from './login_panel';
 
-const Navbar: React.FC<{user: User | null; handleLogout: () => void}> = function ({user, handleLogout}) {
+const Navbar = function () {
+    const {user, handleLogout} = useAuth();
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
             <div className="container py-2">
@@ -29,14 +32,13 @@ const Navbar: React.FC<{user: User | null; handleLogout: () => void}> = function
 };
 
 export const Page: React.FC<{children: React.ReactNode}> = function ({children}) {
-    const {user, handleLogin, handleLogout} = useAuth();
+    const {user} = useAuth();
 
     return (
         <div className="app-shell d-flex flex-column min-vh-100">
-            <Navbar user={user} handleLogout={handleLogout} />
-
+            <Navbar />
             <main className="flex-grow-1 py-5">
-                <div className="container">{user !== null ? children : <LoginPanel handleLogin={handleLogin} />}</div>
+                <div className="container">{user !== null ? children : <LoginPanel />}</div>
             </main>
         </div>
     );

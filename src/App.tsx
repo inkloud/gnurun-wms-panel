@@ -27,16 +27,20 @@ const App = function () {
 
     return (
         <Page>
-            <header className="mb-4">
-                <h1 className="h2 mb-1 text-dark">Welcome back, {user!.name.split(' ')[0]}!</h1>
-                <p className="text-muted mb-0">Choose an operation below to manage your workspace.</p>
-            </header>
+            {user !== null && (
+                <>
+                    <header className="mb-4">
+                        <h1 className="h2 mb-1 text-dark">Welcome back, {user.name.split(' ')[0]}!</h1>
+                        <p className="text-muted mb-0">Choose an operation below to manage your workspace.</p>
+                    </header>
 
-            <div className="row g-4">
-                {operations.map((operation) => (
-                    <OperationCard key={operation.id} operation={operation} />
-                ))}
-            </div>
+                    <div className="row g-4">
+                        {operations.map((operation) => (
+                            <OperationCard key={operation.id} operation={operation} />
+                        ))}
+                    </div>
+                </>
+            )}
         </Page>
     );
 };
