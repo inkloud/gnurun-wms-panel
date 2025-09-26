@@ -27,7 +27,7 @@ const App = function () {
 
     return (
         <Page>
-            {user !== null && (
+            {user !== null && user !== undefined && (
                 <>
                     <header className="mb-4">
                         <h1 className="h2 mb-1 text-dark">Welcome back, {user.name.split(' ')[0]}!</h1>

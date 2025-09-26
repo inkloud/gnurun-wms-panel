@@ -7,19 +7,16 @@ import App from './app.tsx';
 import './index.css';
 import NotFound from './pages/notFound.tsx';
 import Picker from './pages/picker.tsx';
-import {AuthProvider} from './hooks/authProvider.tsx';
 
 const Root = function () {
     return (
-        <AuthProvider>
-            <HashRouter>
-                <Routes>
-                    <Route path="/" element={<App />} />
-                    <Route path="/picker" element={<Picker />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </HashRouter>
-        </AuthProvider>
+        <HashRouter>
+            <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/picker" element={<Picker />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </HashRouter>
     );
 };
 
