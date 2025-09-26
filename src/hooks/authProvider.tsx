@@ -1,25 +1,13 @@
 import React from 'react';
 
+import type {ReactNode} from 'react';
 import type {User} from '../entities/user';
+import {AuthContext, type Credentials} from './authContext';
 
 const meUser: User = {name: 'Luca Bacchi', email: 'bacchilu@gmail.com'};
 const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
 
-export interface Credentials {
-    username: string;
-    password: string;
-}
-
-interface AuthContextValue {
-    user: User | null;
-    errorMessage: string | null;
-    handleLogin: (credentials: Credentials) => void;
-    handleLogout: () => void;
-}
-
-const AuthContext = React.createContext<AuthContextValue | undefined>(undefined);
-
-export const AuthProvider: React.FC<{children: React.ReactNode}> = function ({children}) {
+export const AuthProvider: React.FC<{children: ReactNode}> = function ({children}) {
     const [user, setUser] = React.useState<User | null>(null);
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -42,10 +30,4 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = function ({ch
     return (
         <AuthContext.Provider value={{user, errorMessage, handleLogin, handleLogout}}>{children}</AuthContext.Provider>
     );
-};
-
-export const useAuth = function () {
-    const context = React.useContext(AuthContext);
-    if (context === undefined) throw new Error('useAuth must be used within an AuthProvider');
-    return context;
 };

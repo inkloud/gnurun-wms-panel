@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import {useAuth} from '../hooks/auth';
-import {LoginPanel} from './login_panel';
+import {useAuth} from '../hooks/useAuth';
+import {LoginPanel} from './loginPanel';
 
 const Navbar = function () {
     const {user, handleLogout} = useAuth();

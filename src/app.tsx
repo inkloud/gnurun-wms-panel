@@ -1,7 +1,7 @@
-import './App.css';
+import './app.css';
 import type {Operation} from './entities/operation';
-import {useAuth} from './hooks/auth';
-import {OperationCard} from './ui/operation_card';
+import {useAuth} from './hooks/useAuth';
+import {OperationCard} from './ui/operationCard';
 import {Page} from './ui/page';
 
 const operations: Operation[] = [

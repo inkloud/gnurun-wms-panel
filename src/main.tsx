@@ -3,11 +3,11 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {HashRouter, Route, Routes} from 'react-router';
 
-import App from './App.tsx';
+import App from './app.tsx';
 import './index.css';
-import NotFound from './pages/NotFound.tsx';
-import Picker from './pages/Picker.tsx';
-import {AuthProvider} from './hooks/auth';
+import NotFound from './pages/notFound.tsx';
+import Picker from './pages/picker.tsx';
+import {AuthProvider} from './hooks/authProvider.tsx';
 
 const Root = function () {
     return (
