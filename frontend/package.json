@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@openai/codex": "^0.42.0",
     "@types/react": "^19.1.15",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
