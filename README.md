@@ -22,7 +22,7 @@ From inside the `frontend/` directory:
 From inside `frontend/`:
 
 -   Build the dev container with `docker build -t gnrwms-dev .`
--   Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)":/app -v /app/node_modules gnrwms-dev`
+-   Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)"/src:/app/src gnrwms-dev`
 
 From the repository root:
 
