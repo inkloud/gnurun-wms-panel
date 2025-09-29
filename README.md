@@ -22,8 +22,9 @@ From inside the `frontend/` directory:
 From inside `frontend/`:
 
 -   Build the dev container with `docker build -t gnrwms-dev .`
--   Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)":/app gnrwms-dev`
+-   Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)":/app -v /app/node_modules gnrwms-dev`
 
 From the repository root:
 
+-   Export your host IDs so the dev container runs as your user: `export LOCAL_UID=$(id -u)` and `export LOCAL_GID=$(id -g)` (or add those values to a `.env` file)
 -   Start the dev environment with `docker compose up`

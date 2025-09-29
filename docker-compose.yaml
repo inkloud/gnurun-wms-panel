@@ -3,13 +3,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        LOCAL_UID: ${LOCAL_UID}
+        LOCAL_GID: ${LOCAL_GID}
     command: npm run dev -- --host 0.0.0.0 --port 5173
-    environment:
-      HOST: 0.0.0.0
-      CHOKIDAR_USEPOLLING: "1"
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     tty: true
     stdin_open: true
