@@ -27,6 +27,7 @@ From inside the `backend/` directory (once the service scaffold is in place):
 -   Create and activate a Python virtual environment for the API
 -   Install dependencies (for example, `pip install -r requirements.txt`)
 -   Start the development server with `fastapi dev main.py` (adjust the module path as the project evolves)
+-   Keep backend configuration in `.env` or `.env.local` files rather than committing secrets
 
 ### Docker
 
@@ -34,6 +35,11 @@ From inside `frontend/`:
 
 -   Build the dev container with `docker build -t gnrwms-dev .`
 -   Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)"/src:/app/src gnrwms-dev`
+
+From inside `backend/`:
+
+-   Build the backend container with `docker build -t gnrwms-dev-backend .`
+-   Run the backend container with `docker run --rm -it -p 8000:8000 -v "$(pwd)"/:/app/ gnrwms-dev-backend`
 
 From the repository root:
 
