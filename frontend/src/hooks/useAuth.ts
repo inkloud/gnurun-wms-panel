@@ -44,7 +44,7 @@ export const useAuth = function () {
     const fetcher = async function () {
         return CURRENT;
     };
-    const {data, mutate} = useSWR<AuthResponse | null>('AUTH_SWR_KEY', fetcher);
+    const {data, mutate} = useSWR<AuthResponse | null>('AUTH_SWR_KEY', fetcher, {dedupingInterval: 60000});
 
     const handleLogin = async function ({username, password}: Credentials) {
         const authData = await authenticate({username, password});

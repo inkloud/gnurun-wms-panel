@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 import jwt
 
 USERS: dict[str, dict] = {
@@ -6,12 +8,15 @@ USERS: dict[str, dict] = {
 }
 SECRET: str = "Salve, mondo!"
 ALGORITHM: str = "HS256"
+EXP: datetime = datetime.now(timezone.utc) + timedelta(hours=24)
 
 
 def check_credentials(username: str, password: str) -> dict | None:
     user_data = USERS[username]
     if user_data is not None and user_data["pwd"] == password:
-        token = jwt.encode({"username": username}, SECRET, algorithm=ALGORITHM)
+        token = jwt.encode(
+            {"username": username, "exp": EXP}, SECRET, algorithm=ALGORITHM
+        )
         return {
             "access_token": token,
             "user": {"username": username, "name": user_data["name"]},
