@@ -1,17 +1,42 @@
+import axios from 'axios';
 import React from 'react';
 import useSWR from 'swr';
-
-import type {User} from '../entities/user';
 
 interface Credentials {
     username: string;
     password: string;
 }
 
-const meUser: User = {name: 'Luca Bacchi', email: 'bacchilu@gmail.com'};
-const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
+interface AuthResponse {
+    access_token: string;
+    user: {username: string; name: string};
+}
 
-let CURRENT: User | null = null;
+interface AuthenticateFunction {
+    (credentials: Credentials): Promise<AuthResponse | null>;
+}
+
+let CURRENT: AuthResponse | null = null;
+
+const mockedAuthentication: AuthenticateFunction = async function (credentials: Credentials) {
+    const meUser = {name: 'Luca Bacchi', username: 'bacchilu@gmail.com'};
+    const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
+
+    if (credentials.username === meCredentials.username && credentials.password === meCredentials.password)
+        return {access_token: 'AAABBBCCC', user: meUser} as AuthResponse;
+    return null;
+};
+
+const backendAuthentication: AuthenticateFunction = async function (credentials: Credentials) {
+    try {
+        const response = await axios.post<AuthResponse>('http://0.0.0.0:8000/auth', credentials);
+        return response.data;
+    } catch {
+        return null;
+    }
+};
+
+const authenticate: AuthenticateFunction = backendAuthentication;
 
 export const useAuth = function () {
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -19,12 +44,13 @@ export const useAuth = function () {
     const fetcher = async function () {
         return CURRENT;
     };
-    const {data, mutate} = useSWR<User | null>('AUTH_SWR_KEY', fetcher);
+    const {data, mutate} = useSWR<AuthResponse | null>('AUTH_SWR_KEY', fetcher);
 
-    const handleLogin = function ({username, password}: Credentials) {
-        if (username === meCredentials.username && password === meCredentials.password) {
-            mutate(meUser, {revalidate: false});
-            CURRENT = meUser;
+    const handleLogin = async function ({username, password}: Credentials) {
+        const authData = await authenticate({username, password});
+        if (authData !== null) {
+            mutate(authData, {revalidate: false});
+            CURRENT = authData;
             setErrorMessage(null);
             return;
         }
