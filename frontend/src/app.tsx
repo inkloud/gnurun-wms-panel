@@ -1,6 +1,6 @@
 import './app.css';
 import type {Operation} from './entities/operation';
-import {useAuth} from './hooks/useAuth';
+import {useAuth} from './hooks';
 import {OperationCard} from './ui/operationCard';
 import {Page} from './ui/page';
 

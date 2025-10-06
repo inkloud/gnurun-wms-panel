@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import {useAuth} from '../hooks/useAuth';
+import {useAuth} from '../hooks';
 import {LoginPanel} from './loginPanel';
 
 const Navbar = function () {
