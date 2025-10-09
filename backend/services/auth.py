@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .utils.jwt_utils import decode_jwt, encode_jwt
+from ..utils.jwt_utils import decode_jwt, encode_jwt
 
 USERS: dict[str, dict] = {
     "bacchilu@gmail.com": {"pwd": "bacchilu", "name": "Luca Bacchi"},
