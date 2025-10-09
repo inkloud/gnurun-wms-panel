@@ -38,5 +38,5 @@ export const useAuth = function () {
         setErrorMessage(null);
     };
 
-    return {user: data, errorMessage, handleLogin, handleLogout};
+    return {data, errorMessage, handleLogin, handleLogout};
 };

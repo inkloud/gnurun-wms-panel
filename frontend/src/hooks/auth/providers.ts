@@ -8,12 +8,12 @@ export const FakeAuthProvider: AuthProvider = {
         const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
 
         if (credentials.username === meCredentials.username && credentials.password === meCredentials.password)
-            return {access_token: 'AAABBBCCC', user: meUser} as AuthResponse;
+            return {access_token: 'AAABBBCCC', auth_user: meUser} as AuthResponse;
         return null;
     },
     verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
         const meUser = {name: 'Luca Bacchi', username: 'bacchilu@gmail.com'};
-        if (accessToken === 'AAABBBCCC') return {access_token: 'AAABBBCCC', user: meUser};
+        if (accessToken === 'AAABBBCCC') return {access_token: 'AAABBBCCC', auth_user: meUser};
         return null;
     }
 };

@@ -5,7 +5,7 @@ export interface Credentials {
 
 export interface AuthResponse {
     access_token: string;
-    user: {username: string; name: string};
+    auth_user: {username: string; name: string};
 }
 
 export interface AuthStore {

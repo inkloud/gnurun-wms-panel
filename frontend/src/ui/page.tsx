@@ -5,7 +5,7 @@ import {useAuth} from '../hooks';
 import {LoginPanel} from './loginPanel';
 
 const Navbar = function () {
-    const {user, handleLogout} = useAuth();
+    const {data: user, handleLogout} = useAuth();
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
@@ -32,7 +32,7 @@ const Navbar = function () {
 };
 
 export const Page: React.FC<{children: React.ReactNode}> = function ({children}) {
-    const {user} = useAuth();
+    const {data: user} = useAuth();
 
     if (user === undefined) return null;
 

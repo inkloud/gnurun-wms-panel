@@ -19,7 +19,7 @@ class AuthUser:
 @dataclass(frozen=True)
 class AuthPayload:
     access_token: str
-    user: AuthUser
+    auth_user: AuthUser
 
 
 def encode(auth_user: AuthUser) -> str:
@@ -36,7 +36,8 @@ def check_credentials(username: str, password: str) -> AuthPayload | None:
     if user_data is not None and user_data.pwd == password:
         token = encode(AuthUser(username=username, name=user_data.name))
         return AuthPayload(
-            access_token=token, user=AuthUser(username=username, name=user_data.name)
+            access_token=token,
+            auth_user=AuthUser(username=username, name=user_data.name),
         )
     return None
 
@@ -48,5 +49,5 @@ def check_token(token: str) -> AuthPayload:
         raise KeyError(f"Unknown user '{auth_user.username}'")
     return AuthPayload(
         access_token=token,
-        user=AuthUser(username=auth_user.username, name=user_data.name),
+        auth_user=AuthUser(username=auth_user.username, name=user_data.name),
     )
