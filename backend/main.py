@@ -2,7 +2,9 @@ from fastapi import FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from .services import auth
+from . import services
+from .data_gateway.mock_db import DB
+from .data_gateway.types import DBGateway
 from .utils import get_token_from_header
 
 app = FastAPI()
@@ -20,6 +22,10 @@ app.add_middleware(
 )
 
 
+DataAccess: DBGateway = DB()
+auth_service = services.AuthService(DataAccess)
+
+
 @app.get("/")
 async def root():
     return {"Hello": "World"}
@@ -32,7 +38,9 @@ class AuthRequest(BaseModel):
 
 @app.post("/auth")
 async def authenticate(payload: AuthRequest):
-    if (data := auth.check_credentials(payload.username, payload.password)) is not None:
+    if (
+        data := auth_service.check_credentials(payload.username, payload.password)
+    ) is not None:
         return data
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
@@ -50,7 +58,7 @@ async def verify_authentication(
             detail="Authorization header must use Bearer scheme",
         )
     try:
-        return auth.check_token(token)
+        return auth_service.check_token(token)
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"

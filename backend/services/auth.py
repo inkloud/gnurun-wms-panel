@@ -1,9 +1,9 @@
-__all__ = ["check_credentials", "check_token"]
+__all__ = ["AuthService"]
 
 
 from dataclasses import dataclass
 
-from ..data_gateway import DataAccess, UserRow
+from ..data_gateway.types import DBGateway
 from ..utils.jwt_utils import decode_jwt, encode_jwt
 
 
@@ -31,23 +31,26 @@ def decode(token: str) -> AuthUser:
     return AuthUser(username=payload["username"], name=payload["name"])
 
 
-def check_credentials(username: str, password: str) -> AuthPayload | None:
-    user_data: UserRow | None = DataAccess.get_user(username)
-    if user_data is not None and user_data.pwd == password:
-        token = encode(AuthUser(username=username, name=user_data.name))
+class AuthService:
+    def __init__(self, data_mapper: DBGateway):
+        self.data_mapper = data_mapper
+
+    def check_credentials(self, username: str, password: str) -> AuthPayload | None:
+        user_data = self.data_mapper.get_user(username)
+        if user_data is not None and user_data.pwd == password:
+            token = encode(AuthUser(username=username, name=user_data.name))
+            return AuthPayload(
+                access_token=token,
+                auth_user=AuthUser(username=username, name=user_data.name),
+            )
+        return None
+
+    def check_token(self, token: str) -> AuthPayload:
+        auth_user = decode(token)
+        user_data = self.data_mapper.get_user(auth_user.username)
+        if user_data is None:
+            raise KeyError(f"Unknown user '{auth_user.username}'")
         return AuthPayload(
             access_token=token,
-            auth_user=AuthUser(username=username, name=user_data.name),
+            auth_user=AuthUser(username=auth_user.username, name=user_data.name),
         )
-    return None
-
-
-def check_token(token: str) -> AuthPayload:
-    auth_user = decode(token)
-    user_data: UserRow | None = DataAccess.get_user(auth_user.username)
-    if user_data is None:
-        raise KeyError(f"Unknown user '{auth_user.username}'")
-    return AuthPayload(
-        access_token=token,
-        auth_user=AuthUser(username=auth_user.username, name=user_data.name),
-    )
