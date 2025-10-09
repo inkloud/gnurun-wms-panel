@@ -1,8 +1,9 @@
-from auth import check_credentials, check_token
 from fastapi import FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from utils import get_token_from_header
+
+from .auth import check_credentials, check_token
+from .utils import get_token_from_header
 
 app = FastAPI()
 
