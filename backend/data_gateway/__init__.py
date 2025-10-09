@@ -1,4 +1,7 @@
-__all__ = ["get_by_username", "UserRow"]
+__all__ = ["DataAccess", "UserRow"]
 
 
-from .data_mapper import UserRow, get_by_username
+from .mock_db import DB
+from .types import DBGateway, UserRow
+
+DataAccess: DBGateway = DB()

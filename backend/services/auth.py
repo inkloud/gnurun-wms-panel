@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ..data_gateway import UserRow, get_by_username
+from ..data_gateway import DataAccess, UserRow
 from ..utils.jwt_utils import decode_jwt, encode_jwt
 
 
@@ -17,7 +17,7 @@ class AuthPayload:
 
 
 def check_credentials(username: str, password: str) -> AuthPayload | None:
-    user_data: UserRow | None = get_by_username(username)
+    user_data: UserRow | None = DataAccess.get_user(username)
     if user_data is not None and user_data.pwd == password:
         token = encode_jwt({"username": username})
         return AuthPayload(
@@ -29,7 +29,7 @@ def check_credentials(username: str, password: str) -> AuthPayload | None:
 def check_token(token: str) -> AuthPayload:
     payload = decode_jwt(token)
     username = payload["username"]
-    user_data: UserRow | None = get_by_username(username)
+    user_data: UserRow | None = DataAccess.get_user(username)
     if user_data is None:
         raise KeyError(f"Unknown user '{username}'")
     return AuthPayload(
