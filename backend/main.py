@@ -2,9 +2,8 @@ from fastapi import FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from . import services
 from .data_gateway.mock_db import DB
-from .data_gateway.types import DBGateway
+from .services.auth import AuthService
 from .utils import get_token_from_header
 
 app = FastAPI()
@@ -22,8 +21,7 @@ app.add_middleware(
 )
 
 
-DataAccess: DBGateway = DB()
-auth_service = services.AuthService(DataAccess)
+auth_service = AuthService(DB())
 
 
 @app.get("/")
