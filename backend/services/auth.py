@@ -1,11 +1,7 @@
 from dataclasses import dataclass
 
+from ..data_gateway import UserRow, get_by_username
 from ..utils.jwt_utils import decode_jwt, encode_jwt
-
-USERS: dict[str, dict] = {
-    "bacchilu@gmail.com": {"pwd": "bacchilu", "name": "Luca Bacchi"},
-    "luca@life365.eu": {"pwd": "luca", "name": "Bacchi Luca"},
-}
 
 
 @dataclass(frozen=True)
@@ -21,11 +17,11 @@ class AuthPayload:
 
 
 def check_credentials(username: str, password: str) -> AuthPayload | None:
-    user_data = USERS.get(username)
-    if user_data is not None and user_data.get("pwd") == password:
+    user_data: UserRow | None = get_by_username(username)
+    if user_data is not None and user_data.pwd == password:
         token = encode_jwt({"username": username})
         return AuthPayload(
-            access_token=token, user=AuthUser(username=username, name=user_data["name"])
+            access_token=token, user=AuthUser(username=username, name=user_data.name)
         )
     return None
 
@@ -33,9 +29,9 @@ def check_credentials(username: str, password: str) -> AuthPayload | None:
 def check_token(token: str) -> AuthPayload:
     payload = decode_jwt(token)
     username = payload["username"]
-    user_data = USERS.get(username)
+    user_data: UserRow | None = get_by_username(username)
     if user_data is None:
         raise KeyError(f"Unknown user '{username}'")
     return AuthPayload(
-        access_token=token, user=AuthUser(username=username, name=user_data["name"])
+        access_token=token, user=AuthUser(username=username, name=user_data.name)
     )
