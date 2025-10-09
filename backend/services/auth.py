@@ -1,3 +1,6 @@
+__all__ = ["check_credentials", "check_token"]
+
+
 from dataclasses import dataclass
 
 from ..data_gateway import DataAccess, UserRow
@@ -9,6 +12,9 @@ class AuthUser:
     username: str
     name: str
 
+    def to_dict(self) -> dict[str, str]:
+        return {"username": self.username, "name": self.name}
+
 
 @dataclass(frozen=True)
 class AuthPayload:
@@ -16,10 +22,19 @@ class AuthPayload:
     user: AuthUser
 
 
+def encode(auth_user: AuthUser) -> str:
+    return encode_jwt(auth_user.to_dict())
+
+
+def decode(token: str) -> AuthUser:
+    payload = decode_jwt(token)
+    return AuthUser(username=payload["username"], name=payload["name"])
+
+
 def check_credentials(username: str, password: str) -> AuthPayload | None:
     user_data: UserRow | None = DataAccess.get_user(username)
     if user_data is not None and user_data.pwd == password:
-        token = encode_jwt({"username": username})
+        token = encode(AuthUser(username=username, name=user_data.name))
         return AuthPayload(
             access_token=token, user=AuthUser(username=username, name=user_data.name)
         )
@@ -27,11 +42,11 @@ def check_credentials(username: str, password: str) -> AuthPayload | None:
 
 
 def check_token(token: str) -> AuthPayload:
-    payload = decode_jwt(token)
-    username = payload["username"]
-    user_data: UserRow | None = DataAccess.get_user(username)
+    auth_user = decode(token)
+    user_data: UserRow | None = DataAccess.get_user(auth_user.username)
     if user_data is None:
-        raise KeyError(f"Unknown user '{username}'")
+        raise KeyError(f"Unknown user '{auth_user.username}'")
     return AuthPayload(
-        access_token=token, user=AuthUser(username=username, name=user_data.name)
+        access_token=token,
+        user=AuthUser(username=auth_user.username, name=user_data.name),
     )
