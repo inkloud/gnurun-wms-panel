@@ -4,7 +4,12 @@ import type {AuthProvider, AuthResponse, Credentials} from './types';
 
 export const FakeAuthProvider: AuthProvider = {
     authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
-        const meUser = {name: 'Luca Bacchi', username: 'bacchilu@gmail.com', warehouse: 'GnuRun 101'};
+        const meUser = {
+            name: 'Luca Bacchi',
+            username: 'bacchilu@gmail.com',
+            warehouse: 'GnuRun 101',
+            type: 'MANAGER'
+        };
         const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
 
         if (credentials.username === meCredentials.username && credentials.password === meCredentials.password)
@@ -12,7 +17,12 @@ export const FakeAuthProvider: AuthProvider = {
         return null;
     },
     verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
-        const meUser = {name: 'Luca Bacchi', username: 'bacchilu@gmail.com'};
+        const meUser = {
+            name: 'Luca Bacchi',
+            username: 'bacchilu@gmail.com',
+            warehouse: 'GnuRun 101',
+            type: 'MANAGER'
+        };
         if (accessToken === 'AAABBBCCC') return {access_token: 'AAABBBCCC', auth_user: meUser} as AuthResponse;
         return null;
     }

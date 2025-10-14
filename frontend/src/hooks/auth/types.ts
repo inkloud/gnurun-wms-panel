@@ -3,9 +3,11 @@ export interface Credentials {
     password: string;
 }
 
+type UserType = 'MANAGER' | 'OPERATOR';
+
 export interface AuthResponse {
     access_token: string;
-    auth_user: {username: string; name: string, warehouse: string};
+    auth_user: {username: string; name: string; warehouse: string; type: UserType};
 }
 
 export interface AuthStore {

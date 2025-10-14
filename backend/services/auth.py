@@ -2,9 +2,15 @@ __all__ = ["AuthService"]
 
 
 from dataclasses import dataclass
+from enum import Enum
 
 from ..data_gateway.types import DBGateway
 from ..utils.jwt_utils import decode_jwt, encode_jwt
+
+
+class AuthUserType(Enum):
+    MANAGER = "MANAGER"
+    OPERATOR = "OPERATOR"
 
 
 @dataclass(frozen=True)
@@ -12,12 +18,14 @@ class AuthUser:
     username: str
     name: str
     warehouse: str
+    type: AuthUserType
 
     def to_dict(self) -> dict[str, str]:
         return {
             "username": self.username,
             "name": self.name,
             "warehouse": self.warehouse,
+            "type": self.type.value,
         }
 
 
@@ -37,6 +45,7 @@ def decode(token: str) -> AuthUser:
         username=payload["username"],
         name=payload["name"],
         warehouse=payload["warehouse"],
+        type=AuthUserType(payload["type"]),
     )
 
 
@@ -47,12 +56,12 @@ class AuthService:
     def check_credentials(self, username: str, password: str) -> AuthPayload | None:
         user_data = self.data_mapper.get_user(username)
         if user_data is not None and user_data.pwd == password:
-            print(user_data)
             token = encode(
                 AuthUser(
                     username=username,
                     name=user_data.name,
                     warehouse=user_data.warehouse.name,
+                    type=AuthUserType(user_data.type.value),
                 )
             )
             return AuthPayload(
@@ -61,6 +70,7 @@ class AuthService:
                     username=username,
                     name=user_data.name,
                     warehouse=user_data.warehouse.name,
+                    type=AuthUserType(user_data.type.value),
                 ),
             )
         return None
@@ -76,5 +86,6 @@ class AuthService:
                 username=auth_user.username,
                 name=user_data.name,
                 warehouse=user_data.warehouse.name,
+                type=AuthUserType(user_data.type.value),
             ),
         )

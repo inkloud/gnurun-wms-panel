@@ -1,7 +1,13 @@
-__all__ = ["UserRow", "DBGateway", "Warehouse"]
+__all__ = ["UserRow", "DBGateway", "Warehouse", "UserType"]
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Protocol
+
+
+class UserType(Enum):
+    MANAGER = "MANAGER"
+    OPERATOR = "OPERATOR"
 
 
 @dataclass(frozen=True)
@@ -15,6 +21,7 @@ class UserRow:
     username: str
     name: str
     pwd: str
+    type: UserType
     warehouse: Warehouse
 
 
