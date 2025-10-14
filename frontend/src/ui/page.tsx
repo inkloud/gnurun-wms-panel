@@ -13,20 +13,20 @@ const Navbar = function () {
                 <Link className="navbar-brand fw-semibold" to="/">
                     GnuRun WMS Panel
                 </Link>
-                <span className="navbar-text text-white-50 ms-3">{user!.auth_user.warehouse}</span>
-                <div className="ms-auto d-flex align-items-center gap-3">
-                    {user !== null && (
-                        <>
+                {user !== null && user !== undefined && (
+                    <>
+                        <span className="navbar-text text-white-50 ms-3">{user.auth_user.warehouse}</span>
+                        <div className="ms-auto d-flex align-items-center gap-3">
                             <div className="text-white small text-end">
-                                <div className="fw-semibold">{user!.auth_user.name}</div>
-                                <div className="opacity-75">{user!.auth_user.username}</div>
+                                <div className="fw-semibold">{user.auth_user.name}</div>
+                                <div className="opacity-75">{user.auth_user.username}</div>
                             </div>
                             <button type="button" className="btn btn-outline-light btn-sm" onClick={handleLogout}>
                                 Logout
                             </button>
-                        </>
-                    )}
-                </div>
+                        </div>
+                    </>
+                )}
             </div>
         </nav>
     );
