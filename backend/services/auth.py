@@ -11,9 +11,14 @@ from ..utils.jwt_utils import decode_jwt, encode_jwt
 class AuthUser:
     username: str
     name: str
+    warehouse: str
 
     def to_dict(self) -> dict[str, str]:
-        return {"username": self.username, "name": self.name}
+        return {
+            "username": self.username,
+            "name": self.name,
+            "warehouse": self.warehouse,
+        }
 
 
 @dataclass(frozen=True)
@@ -28,7 +33,11 @@ def encode(auth_user: AuthUser) -> str:
 
 def decode(token: str) -> AuthUser:
     payload = decode_jwt(token)
-    return AuthUser(username=payload["username"], name=payload["name"])
+    return AuthUser(
+        username=payload["username"],
+        name=payload["name"],
+        warehouse=payload["warehouse"],
+    )
 
 
 class AuthService:
@@ -38,10 +47,21 @@ class AuthService:
     def check_credentials(self, username: str, password: str) -> AuthPayload | None:
         user_data = self.data_mapper.get_user(username)
         if user_data is not None and user_data.pwd == password:
-            token = encode(AuthUser(username=username, name=user_data.name))
+            print(user_data)
+            token = encode(
+                AuthUser(
+                    username=username,
+                    name=user_data.name,
+                    warehouse=user_data.warehouse.name,
+                )
+            )
             return AuthPayload(
                 access_token=token,
-                auth_user=AuthUser(username=username, name=user_data.name),
+                auth_user=AuthUser(
+                    username=username,
+                    name=user_data.name,
+                    warehouse=user_data.warehouse.name,
+                ),
             )
         return None
 
@@ -52,5 +72,9 @@ class AuthService:
             raise KeyError(f"Unknown user '{auth_user.username}'")
         return AuthPayload(
             access_token=token,
-            auth_user=AuthUser(username=auth_user.username, name=user_data.name),
+            auth_user=AuthUser(
+                username=auth_user.username,
+                name=user_data.name,
+                warehouse=user_data.warehouse.name,
+            ),
         )

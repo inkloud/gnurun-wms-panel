@@ -1,10 +1,18 @@
 __all__ = ["DB"]
 
-from .types import DBGateway, UserRow
+from .types import DBGateway, UserRow, Warehouse
 
 USERS: dict[str, dict] = {
-    "bacchilu@gmail.com": {"pwd": "bacchilu", "name": "Luca Bacchi"},
-    "luca@life365.eu": {"pwd": "luca", "name": "Bacchi Luca"},
+    "bacchilu@gmail.com": {
+        "pwd": "bacchilu",
+        "name": "Luca Bacchi",
+        "warehouse": {"id": 1, "name": "Gnu000 Test"},
+    },
+    "luca@life365.eu": {
+        "pwd": "luca",
+        "name": "Bacchi Luca",
+        "warehouse": {"id": 4, "name": "Gnu102 forlì Srl"},
+    },
 }
 
 
@@ -15,5 +23,12 @@ class DB(DBGateway):
         return (
             None
             if user_data is None
-            else UserRow(**{**user_data, "username": username})
+            else UserRow(
+                username=username,
+                name=user_data["name"],
+                pwd=user_data["pwd"],
+                warehouse=Warehouse(
+                    id=user_data["warehouse"]["id"], name=user_data["warehouse"]["name"]
+                ),
+            )
         )
