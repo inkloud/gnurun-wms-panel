@@ -18,7 +18,10 @@ const Navbar = function () {
                         <span className="navbar-text text-white-50 ms-3">{user.auth_user.warehouse}</span>
                         <div className="ms-auto d-flex align-items-center gap-3">
                             <div className="text-white small text-end">
-                                <div className="fw-semibold">{user.auth_user.name}</div>
+                                <div className="d-flex align-items-center justify-content-end gap-2">
+                                    <span className="fw-semibold">{user.auth_user.name}</span>
+                                    <span className="badge text-bg-light text-uppercase">{user.auth_user.type}</span>
+                                </div>
                                 <div className="opacity-75">{user.auth_user.username}</div>
                             </div>
                             <button type="button" className="btn btn-outline-light btn-sm" onClick={handleLogout}>
