@@ -1,50 +1,66 @@
 import axios from 'axios';
 
-import type {AuthProvider, AuthResponse, Credentials} from './types';
+import {UserType, type AuthProvider, type AuthResponse, type Credentials} from './types';
 
-export const FakeAuthProvider: AuthProvider = {
-    authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
-        const meUser = {
+type RemoteAuthResponse = {
+    access_token: string;
+    auth_user: {
+        username: string;
+        name: string;
+        warehouse: string;
+        type: 'MANAGER' | 'OPERATOR';
+    };
+};
+
+export const FakeAuthProvider: AuthProvider = (function () {
+    const resToken: AuthResponse = {
+        access_token: 'AAABBBCCC',
+        auth_user: {
             name: 'Luca Bacchi',
             username: 'bacchilu@gmail.com',
             warehouse: 'GnuRun 101',
-            type: 'MANAGER'
-        };
-        const meCredentials: Credentials = {username: 'bacchilu@gmail.com', password: 'bacchilu'};
+            type: UserType.MANAGER
+        }
+    };
 
-        if (credentials.username === meCredentials.username && credentials.password === meCredentials.password)
-            return {access_token: 'AAABBBCCC', auth_user: meUser} as AuthResponse;
-        return null;
-    },
-    verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
-        const meUser = {
-            name: 'Luca Bacchi',
-            username: 'bacchilu@gmail.com',
-            warehouse: 'GnuRun 101',
-            type: 'MANAGER'
-        };
-        if (accessToken === 'AAABBBCCC') return {access_token: 'AAABBBCCC', auth_user: meUser} as AuthResponse;
-        return null;
-    }
-};
-
-export const RemoteAuthProvider: AuthProvider = {
-    authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
-        try {
-            const response = await axios.post<AuthResponse>('http://0.0.0.0:8000/auth', credentials);
-            return response.data;
-        } catch {
+    return {
+        authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
+            if (credentials.username === 'bacchilu@gmail.com' && credentials.password === 'bacchilu') return resToken;
+            return null;
+        },
+        verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
+            if (accessToken === 'AAABBBCCC') return resToken;
             return null;
         }
-    },
-    verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
-        try {
-            const {data} = await axios.get<AuthResponse>('http://0.0.0.0:8000/auth', {
-                headers: {Authorization: `Bearer ${accessToken}`}
-            });
-            return data;
-        } catch {
-            return null;
+    };
+})();
+
+export const RemoteAuthProvider: AuthProvider = (function () {
+    const fromRemoteAuthResponse = function (payload: RemoteAuthResponse): AuthResponse {
+        return {
+            access_token: payload.access_token,
+            auth_user: {...payload.auth_user, type: UserType[payload.auth_user.type]}
+        };
+    };
+
+    return {
+        authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
+            try {
+                const response = await axios.post<RemoteAuthResponse>('http://0.0.0.0:8000/auth', credentials);
+                return fromRemoteAuthResponse(response.data);
+            } catch {
+                return null;
+            }
+        },
+        verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
+            try {
+                const response = await axios.get<RemoteAuthResponse>('http://0.0.0.0:8000/auth', {
+                    headers: {Authorization: `Bearer ${accessToken}`}
+                });
+                return fromRemoteAuthResponse(response.data);
+            } catch {
+                return null;
+            }
         }
-    }
-};
+    };
+})();

@@ -3,7 +3,10 @@ export interface Credentials {
     password: string;
 }
 
-type UserType = 'MANAGER' | 'OPERATOR';
+export enum UserType {
+    MANAGER = 'MANAGER',
+    OPERATOR = 'OPERATOR'
+}
 
 export interface AuthResponse {
     access_token: string;
