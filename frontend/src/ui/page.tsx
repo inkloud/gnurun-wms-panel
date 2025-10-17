@@ -35,11 +35,20 @@ const Navbar = function () {
     );
 };
 
+const LoadingPage = function () {
+    return (
+        <div className="app-shell d-flex flex-column min-vh-100">
+            <main className="flex-grow-1 d-flex align-items-center justify-content-center">
+                <div className="text-center text-muted fw-semibold">Checking Authentication...</div>
+            </main>
+        </div>
+    );
+};
+
 export const Page: React.FC<{children: React.ReactNode}> = function ({children}) {
     const {data: user} = useAuth();
 
-    if (user === undefined) return null;
-
+    if (user === undefined) return <LoadingPage />;
     return (
         <div className="app-shell d-flex flex-column min-vh-100">
             <Navbar />
