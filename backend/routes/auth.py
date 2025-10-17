@@ -1,3 +1,6 @@
+__all__ = ["router"]
+
+
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
