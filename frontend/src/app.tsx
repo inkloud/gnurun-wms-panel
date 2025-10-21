@@ -84,12 +84,8 @@ const MainManager: React.FC<{authData: AuthResponse}> = function ({authData}) {
 };
 
 const Main: React.FC<{authData: AuthResponse}> = function ({authData}) {
-    console.log(authData.auth_user.type);
-
-    {
-        if (authData.auth_user.type === UserType.OPERATOR) return <MainOperator authData={authData} />;
-        if (authData.auth_user.type === UserType.MANAGER) return <MainManager authData={authData} />;
-    }
+    if (authData.auth_user.type === UserType.OPERATOR) return <MainOperator authData={authData} />;
+    if (authData.auth_user.type === UserType.MANAGER) return <MainManager authData={authData} />;
 };
 
 const App = function () {
