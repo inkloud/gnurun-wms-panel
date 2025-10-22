@@ -1,6 +1,6 @@
 import './app.css';
 import type {Operation} from './entities/operation';
-import {useAuth} from './hooks';
+import {useAuth, useWHOperators} from './hooks';
 import {UserType, type AuthResponse} from './hooks/auth/types';
 import {OperationCard} from './ui/operationCard';
 import {Page} from './ui/page';
@@ -41,21 +41,9 @@ const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
     );
 };
 
-type OperatorCandidate = {
-    name: string;
-    username: string;
-};
-
-const operatorCandidates: OperatorCandidate[] = [
-    {name: 'Alice Porter', username: 'alice.porter@gnurun.example'},
-    {name: 'Marco Jimenez', username: 'marco.jimenez@gnurun.example'},
-    {name: 'Priya Desai', username: 'priya.desai@gnurun.example'},
-    {name: 'Ethan Wright', username: 'ethan.wright@gnurun.example'},
-    {name: 'Sofia Conti', username: 'sofia.conti@gnurun.example'},
-    {name: 'Bacchi Luca', username: 'luca@life365.eu'}
-];
-
 const MainManager: React.FC<{authData: AuthResponse}> = function ({authData}) {
+    const {data: operatorCandidates, error} = useWHOperators(authData.access_token);
+
     return (
         <>
             <header className="mb-4">
@@ -66,19 +54,33 @@ const MainManager: React.FC<{authData: AuthResponse}> = function ({authData}) {
                 </p>
             </header>
 
-            <div className="row g-3">
-                {operatorCandidates.map((operator) => (
-                    <div key={operator.username} className="col-12 col-md-6 col-xl-4">
-                        <button
-                            type="button"
-                            className="btn btn-outline-primary w-100 text-start d-flex flex-column align-items-start"
-                        >
-                            <span className="fw-semibold">{operator.name}</span>
-                            <span className="text-secondary small">{operator.username}</span>
-                        </button>
+            {error !== undefined && (
+                <div className="alert alert-danger" role="alert">
+                    Unable to load operators. Please retry.
+                </div>
+            )}
+
+            {operatorCandidates === undefined ? (
+                <div className="d-flex justify-content-center py-5">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading operators...</span>
                     </div>
-                ))}
-            </div>
+                </div>
+            ) : (
+                <div className="row g-3">
+                    {(operatorCandidates ?? []).map((operator) => (
+                        <div key={operator.username} className="col-12 col-md-6 col-xl-4">
+                            <button
+                                type="button"
+                                className="btn btn-outline-primary w-100 text-start d-flex flex-column align-items-start"
+                            >
+                                <span className="fw-semibold">{operator.name}</span>
+                                <span className="text-secondary small">{operator.username}</span>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </>
     );
 };

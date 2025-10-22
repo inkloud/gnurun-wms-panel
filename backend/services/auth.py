@@ -1,4 +1,4 @@
-__all__ = ["AuthService"]
+__all__ = ["AuthService", "AuthUserType"]
 
 
 from dataclasses import dataclass

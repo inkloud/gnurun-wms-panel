@@ -28,3 +28,6 @@ class UserRow:
 class DBGateway(Protocol):
     @staticmethod
     def get_user(username: str) -> UserRow | None: ...
+
+    @staticmethod
+    def get_operators(username: str) -> list[UserRow]: ...

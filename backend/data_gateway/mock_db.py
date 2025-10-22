@@ -65,3 +65,38 @@ class DB(DBGateway):
                 ),
             )
         )
+
+    @staticmethod
+    def get_operators(user_name: str) -> list[UserRow]:
+        manager_user = [
+            UserRow(
+                username=username,
+                name=user_data["name"],
+                pwd=user_data["pwd"],
+                type=UserType(user_data["type"]),
+                warehouse=Warehouse(
+                    id=user_data["warehouse"]["id"], name=user_data["warehouse"]["name"]
+                ),
+            )
+            for username, user_data in USERS.items()
+            if username == user_name
+        ]
+        assert len(manager_user) == 1
+        assert manager_user[0].type == UserType.MANAGER
+        warehouse_id = manager_user[0].warehouse.id
+
+        return [
+            UserRow(
+                username=username,
+                name=user_data["name"],
+                pwd=user_data["pwd"],
+                type=UserType(user_data["type"]),
+                warehouse=Warehouse(
+                    id=user_data["warehouse"]["id"],
+                    name=user_data["warehouse"]["name"],
+                ),
+            )
+            for username, user_data in USERS.items()
+            if user_data["type"] == "OPERATOR"
+            and user_data["warehouse"]["id"] == warehouse_id
+        ]
