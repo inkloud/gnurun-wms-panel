@@ -1,9 +1,14 @@
+import axios from 'axios';
+
 import './app.css';
 import type {Operation} from './entities/operation';
 import {useAuth, useWHOperators} from './hooks';
 import {UserType, type AuthResponse} from './hooks/auth/types';
+import type {OperatorCandidate} from './hooks/useWHOperators';
 import {OperationCard} from './ui/operationCard';
 import {Page} from './ui/page';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
 const operations: Operation[] = [
     {
@@ -23,6 +28,13 @@ const operations: Operation[] = [
     }
 ];
 
+const authenticateAsOperator = async (username: string, token: string) => {
+    const response = await axios.get<AuthResponse>(`${API_BASE_URL}/auth/as/${encodeURIComponent(username)}`, {
+        headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+};
+
 const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
     return (
         <>
@@ -38,6 +50,30 @@ const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
                 ))}
             </div>
         </>
+    );
+};
+
+const OperatorButton: React.FC<{operator: OperatorCandidate; token: string}> = function ({operator, token}) {
+    const handleClick = async function () {
+        try {
+            const impersonated = await authenticateAsOperator(operator.username, token);
+            console.log('Authenticated as', impersonated.auth_user.username);
+        } catch (error) {
+            console.error('Failed to authenticate as operator', error);
+        }
+    };
+
+    return (
+        <div className="col-12 col-md-6 col-xl-4">
+            <button
+                type="button"
+                className="btn btn-outline-primary w-100 text-start d-flex flex-column align-items-start"
+                onClick={handleClick}
+            >
+                <span className="fw-semibold">{operator.name}</span>
+                <span className="text-secondary small">{operator.username}</span>
+            </button>
+        </div>
     );
 };
 
@@ -68,16 +104,8 @@ const MainManager: React.FC<{authData: AuthResponse}> = function ({authData}) {
                 </div>
             ) : (
                 <div className="row g-3">
-                    {(operatorCandidates ?? []).map((operator) => (
-                        <div key={operator.username} className="col-12 col-md-6 col-xl-4">
-                            <button
-                                type="button"
-                                className="btn btn-outline-primary w-100 text-start d-flex flex-column align-items-start"
-                            >
-                                <span className="fw-semibold">{operator.name}</span>
-                                <span className="text-secondary small">{operator.username}</span>
-                            </button>
-                        </div>
+                    {operatorCandidates.map((operator) => (
+                        <OperatorButton key={operator.username} operator={operator} token={authData.access_token} />
                     ))}
                 </div>
             )}
