@@ -43,5 +43,19 @@ From inside `backend/`:
 
 From the repository root:
 
--   Export your host IDs so the dev container runs as your user: `export LOCAL_UID=$(id -u)` and `export LOCAL_GID=$(id -g)` (or add those values to a `.env` file)
--   Start the dev environment with `docker compose up` to bring up the frontend and, once defined, the FastAPI backend
+-   Export your host IDs so the dev container runs as your user: `export USER_ID=$(id -u)` and `export GROUP_ID=$(id -g)` (or add those values to a `.env` file).
+-   With the IDs exported or provided inline, run `docker compose up` to bring up the frontend and, once defined, the FastAPI backend
+
+### Starting the Docker Compose Cluster
+
+Run the stack from the repository root using inline environment variables:
+
+```bash
+USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose up
+```
+
+Repeat the same command whenever you need to restart the services:
+
+```bash
+USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose up
+```

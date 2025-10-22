@@ -1,13 +1,13 @@
 FROM python:3.14.0
 LABEL maintainer="Luca Bacchi <bacchilu@gmail.com> (https://github.com/bacchilu)"
 
-ARG LOCAL_UID=1000
-ARG LOCAL_GID=1000
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 ARG USERNAME=python
 ARG GROUPNAME=python
 
-RUN groupadd -g ${LOCAL_GID} ${GROUPNAME}
-RUN useradd -m -u ${LOCAL_UID} -g ${GROUPNAME} ${USERNAME}
+RUN groupadd -g ${GROUP_ID} ${GROUPNAME}
+RUN useradd -m -u ${USER_ID} -g ${GROUPNAME} ${USERNAME}
 
 USER ${USERNAME}
 

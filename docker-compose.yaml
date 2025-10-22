@@ -4,8 +4,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        LOCAL_UID: ${LOCAL_UID}
-        LOCAL_GID: ${LOCAL_GID}
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
     depends_on:
       - backend
     command: npm run dev -- --host 0.0.0.0 --port 5173
@@ -20,8 +20,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       args:
-        LOCAL_UID: ${LOCAL_UID}
-        LOCAL_GID: ${LOCAL_GID}
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
     command: fastapi dev main.py --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
