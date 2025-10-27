@@ -1,2 +1,2 @@
-export {useAuth} from './auth/useAuth';
+export {useAuth} from './auth';
 export {useWHOperators} from './useWHOperators';

@@ -3,7 +3,7 @@ import axios from 'axios';
 import './app.css';
 import type {Operation} from './entities/operation';
 import {useAuth, useWHOperators} from './hooks';
-import {UserType, type AuthResponse} from './hooks/auth/types';
+import {UserType, type AuthResponse} from './hooks/auth';
 import type {OperatorCandidate} from './hooks/useWHOperators';
 import {OperationCard} from './ui/operationCard';
 import {Page} from './ui/page';
@@ -54,10 +54,12 @@ const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
 };
 
 const OperatorButton: React.FC<{operator: OperatorCandidate; token: string}> = function ({operator, token}) {
+    const {setToken} = useAuth();
+
     const handleClick = async function () {
         try {
             const impersonated = await authenticateAsOperator(operator.username, token);
-            console.log('Authenticated as', impersonated.auth_user.username);
+            setToken(impersonated);
         } catch (error) {
             console.error('Failed to authenticate as operator', error);
         }

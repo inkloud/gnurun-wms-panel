@@ -18,12 +18,16 @@ export const useAuth = function () {
     };
     const {data, mutate} = useSWR<AuthResponse | null>('AUTH_SWR_KEY', fetcher, {dedupingInterval: 60000});
 
+    const setToken = function (authData: AuthResponse): void {
+        mutate(authData, {revalidate: false});
+        CurrentStorage.set(authData);
+        setErrorMessage(null);
+    };
+
     const handleLogin = async function ({username, password}: Credentials) {
         const authData = await Authenticator.authenticate({username, password});
         if (authData !== null) {
-            mutate(authData, {revalidate: false});
-            CurrentStorage.set(authData);
-            setErrorMessage(null);
+            setToken(authData);
             return;
         }
 
@@ -38,5 +42,5 @@ export const useAuth = function () {
         setErrorMessage(null);
     };
 
-    return {data, errorMessage, handleLogin, handleLogout};
+    return {data, errorMessage, handleLogin, handleLogout, setToken};
 };
