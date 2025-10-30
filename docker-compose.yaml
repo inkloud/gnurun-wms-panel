@@ -1,5 +1,17 @@
 services:
-  web:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    command: fastapi dev main.py --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -15,15 +27,3 @@ services:
       - ./frontend/src:/app/src
     stdin_open: true
     tty: true
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      args:
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
-    command: fastapi dev main.py --host 0.0.0.0 --port 8000
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
