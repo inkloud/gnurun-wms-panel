@@ -1,8 +1,8 @@
 FROM node:25.1.0
 LABEL maintainer="Luca Bacchi <bacchilu@gmail.com> (https://github.com/bacchilu)"
 
-ARG USER_ID=1000
-ARG GROUP_ID=1000
+ARG USER_ID
+ARG GROUP_ID
 ARG USERNAME=appuser
 
 RUN userdel -f node && if getent group node ; then groupdel node; fi
