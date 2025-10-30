@@ -3,17 +3,17 @@ LABEL maintainer="Luca Bacchi <bacchilu@gmail.com> (https://github.com/bacchilu)
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
-ARG USERNAME=python
-ARG GROUPNAME=python
+ARG USERNAME=appuser
 
-RUN groupadd -g ${GROUP_ID} ${GROUPNAME}
-RUN useradd -m -u ${USER_ID} -g ${GROUPNAME} ${USERNAME}
-
-USER ${USERNAME}
+RUN groupadd -g ${GROUP_ID} ${USERNAME}
+RUN useradd -m -u ${USER_ID} -g ${USERNAME} ${USERNAME}
 
 WORKDIR /app
 
 COPY . .
+
+RUN chown -R ${USERNAME}:${USERNAME} /app
+USER ${USERNAME}
 
 ENV PATH="$PATH:/home/$USERNAME/.local/bin"
 RUN pip3 install -r requirements.txt
