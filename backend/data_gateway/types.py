@@ -1,6 +1,7 @@
-__all__ = ["UserRow", "DBGateway", "Warehouse", "UserType"]
+__all__ = ["UserRow", "DBGateway", "Warehouse", "UserType", "FulfillmentOrder"]
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import Protocol
 
@@ -31,3 +32,12 @@ class DBGateway(Protocol):
 
     @staticmethod
     def get_operators(username: str) -> list[UserRow]: ...
+
+    @staticmethod
+    def get_fulfillment_orders() -> list["FulfillmentOrder"]: ...
+
+
+@dataclass(frozen=True)
+class FulfillmentOrder:
+    id: str
+    date: datetime

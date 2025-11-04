@@ -3,7 +3,7 @@ import React from 'react';
 
 import {useAuth, useWHOperators} from '../../hooks';
 import type {AuthResponse} from '../../hooks/auth';
-import type {OperatorCandidate} from '../../hooks/useWHOperators';
+import type {OperatorCandidate} from '../../hooks/use-wh-operators';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 

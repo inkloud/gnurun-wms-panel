@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routes.auth import router as auth_router
+from .routes.picker import router as picker_router
 from .routes.root import router as root_router
 from .routes.users import router as users_router
 
@@ -21,5 +22,6 @@ app.add_middleware(
 
 
 app.include_router(auth_router)
+app.include_router(picker_router)
 app.include_router(root_router)
 app.include_router(users_router)

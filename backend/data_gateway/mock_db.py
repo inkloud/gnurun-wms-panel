@@ -1,6 +1,8 @@
 __all__ = ["DB"]
 
-from .types import DBGateway, UserRow, UserType, Warehouse
+from datetime import datetime
+
+from .types import DBGateway, FulfillmentOrder, UserRow, UserType, Warehouse
 
 USERS: dict[str, dict] = {
     "bacchilu@gmail.com": {
@@ -46,6 +48,13 @@ USERS: dict[str, dict] = {
         "warehouse": {"id": 1, "name": "Gnu000 Test"},
     },
 }
+
+
+FULFILLMENT_ORDERS: list[FulfillmentOrder] = [
+    FulfillmentOrder(id="FO-1001", date=datetime(2024, 2, 6)),
+    FulfillmentOrder(id="FO-1002", date=datetime(2024, 2, 7)),
+    FulfillmentOrder(id="FO-1003", date=datetime(2024, 2, 8)),
+]
 
 
 class DB(DBGateway):
@@ -100,3 +109,7 @@ class DB(DBGateway):
             if user_data["type"] == "OPERATOR"
             and user_data["warehouse"]["id"] == warehouse_id
         ]
+
+    @staticmethod
+    def get_fulfillment_orders() -> list[FulfillmentOrder]:
+        return FULFILLMENT_ORDERS

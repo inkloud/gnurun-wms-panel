@@ -1,4 +1,4 @@
-__all__ = ["auth", "users"]
+__all__ = ["auth", "picker", "users"]
 
 
-from . import auth, users
+from . import auth, picker, users
