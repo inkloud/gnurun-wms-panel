@@ -51,11 +51,23 @@ USERS: dict[str, dict] = {
 
 NOW = datetime.now()
 FULFILLMENT_ORDERS: list[FulfillmentOrder] = [
-    FulfillmentOrder(id="FO-1001", date=NOW - timedelta(hours=23, minutes=15)),
+    FulfillmentOrder(
+        id="FO-1001",
+        date=NOW - timedelta(hours=23, minutes=15),
+        assigned_to=["luca@life365.eu"],
+    ),
     FulfillmentOrder(id="FO-1002", date=NOW - timedelta(hours=21, minutes=40)),
-    FulfillmentOrder(id="FO-1003", date=NOW - timedelta(hours=19, minutes=5)),
+    FulfillmentOrder(
+        id="FO-1003",
+        date=NOW - timedelta(hours=19, minutes=5),
+        assigned_to=["luca@life365.eu", "alice.porter@gnurun.example"],
+    ),
     FulfillmentOrder(id="FO-1004", date=NOW - timedelta(hours=17, minutes=20)),
-    FulfillmentOrder(id="FO-1005", date=NOW - timedelta(hours=15, minutes=45)),
+    FulfillmentOrder(
+        id="FO-1005",
+        date=NOW - timedelta(hours=15, minutes=45),
+        assigned_to=["marco.jimenez@gnurun.example"],
+    ),
     FulfillmentOrder(id="FO-1006", date=NOW - timedelta(hours=13, minutes=10)),
     FulfillmentOrder(id="FO-1007", date=NOW - timedelta(hours=10, minutes=30)),
     FulfillmentOrder(id="FO-1008", date=NOW - timedelta(hours=7, minutes=55)),

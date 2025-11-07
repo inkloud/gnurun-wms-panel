@@ -1,1 +1,1 @@
-export type FulfillmentOrder = {id: string; date: Date};
+export type FulfillmentOrder = {id: string; date: Date; assigned_to: string[]};

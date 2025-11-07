@@ -1,6 +1,6 @@
 __all__ = ["UserRow", "DBGateway", "Warehouse", "UserType", "FulfillmentOrder"]
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import Protocol
@@ -41,3 +41,4 @@ class DBGateway(Protocol):
 class FulfillmentOrder:
     id: str
     date: datetime
+    assigned_to: list[str] = field(default_factory=list)

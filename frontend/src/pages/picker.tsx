@@ -11,7 +11,24 @@ const ErrorMessage: React.FC<{msg: string}> = function ({msg}) {
     );
 };
 
+const UserBadge: React.FC<{username: string}> = function ({username}) {
+    const {data: authData} = useAuth();
+
+    const currentLogged = authData!.auth_user.username;
+    const badgeClass = username === currentLogged ? 'badge bg-success' : 'badge bg-secondary';
+    return (
+        <span key={username} className={badgeClass}>
+            {username}
+        </span>
+    );
+};
+
 const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
+    const {data: authData} = useAuth();
+
+    const currentLogged = authData!.auth_user.username;
+    const assigned_to = item.assigned_to.map((username) => <UserBadge key={username} username={username} />);
+    const isAlreadyAssigned = item.assigned_to.includes(currentLogged);
     return (
         <div className="col" key={item.id}>
             <div className="card h-100">
@@ -21,7 +38,10 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
                         <span className="d-block fw-semibold">Scheduled for</span>
                         <time dateTime={item.date.toISOString()}>{formatOrderDate(item.date)}</time>
                     </p>
-                    <button className="btn btn-primary mt-2" type="button">
+                    <div className="mb-3">
+                        <div className="d-flex flex-wrap gap-2 mt-1">{assigned_to}</div>
+                    </div>
+                    <button className="btn btn-primary mt-auto" type="button" disabled={isAlreadyAssigned}>
                         Assign to me
                     </button>
                 </div>
