@@ -1,1 +1,1 @@
-export type FulfillmentOrder = {id: string; date: string};
+export type FulfillmentOrder = {id: string; date: Date};

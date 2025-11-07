@@ -1,6 +1,7 @@
 import type {FulfillmentOrder} from '../entities/fulfillment-order';
 import {useAuth, useFulfillmentOrders} from '../hooks';
 import {Page} from '../ui/page';
+import {formatOrderDate} from '../util';
 
 const ErrorMessage: React.FC<{msg: string}> = function ({msg}) {
     return (
@@ -11,13 +12,6 @@ const ErrorMessage: React.FC<{msg: string}> = function ({msg}) {
 };
 
 const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
-    const dateValue = new Date(item.date);
-    const formattedDate = dateValue.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-
     return (
         <div className="col" key={item.id}>
             <div className="card h-100">
@@ -25,7 +19,7 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
                     <h5 className="card-title mb-1">{item.id}</h5>
                     <p className="card-text text-muted flex-grow-1">
                         <span className="d-block fw-semibold">Scheduled for</span>
-                        <time dateTime={item.date}>{formattedDate}</time>
+                        <time dateTime={item.date.toISOString()}>{formatOrderDate(item.date)}</time>
                     </p>
                     <button className="btn btn-primary mt-2" type="button">
                         Assign to me
