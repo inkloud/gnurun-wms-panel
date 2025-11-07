@@ -46,3 +46,11 @@ async def list_fulfillment_orders(
 ) -> list[FulfillmentOrder]:
     _authorize_operator(auth_header)
     return picker_service.get_fulfillment_orders()
+
+
+@router.put("/assign/{fulfillment_order_id}")
+async def assign_fulfillment_order(
+    fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
+) -> dict[str, str]:
+    _authorize_operator(auth_header)
+    return {"fulfillment_order_id": fulfillment_order_id}
