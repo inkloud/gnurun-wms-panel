@@ -44,9 +44,8 @@ const OrderCards: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
     return <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">{cards}</div>;
 };
 
-const Picker = function () {
-    const {data: authData} = useAuth();
-    const {data: fulfillmentOrders, error} = useFulfillmentOrders(authData!.access_token);
+const AuthedPicker: React.FC<{token: string}> = function ({token}) {
+    const {data: fulfillmentOrders, error} = useFulfillmentOrders(token);
 
     const isPending = fulfillmentOrders === undefined;
     const isError = error !== undefined;
@@ -61,6 +60,13 @@ const Picker = function () {
             {!isError && !isPending && <OrderCards items={fulfillmentOrders} />}
         </Page>
     );
+};
+
+const Picker = function () {
+    const {data: authData} = useAuth();
+
+    if (authData === undefined) return null;
+    return <AuthedPicker token={authData!.access_token} />;
 };
 
 export default Picker;
