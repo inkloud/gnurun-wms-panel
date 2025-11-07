@@ -28,7 +28,7 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
 
     const currentLogged = authData!.auth_user.username;
     const assigned_to = item.assigned_to.map((username) => <UserBadge key={username} username={username} />);
-    const isAlreadyAssigned = item.assigned_to.includes(currentLogged);
+    const isAssignedToMe = item.assigned_to.includes(currentLogged);
     return (
         <div className="col" key={item.id}>
             <div className="card h-100">
@@ -41,8 +41,8 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
                     <div className="mb-3">
                         <div className="d-flex flex-wrap gap-2 mt-1">{assigned_to}</div>
                     </div>
-                    <button className="btn btn-primary mt-auto" type="button" disabled={isAlreadyAssigned}>
-                        Assign to me
+                    <button className={`btn mt-auto ${isAssignedToMe ? 'btn-danger' : 'btn-primary'}`} type="button">
+                        {isAssignedToMe ? 'Unassign me' : 'Assign me'}
                     </button>
                 </div>
             </div>
