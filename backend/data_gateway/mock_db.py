@@ -1,6 +1,6 @@
 __all__ = ["DB"]
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .types import DBGateway, FulfillmentOrder, UserRow, UserType, Warehouse
 
@@ -49,11 +49,18 @@ USERS: dict[str, dict] = {
     },
 }
 
-
+NOW = datetime.now()
 FULFILLMENT_ORDERS: list[FulfillmentOrder] = [
-    FulfillmentOrder(id="FO-1001", date=datetime(2024, 2, 6)),
-    FulfillmentOrder(id="FO-1002", date=datetime(2024, 2, 7)),
-    FulfillmentOrder(id="FO-1003", date=datetime(2024, 2, 8)),
+    FulfillmentOrder(id="FO-1001", date=NOW - timedelta(hours=23, minutes=15)),
+    FulfillmentOrder(id="FO-1002", date=NOW - timedelta(hours=21, minutes=40)),
+    FulfillmentOrder(id="FO-1003", date=NOW - timedelta(hours=19, minutes=5)),
+    FulfillmentOrder(id="FO-1004", date=NOW - timedelta(hours=17, minutes=20)),
+    FulfillmentOrder(id="FO-1005", date=NOW - timedelta(hours=15, minutes=45)),
+    FulfillmentOrder(id="FO-1006", date=NOW - timedelta(hours=13, minutes=10)),
+    FulfillmentOrder(id="FO-1007", date=NOW - timedelta(hours=10, minutes=30)),
+    FulfillmentOrder(id="FO-1008", date=NOW - timedelta(hours=7, minutes=55)),
+    FulfillmentOrder(id="FO-1009", date=NOW - timedelta(hours=5, minutes=15)),
+    FulfillmentOrder(id="FO-1010", date=NOW - timedelta(hours=2, minutes=45)),
 ]
 
 
@@ -112,4 +119,4 @@ class DB(DBGateway):
 
     @staticmethod
     def get_fulfillment_orders() -> list[FulfillmentOrder]:
-        return FULFILLMENT_ORDERS
+        return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
