@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 import type {FulfillmentOrder} from '../entities/fulfillment-order';
 
-type FulfillmentOrderApi = {id: string; date: string};
+type FulfillmentOrderApi = {id: string; date: string; assigned_to: string[]};
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
