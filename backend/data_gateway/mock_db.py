@@ -133,6 +133,17 @@ class _FulfillmentGateway(FulfillmentGateway):
             data.assigned_to.append(operator)
         return data
 
+    @staticmethod
+    def unassign(id: str, operator: str) -> FulfillmentOrder:
+        res: list[FulfillmentOrder] = [f for f in FULFILLMENT_ORDERS if f.id == id]
+        assert len(res) == 1
+        data: FulfillmentOrder = res[0]
+        try:
+            data.assigned_to.remove(operator)
+        except ValueError:
+            pass
+        return data
+
 
 class DB(DBGateway):
     def __init__(self) -> None:

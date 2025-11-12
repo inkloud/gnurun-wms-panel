@@ -12,3 +12,6 @@ class PickerService:
 
     def assign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
         return self.data_mapper.fulfillment.assign(id, operator)
+
+    def unassign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
+        return self.data_mapper.fulfillment.unassign(id, operator)

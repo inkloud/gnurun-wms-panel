@@ -56,3 +56,13 @@ async def assign_fulfillment_order(
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
     return picker_service.assign_fulfillment_orders(fulfillment_order_id, operator)
+
+
+@router.put("/unassign/{fulfillment_order_id}")
+async def unassign_fulfillment_order(
+    fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
+) -> FulfillmentOrder:
+    auth_payload: AuthPayload = _authorize_operator(auth_header)
+    assert auth_payload.auth_user.type == AuthUserType.OPERATOR
+    operator: str = auth_payload.auth_user.username
+    return picker_service.unassign_fulfillment_orders(fulfillment_order_id, operator)

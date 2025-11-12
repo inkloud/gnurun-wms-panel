@@ -56,6 +56,9 @@ class FulfillmentGateway(Protocol):
     @staticmethod
     def assign(id: str, operator: str) -> FulfillmentOrder: ...
 
+    @staticmethod
+    def unassign(id: str, operator: str) -> FulfillmentOrder: ...
+
 
 class DBGateway(Protocol):
     user: UserGateway
