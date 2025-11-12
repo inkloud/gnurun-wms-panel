@@ -4,7 +4,7 @@ from fastapi import APIRouter, Header, HTTPException, status
 
 from ..data_gateway import mock_db
 from ..data_gateway.types import FulfillmentOrder
-from ..services.auth import AuthService, AuthUserType
+from ..services.auth import AuthPayload, AuthService, AuthUserType
 from ..services.picker import PickerService
 from ..utils import get_token_from_header
 
@@ -51,6 +51,8 @@ async def list_fulfillment_orders(
 @router.put("/assign/{fulfillment_order_id}")
 async def assign_fulfillment_order(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
-) -> dict[str, str]:
-    _authorize_operator(auth_header)
-    return {"fulfillment_order_id": fulfillment_order_id}
+) -> FulfillmentOrder:
+    auth_payload: AuthPayload = _authorize_operator(auth_header)
+    assert auth_payload.auth_user.type == AuthUserType.OPERATOR
+    operator: str = auth_payload.auth_user.username
+    return picker_service.assign_fulfillment_orders(fulfillment_order_id, operator)

@@ -124,6 +124,15 @@ class _FulfillmentGateway(FulfillmentGateway):
     def get_fulfillment_orders() -> list[FulfillmentOrder]:
         return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
 
+    @staticmethod
+    def assign(id: str, operator: str) -> FulfillmentOrder:
+        res: list[FulfillmentOrder] = [f for f in FULFILLMENT_ORDERS if f.id == id]
+        assert len(res) == 1
+        data: FulfillmentOrder = res[0]
+        if operator not in data.assigned_to:
+            data.assigned_to.append(operator)
+        return data
+
 
 class DB(DBGateway):
     def __init__(self) -> None:

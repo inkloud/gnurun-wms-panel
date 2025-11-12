@@ -53,6 +53,9 @@ class FulfillmentGateway(Protocol):
     @staticmethod
     def get_fulfillment_orders() -> list[FulfillmentOrder]: ...
 
+    @staticmethod
+    def assign(id: str, operator: str) -> FulfillmentOrder: ...
+
 
 class DBGateway(Protocol):
     user: UserGateway
