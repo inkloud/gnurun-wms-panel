@@ -1,4 +1,12 @@
-__all__ = ["UserRow", "DBGateway", "Warehouse", "UserType", "FulfillmentOrder"]
+__all__ = [
+    "UserRow",
+    "FulfillmentOrder",
+    "Warehouse",
+    "UserType",
+    "UserGateway",
+    "FulfillmentGateway",
+    "DBGateway",
+]
 
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -18,6 +26,13 @@ class Warehouse:
 
 
 @dataclass(frozen=True)
+class FulfillmentOrder:
+    id: str
+    date: datetime
+    assigned_to: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class UserRow:
     username: str
     name: str
@@ -26,19 +41,19 @@ class UserRow:
     warehouse: Warehouse
 
 
-class DBGateway(Protocol):
+class UserGateway(Protocol):
     @staticmethod
     def get_user(username: str) -> UserRow | None: ...
 
     @staticmethod
     def get_operators(username: str) -> list[UserRow]: ...
 
+
+class FulfillmentGateway(Protocol):
     @staticmethod
-    def get_fulfillment_orders() -> list["FulfillmentOrder"]: ...
+    def get_fulfillment_orders() -> list[FulfillmentOrder]: ...
 
 
-@dataclass(frozen=True)
-class FulfillmentOrder:
-    id: str
-    date: datetime
-    assigned_to: list[str] = field(default_factory=list)
+class DBGateway(Protocol):
+    user: UserGateway
+    fulfillment: FulfillmentGateway

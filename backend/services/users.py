@@ -9,4 +9,4 @@ class UsersService:
         self.data_mapper = data_mapper
 
     def get_operators(self, username: str) -> list[UserRow]:
-        return self.data_mapper.get_operators(username)
+        return self.data_mapper.user.get_operators(username)

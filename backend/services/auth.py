@@ -54,7 +54,7 @@ class AuthService:
         self.data_mapper = data_mapper
 
     def check_credentials(self, username: str, password: str) -> AuthPayload | None:
-        user_data = self.data_mapper.get_user(username)
+        user_data = self.data_mapper.user.get_user(username)
         if user_data is not None and user_data.pwd == password:
             token = encode(
                 AuthUser(
@@ -77,7 +77,7 @@ class AuthService:
 
     def check_token(self, token: str) -> AuthPayload:
         auth_user = decode(token)
-        user_data = self.data_mapper.get_user(auth_user.username)
+        user_data = self.data_mapper.user.get_user(auth_user.username)
         if user_data is None:
             raise KeyError(f"Unknown user '{auth_user.username}'")
         return AuthPayload(

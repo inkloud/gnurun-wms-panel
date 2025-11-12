@@ -8,4 +8,4 @@ class PickerService:
         self.data_mapper = data_mapper
 
     def get_fulfillment_orders(self) -> list[FulfillmentOrder]:
-        return self.data_mapper.get_fulfillment_orders()
+        return self.data_mapper.fulfillment.get_fulfillment_orders()

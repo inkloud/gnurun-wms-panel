@@ -2,7 +2,15 @@ __all__ = ["DB"]
 
 from datetime import datetime, timedelta
 
-from .types import DBGateway, FulfillmentOrder, UserRow, UserType, Warehouse
+from .types import (
+    DBGateway,
+    FulfillmentGateway,
+    FulfillmentOrder,
+    UserGateway,
+    UserRow,
+    UserType,
+    Warehouse,
+)
 
 USERS: dict[str, dict] = {
     "bacchilu@gmail.com": {
@@ -76,59 +84,48 @@ FULFILLMENT_ORDERS: list[FulfillmentOrder] = [
 ]
 
 
-class DB(DBGateway):
+def _to_user_row(username: str, user_data: dict) -> UserRow:
+    return UserRow(
+        username=username,
+        name=user_data["name"],
+        pwd=user_data["pwd"],
+        type=UserType(user_data["type"]),
+        warehouse=Warehouse(
+            id=user_data["warehouse"]["id"],
+            name=user_data["warehouse"]["name"],
+        ),
+    )
+
+
+class _UserGateway(UserGateway):
     @staticmethod
     def get_user(username: str) -> UserRow | None:
         user_data = USERS.get(username)
-        return (
-            None
-            if user_data is None
-            else UserRow(
-                username=username,
-                name=user_data["name"],
-                pwd=user_data["pwd"],
-                type=UserType(user_data["type"]),
-                warehouse=Warehouse(
-                    id=user_data["warehouse"]["id"], name=user_data["warehouse"]["name"]
-                ),
-            )
-        )
+        return None if user_data is None else _to_user_row(username, user_data)
 
     @staticmethod
     def get_operators(user_name: str) -> list[UserRow]:
-        manager_user = [
-            UserRow(
-                username=username,
-                name=user_data["name"],
-                pwd=user_data["pwd"],
-                type=UserType(user_data["type"]),
-                warehouse=Warehouse(
-                    id=user_data["warehouse"]["id"], name=user_data["warehouse"]["name"]
-                ),
-            )
-            for username, user_data in USERS.items()
-            if username == user_name
-        ]
-        assert len(manager_user) == 1
-        assert manager_user[0].type == UserType.MANAGER
-        warehouse_id = manager_user[0].warehouse.id
+        manager_user = _UserGateway.get_user(user_name)
+        if manager_user is None:
+            raise KeyError(f"Unknown manager '{user_name}'")
+        assert manager_user.type == UserType.MANAGER
+        warehouse_id = manager_user.warehouse.id
 
         return [
-            UserRow(
-                username=username,
-                name=user_data["name"],
-                pwd=user_data["pwd"],
-                type=UserType(user_data["type"]),
-                warehouse=Warehouse(
-                    id=user_data["warehouse"]["id"],
-                    name=user_data["warehouse"]["name"],
-                ),
-            )
+            _to_user_row(username, user_data)
             for username, user_data in USERS.items()
             if user_data["type"] == "OPERATOR"
             and user_data["warehouse"]["id"] == warehouse_id
         ]
 
+
+class _FulfillmentGateway(FulfillmentGateway):
     @staticmethod
     def get_fulfillment_orders() -> list[FulfillmentOrder]:
         return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
+
+
+class DB(DBGateway):
+    def __init__(self) -> None:
+        self.user: UserGateway = _UserGateway()
+        self.fulfillment: FulfillmentGateway = _FulfillmentGateway()
