@@ -3,6 +3,8 @@ import {useAuth, useFulfillmentOrders} from '../hooks';
 import {Page} from '../ui/page';
 import {formatOrderDate} from '../util';
 
+type FulfillmentActions = ReturnType<typeof useFulfillmentOrders>['actions'];
+
 const ErrorMessage: React.FC<{msg: string}> = function ({msg}) {
     return (
         <div className="alert alert-danger" role="alert">
@@ -23,12 +25,18 @@ const UserBadge: React.FC<{username: string}> = function ({username}) {
     );
 };
 
-const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
+const FulfillmentCard: React.FC<{item: FulfillmentOrder; actions: FulfillmentActions}> = function ({item, actions}) {
     const {data: authData} = useAuth();
 
     const currentLogged = authData!.auth_user.username;
     const assigned_to = item.assigned_to.map((username) => <UserBadge key={username} username={username} />);
     const isAssignedToMe = item.assigned_to.includes(currentLogged);
+
+    const handleAssign = function () {
+        if (isAssignedToMe) actions.unassign(item.id);
+        else actions.assign(item.id);
+    };
+
     return (
         <div className="col" key={item.id}>
             <div className="card h-100">
@@ -41,7 +49,11 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
                     <div className="mb-3">
                         <div className="d-flex flex-wrap gap-2 mt-1">{assigned_to}</div>
                     </div>
-                    <button className={`btn mt-auto ${isAssignedToMe ? 'btn-danger' : 'btn-primary'}`} type="button">
+                    <button
+                        className={`btn mt-auto ${isAssignedToMe ? 'btn-danger' : 'btn-primary'}`}
+                        type="button"
+                        onClick={handleAssign}
+                    >
                         {isAssignedToMe ? 'Unassign me' : 'Assign me'}
                     </button>
                 </div>
@@ -50,16 +62,16 @@ const FulfillmentCard: React.FC<{item: FulfillmentOrder}> = function ({item}) {
     );
 };
 
-const OrderCards: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
+const OrderCards: React.FC<{items: FulfillmentOrder[]; actions: FulfillmentActions}> = function ({items, actions}) {
     if (items.length === 0)
         return <div className="text-muted text-center py-5">No fulfillment orders are waiting for assignment.</div>;
 
-    const cards = items.map((item) => <FulfillmentCard key={item.id} item={item} />);
+    const cards = items.map((item) => <FulfillmentCard key={item.id} item={item} actions={actions} />);
     return <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">{cards}</div>;
 };
 
-const AuthedPicker: React.FC<{token: string}> = function ({token}) {
-    const {data: fulfillmentOrders, error} = useFulfillmentOrders(token);
+const AuthedPicker = function () {
+    const {data: fulfillmentOrders, error, actions} = useFulfillmentOrders();
 
     const isPending = fulfillmentOrders === undefined;
     const isError = error !== undefined;
@@ -71,7 +83,7 @@ const AuthedPicker: React.FC<{token: string}> = function ({token}) {
             </header>
             {isError && <ErrorMessage msg="Unable to load fulfillment orders. Please refresh and try again." />}
             {!isError && isPending && <div className="text-muted text-center py-5">Loading fulfillment orders…</div>}
-            {!isError && !isPending && <OrderCards items={fulfillmentOrders} />}
+            {!isError && !isPending && <OrderCards items={fulfillmentOrders} actions={actions} />}
         </Page>
     );
 };
@@ -80,7 +92,7 @@ const Picker = function () {
     const {data: authData} = useAuth();
 
     if (authData === undefined) return null;
-    return <AuthedPicker token={authData!.access_token} />;
+    return <AuthedPicker />;
 };
 
 export default Picker;
