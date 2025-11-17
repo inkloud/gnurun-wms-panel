@@ -6,7 +6,7 @@ import {HashRouter, Route, Routes} from 'react-router';
 import App from './app.tsx';
 import './index.css';
 import NotFound from './pages/notFound.tsx';
-import Picker from './pages/picker.tsx';
+import Picker from './pages/picker';
 
 const Root = function () {
     return (
