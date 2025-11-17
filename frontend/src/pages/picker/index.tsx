@@ -35,7 +35,7 @@ const DoWorkButton: React.FC<{items: FulfillmentOrder[] | undefined; disabled: b
     const isDisabled = disabled || mineItems === undefined || mineItems.length === 0;
     const classes = `btn btn-primary w-100 py-2${isDisabled ? ' disabled' : ''}`;
     return (
-        <a className={classes} href="/#/picker/work" role="button" aria-disabled={isDisabled}>
+        <a className={classes} href="#/picker/work" role="button" aria-disabled={isDisabled}>
             Work
         </a>
     );
