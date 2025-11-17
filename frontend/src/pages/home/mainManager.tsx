@@ -4,6 +4,7 @@ import React from 'react';
 import {useAuth, useWHOperators} from '../../hooks';
 import type {AuthResponse} from '../../hooks/auth';
 import type {OperatorCandidate} from '../../hooks/use-wh-operators';
+import {Header} from '../../ui/header';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
@@ -48,13 +49,11 @@ export const MainManager: React.FC<{authData: AuthResponse}> = function ({authDa
 
     return (
         <>
-            <header className="mb-4">
-                <h1 className="h2 mb-1 text-dark">Welcome back, {authData.auth_user.name.split(' ')[0]}!</h1>
-                <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
-                <p className="text-muted mb-0">
-                    Choose an operator below to authenticate with and step into their workspace.
-                </p>
-            </header>
+            <Header
+                title={`Welcome back, ${authData.auth_user.name.split(' ')[0]}!`}
+                subtitle="Choose an operator below to authenticate with and step into their workspace."
+            />
+            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
 
             {error !== undefined && (
                 <div className="alert alert-danger" role="alert">

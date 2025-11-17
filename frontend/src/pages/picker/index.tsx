@@ -2,6 +2,7 @@ import React from 'react';
 
 import type {FulfillmentOrder} from '../../entities/fulfillment-order';
 import {useAuth, useFulfillmentOrders} from '../../hooks';
+import {Header} from '../../ui/header';
 import {Page} from '../../ui/page';
 import {OrderCards} from './orders';
 
@@ -52,10 +53,7 @@ const AuthedPicker = function () {
     return (
         <Page>
             <div className="pb-5 mb-5">
-                <header className="mb-4">
-                    <h1 className="h2 mb-1 text-dark">Picker</h1>
-                    <p className="text-muted mb-0">Assign fulfillment orders to yourself before you start picking.</p>
-                </header>
+                <Header title="Picker" subtitle="Assign fulfillment orders to yourself before you start picking." />
                 {isError && <ErrorMessage msg="Unable to load fulfillment orders. Please refresh and try again." />}
                 {!isError && isPending && (
                     <div className="text-muted text-center py-5">Loading fulfillment orders…</div>

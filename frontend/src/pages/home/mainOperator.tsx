@@ -2,6 +2,7 @@ import React from 'react';
 
 import type {Operation} from '../../entities/operation';
 import type {AuthResponse} from '../../hooks/auth';
+import {Header} from '../../ui/header';
 import {OperationCard} from '../../ui/operationCard';
 
 const operations: Operation[] = [
@@ -25,11 +26,11 @@ const operations: Operation[] = [
 export const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
     return (
         <>
-            <header className="mb-4">
-                <h1 className="h2 mb-1 text-dark">Welcome back, {authData.auth_user.name.split(' ')[0]}!</h1>
-                <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
-                <p className="text-muted mb-0">Choose an operation below to manage your workspace.</p>
-            </header>
+            <Header
+                title={`Welcome back, ${authData.auth_user.name.split(' ')[0]}!`}
+                subtitle="Choose an operation below to manage your workspace."
+            />
+            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
 
             <div className="row g-4">
                 {operations.map((operation) => (
