@@ -45,7 +45,7 @@ export const FulfillmentCard: React.FC<{item: FulfillmentOrder; actions: Fulfill
                         <div className="d-flex flex-wrap gap-2 mt-1">{assigned_to}</div>
                     </div>
                     <button
-                        className={`btn mt-auto ${isAssignedToMe ? 'btn-danger' : 'btn-primary'}`}
+                        className={`btn mt-auto ${isAssignedToMe ? 'btn-outline-danger' : 'btn-outline-primary'}`}
                         type="button"
                         onClick={handleAssign}
                     >

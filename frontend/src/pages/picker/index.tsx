@@ -40,7 +40,6 @@ const AuthedPicker = function () {
             </div>
             <nav className="navbar navbar-light bg-white border-top shadow-sm fixed-bottom" aria-label="Work toolbar">
                 <div className="container py-2">
-                    <span className="fw-semibold text-muted d-block mb-2">Ready to start picking?</span>
                     <button type="button" className="btn btn-primary w-100 py-2">
                         Work
                     </button>
