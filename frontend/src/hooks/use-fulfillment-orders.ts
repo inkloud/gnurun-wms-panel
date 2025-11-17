@@ -51,10 +51,9 @@ export const useFulfillmentOrders = function (): {
 } {
     const {data: authData} = useAuth();
 
-    const currentLogged = authData!.auth_user.username;
-    const token = authData!.access_token;
-
     const fetcher = async function (url: string): Promise<FulfillmentOrder[]> {
+        const token = authData!.access_token;
+
         const response = await axios.get<FulfillmentOrderApi[]>(url, {
             headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
         });
@@ -66,6 +65,9 @@ export const useFulfillmentOrders = function (): {
     });
 
     const _doAssign = function (id: string, mode: AssignmentMode) {
+        const currentLogged = authData!.auth_user.username;
+        const token = authData!.access_token;
+
         const updateFn = async function () {
             const res = await doAssign(id, token, mode);
             return data!.map((item) => (item.id !== id ? item : res));

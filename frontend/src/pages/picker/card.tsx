@@ -11,9 +11,10 @@ const UserBadge: React.FC<{username: string}> = function ({username}) {
 
     const currentLogged = authData!.auth_user.username;
     const badgeClass = username === currentLogged ? 'badge bg-success' : 'badge bg-secondary';
+    const label = username === currentLogged ? 'ME' : username;
     return (
         <span key={username} className={badgeClass}>
-            {username}
+            {label}
         </span>
     );
 };
