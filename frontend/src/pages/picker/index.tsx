@@ -32,15 +32,12 @@ const DoWorkButton: React.FC<{items: FulfillmentOrder[] | undefined; disabled: b
             ? undefined
             : items.filter((order) => order.assigned_to.includes(authData!.auth_user.username));
 
-    const handleClick = function () {
-        console.log(mineItems);
-    };
-
     const isDisabled = disabled || mineItems === undefined || mineItems.length === 0;
+    const classes = `btn btn-primary w-100 py-2${isDisabled ? ' disabled' : ''}`;
     return (
-        <button type="button" className="btn btn-primary w-100 py-2" disabled={isDisabled} onClick={handleClick}>
+        <a className={classes} href="/#/picker/work" role="button" aria-disabled={isDisabled}>
             Work
-        </button>
+        </a>
     );
 };
 
