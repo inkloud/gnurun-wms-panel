@@ -1,5 +1,6 @@
 import React from 'react';
 
+import type {FulfillmentOrder} from '../../entities/fulfillment-order';
 import {useAuth, useFulfillmentOrders} from '../../hooks';
 import {Page} from '../../ui/page';
 import {OrderCards} from './orders';
@@ -12,12 +13,44 @@ const ErrorMessage: React.FC<{msg: string}> = function ({msg}) {
     );
 };
 
+const BottomNavbar: React.FC<{children: React.ReactNode}> = function ({children}) {
+    return (
+        <nav className="navbar navbar-light bg-white border-top shadow-sm fixed-bottom" aria-label="Work toolbar">
+            <div className="container py-2">{children}</div>
+        </nav>
+    );
+};
+
+const DoWorkButton: React.FC<{items: FulfillmentOrder[] | undefined; disabled: boolean}> = function ({
+    items,
+    disabled
+}) {
+    const {data: authData} = useAuth();
+
+    const mineItems =
+        items === undefined || authData === undefined
+            ? undefined
+            : items.filter((order) => order.assigned_to.includes(authData!.auth_user.username));
+
+    const handleClick = function () {
+        console.log(mineItems);
+    };
+
+    const isDisabled = disabled || mineItems === undefined || mineItems.length === 0;
+    return (
+        <button type="button" className="btn btn-primary w-100 py-2" disabled={isDisabled} onClick={handleClick}>
+            Work
+        </button>
+    );
+};
+
 const AuthedPicker = function () {
     const {data: authData} = useAuth();
     const {data: fulfillmentOrders, error, actions} = useFulfillmentOrders();
 
-    const isPending = fulfillmentOrders === undefined;
+    const isPending = fulfillmentOrders === undefined || authData === undefined;
     const isError = error !== undefined;
+    const isReady = !isError && !isPending;
 
     return (
         <Page>
@@ -30,7 +63,7 @@ const AuthedPicker = function () {
                 {!isError && isPending && (
                     <div className="text-muted text-center py-5">Loading fulfillment orders…</div>
                 )}
-                {!isError && !isPending && authData !== undefined && (
+                {isReady && (
                     <OrderCards
                         items={fulfillmentOrders}
                         actions={actions}
@@ -38,13 +71,9 @@ const AuthedPicker = function () {
                     />
                 )}
             </div>
-            <nav className="navbar navbar-light bg-white border-top shadow-sm fixed-bottom" aria-label="Work toolbar">
-                <div className="container py-2">
-                    <button type="button" className="btn btn-primary w-100 py-2">
-                        Work
-                    </button>
-                </div>
-            </nav>
+            <BottomNavbar>
+                <DoWorkButton items={fulfillmentOrders} disabled={!isReady} />
+            </BottomNavbar>
         </Page>
     );
 };
