@@ -1,11 +1,17 @@
 import React from 'react';
-import {Link} from 'react-router';
+import {Link, useNavigate} from 'react-router';
 
 import {useAuth} from '../hooks';
 import {LoginPanel} from './loginPanel';
 
 const Navbar = function () {
+    const navigate = useNavigate();
     const {data: user, handleLogout} = useAuth();
+
+    const doHandleLogout = function () {
+        navigate('/');
+        handleLogout();
+    };
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
@@ -24,7 +30,7 @@ const Navbar = function () {
                                 </div>
                                 <div className="opacity-75">{user.auth_user.username}</div>
                             </div>
-                            <button type="button" className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+                            <button type="button" className="btn btn-outline-light btn-sm" onClick={doHandleLogout}>
                                 Logout
                             </button>
                         </div>

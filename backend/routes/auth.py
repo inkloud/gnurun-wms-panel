@@ -5,7 +5,8 @@ from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
 from ..data_gateway import mock_db
-from ..services.auth import AuthService, AuthUserType
+from ..services.auth import AuthService
+from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.users import UsersService
 from ..utils import get_token_from_header
 
@@ -20,7 +21,7 @@ class AuthRequest(BaseModel):
     password: str
 
 
-def login(payload: AuthRequest):
+def login(payload: AuthRequest) -> AuthPayload:
     if (
         data := auth_service.check_credentials(payload.username, payload.password)
     ) is not None:
@@ -31,14 +32,14 @@ def login(payload: AuthRequest):
 
 
 @router.post("")
-async def authenticate(payload: AuthRequest):
+async def authenticate(payload: AuthRequest) -> AuthPayload:
     return login(payload)
 
 
 @router.get("")
 async def verify_authentication(
     auth_header: str = Header(..., alias="Authorization"),
-):
+) -> AuthPayload:
     token = get_token_from_header(auth_header)
     if token is None:
         raise HTTPException(
@@ -54,7 +55,9 @@ async def verify_authentication(
 
 
 @router.get("/as/{username}")
-async def auth_as(username: str, auth_header: str = Header(..., alias="Authorization")):
+async def auth_as(
+    username: str, auth_header: str = Header(..., alias="Authorization")
+) -> AuthPayload:
     token = get_token_from_header(auth_header)
     if token is None:
         raise HTTPException(
