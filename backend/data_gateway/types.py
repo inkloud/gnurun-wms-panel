@@ -1,6 +1,6 @@
 __all__ = [
     "UserRow",
-    "FulfillmentOrder",
+    "FulfillmentOrderRow",
     "Warehouse",
     "UserType",
     "UserGateway",
@@ -26,7 +26,7 @@ class Warehouse:
 
 
 @dataclass(frozen=True)
-class FulfillmentOrder:
+class FulfillmentOrderRow:
     id: str
     date: datetime
     assigned_to: list[str] = field(default_factory=list)
@@ -51,13 +51,13 @@ class UserGateway(Protocol):
 
 class FulfillmentGateway(Protocol):
     @staticmethod
-    def get_fulfillment_orders() -> list[FulfillmentOrder]: ...
+    def get_fulfillment_orders() -> list[FulfillmentOrderRow]: ...
 
     @staticmethod
-    def assign(id: str, operator: str) -> FulfillmentOrder: ...
+    def assign(id: str, operator: str) -> FulfillmentOrderRow: ...
 
     @staticmethod
-    def unassign(id: str, operator: str) -> FulfillmentOrder: ...
+    def unassign(id: str, operator: str) -> FulfillmentOrderRow: ...
 
 
 class DBGateway(Protocol):

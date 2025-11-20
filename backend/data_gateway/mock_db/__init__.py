@@ -3,7 +3,7 @@ __all__ = ["DB"]
 from ..types import (
     DBGateway,
     FulfillmentGateway,
-    FulfillmentOrder,
+    FulfillmentOrderRow,
     UserGateway,
     UserRow,
     UserType,
@@ -50,23 +50,23 @@ class _UserGateway(UserGateway):
 
 class _FulfillmentGateway(FulfillmentGateway):
     @staticmethod
-    def get_fulfillment_orders() -> list[FulfillmentOrder]:
+    def get_fulfillment_orders() -> list[FulfillmentOrderRow]:
         return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
 
     @staticmethod
-    def assign(id: str, operator: str) -> FulfillmentOrder:
-        res: list[FulfillmentOrder] = [f for f in FULFILLMENT_ORDERS if f.id == id]
+    def assign(id: str, operator: str) -> FulfillmentOrderRow:
+        res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
-        data: FulfillmentOrder = res[0]
+        data: FulfillmentOrderRow = res[0]
         if operator not in data.assigned_to:
             data.assigned_to.append(operator)
         return data
 
     @staticmethod
-    def unassign(id: str, operator: str) -> FulfillmentOrder:
-        res: list[FulfillmentOrder] = [f for f in FULFILLMENT_ORDERS if f.id == id]
+    def unassign(id: str, operator: str) -> FulfillmentOrderRow:
+        res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
-        data: FulfillmentOrder = res[0]
+        data: FulfillmentOrderRow = res[0]
         try:
             data.assigned_to.remove(operator)
         except ValueError:

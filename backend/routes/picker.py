@@ -3,9 +3,10 @@ __all__ = ["router"]
 from fastapi import APIRouter, Header, HTTPException, status
 
 from ..data_gateway import mock_db
-from ..data_gateway.types import FulfillmentOrder
-from ..services.auth import AuthPayload, AuthService, AuthUserType
+from ..services.auth import AuthService
+from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.picker import PickerService
+from ..services.picker.types import FulfillmentOrder
 from ..utils import get_token_from_header
 
 router = APIRouter(prefix="/picker", tags=["picker"])
@@ -16,14 +17,14 @@ picker_service = PickerService(mock_db.DB())
 
 
 def _authorize_operator(auth_header: str):
-    token = get_token_from_header(auth_header)
+    token: str | None = get_token_from_header(auth_header)
     if token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authorization header must use Bearer scheme",
         )
     try:
-        auth_payload = auth_service.check_token(token)
+        auth_payload: AuthPayload = auth_service.check_token(token)
         assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     except Exception as exc:
         raise HTTPException(

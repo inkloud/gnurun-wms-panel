@@ -3,7 +3,7 @@ __all__ = ["FULFILLMENT_ORDERS"]
 import random
 from datetime import datetime, timedelta
 
-from ..types import FulfillmentOrder
+from ..types import FulfillmentOrderRow
 from .users import USERS
 
 _OPERATOR_USERNAMES = [
@@ -24,14 +24,14 @@ def _random_assigned_users() -> list[str]:
     return random.sample(_OPERATOR_USERNAMES, k=count)
 
 
-def _generate_fulfillment_orders() -> list[FulfillmentOrder]:
+def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
     now = datetime.now()
     total = random.randint(0, 10)
     base_id = 1001
-    orders: list[FulfillmentOrder] = []
+    orders: list[FulfillmentOrderRow] = []
     for i in range(total):
         orders.append(
-            FulfillmentOrder(
+            FulfillmentOrderRow(
                 id=f"FO-{base_id + i:04d}",
                 date=_random_date_within_last_week(now),
                 assigned_to=_random_assigned_users(),
@@ -40,4 +40,4 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrder]:
     return orders
 
 
-FULFILLMENT_ORDERS: list[FulfillmentOrder] = _generate_fulfillment_orders()
+FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
