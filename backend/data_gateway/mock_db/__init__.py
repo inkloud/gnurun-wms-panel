@@ -34,11 +34,11 @@ class _UserGateway(UserGateway):
 
     @staticmethod
     def get_operators(user_name: str) -> list[UserRow]:
-        manager_user = _UserGateway.get_user(user_name)
+        manager_user: UserRow | None = _UserGateway.get_user(user_name)
         if manager_user is None:
             raise KeyError(f"Unknown manager '{user_name}'")
         assert manager_user.type == UserType.MANAGER
-        warehouse_id = manager_user.warehouse.id
+        warehouse_id: int = manager_user.warehouse.id
 
         return [
             _to_user_row(username, user_data)
