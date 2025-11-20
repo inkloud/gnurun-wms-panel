@@ -1,4 +1,4 @@
-__all__ = ["PickerService"]
+__all__ = ["FulfillmentOrderService"]
 
 from ...data_gateway.types import DBGateway, FulfillmentOrderRow
 from .types import FulfillmentOrder
@@ -10,7 +10,7 @@ def _to_fulfillment_order(order: FulfillmentOrderRow) -> FulfillmentOrder:
     )
 
 
-class PickerService:
+class FulfillmentOrderService:
     def __init__(self, data_mapper: DBGateway):
         self.data_mapper = data_mapper
 

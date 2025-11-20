@@ -5,15 +5,15 @@ from fastapi import APIRouter, Header, HTTPException, status
 from ..data_gateway import mock_db
 from ..services.auth import AuthService
 from ..services.auth.types import AuthPayload, AuthUserType
-from ..services.picker import PickerService
-from ..services.picker.types import FulfillmentOrder
+from ..services.fulfillment_order import FulfillmentOrderService
+from ..services.fulfillment_order.types import FulfillmentOrder
 from ..utils import get_token_from_header
 
 router = APIRouter(prefix="/picker", tags=["picker"])
 
 
 auth_service = AuthService(mock_db.DB())
-picker_service = PickerService(mock_db.DB())
+fulfillment_order_service = FulfillmentOrderService(mock_db.DB())
 
 
 def _authorize_operator(auth_header: str):
@@ -46,7 +46,7 @@ async def list_fulfillment_orders(
     auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrder]:
     _authorize_operator(auth_header)
-    return picker_service.get_fulfillment_orders()
+    return fulfillment_order_service.get_fulfillment_orders()
 
 
 @router.put("/assign/{fulfillment_order_id}")
@@ -56,7 +56,9 @@ async def assign_fulfillment_order(
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return picker_service.assign_fulfillment_orders(fulfillment_order_id, operator)
+    return fulfillment_order_service.assign_fulfillment_orders(
+        fulfillment_order_id, operator
+    )
 
 
 @router.put("/unassign/{fulfillment_order_id}")
@@ -66,4 +68,6 @@ async def unassign_fulfillment_order(
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return picker_service.unassign_fulfillment_orders(fulfillment_order_id, operator)
+    return fulfillment_order_service.unassign_fulfillment_orders(
+        fulfillment_order_id, operator
+    )
