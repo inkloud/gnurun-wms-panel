@@ -6,6 +6,9 @@ export type OperatorCandidate = {
     username: string;
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+const USERS_ENDPOINT = `${API_BASE_URL}/users`;
+
 type UsersApiRow = {
     username: string;
     name: string;
@@ -15,9 +18,6 @@ type UsersApiRow = {
         name: string;
     };
 };
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
-const USERS_ENDPOINT = `${API_BASE_URL}/users`;
 
 export const useWHOperators = function (token: string): {
     data: OperatorCandidate[] | undefined;
