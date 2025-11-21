@@ -1,5 +1,6 @@
 import axios, {AxiosError} from 'axios';
 import useSWR from 'swr';
+import {z} from 'zod';
 
 export type OperatorCandidate = {
     name: string;
@@ -9,27 +10,36 @@ export type OperatorCandidate = {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const USERS_ENDPOINT = `${API_BASE_URL}/users`;
 
-type UsersApiRow = {
-    username: string;
-    name: string;
-    type: string;
-    warehouse: {
-        id: number;
-        name: string;
-    };
-};
+const UsersApiSchema = z.object({
+    username: z.string(),
+    name: z.string(),
+    type: z.literal('OPERATOR'),
+    warehouse: z.object({
+        id: z.number(),
+        name: z.string()
+    })
+});
+type UsersApiSchemaInput = z.input<typeof UsersApiSchema>;
+type UsersApiSchemaOutput = z.infer<typeof UsersApiSchema>;
+
+// const toOperatorCandidateList = function (data: UsersApiSchemaInput[]): OperatorCandidate[] {
+//     const res: UsersApiSchemaOutput[] = UsersApiSchema.array().parse(data);
+//     return res.map((user) => ({name: user.name, username: user.username}));
+// };
 
 export const useWHOperators = function (token: string): {
     data: OperatorCandidate[] | undefined;
     error: AxiosError | undefined;
 } {
-    const fetcher = async (url: string): Promise<UsersApiRow[]> => {
-        const response = await axios.get<UsersApiRow[]>(url, {
+    const fetcher = async (url: string): Promise<UsersApiSchemaOutput[]> => {
+        const response = await axios.get<UsersApiSchemaInput[]>(url, {
             headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
         });
-        return response.data;
+        return UsersApiSchema.array().parse(response.data);
     };
-    const {data, error} = useSWR<UsersApiRow[], AxiosError>(USERS_ENDPOINT, fetcher, {dedupingInterval: 60000});
+    const {data, error} = useSWR<UsersApiSchemaOutput[], AxiosError>(USERS_ENDPOINT, fetcher, {
+        dedupingInterval: 60000
+    });
 
     if (data === undefined) return {data, error};
     return {data: data.map((user) => ({name: user.name, username: user.username})), error};
