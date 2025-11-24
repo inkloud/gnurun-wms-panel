@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useAuth} from '../hooks';
+import {useAuth} from '../hooks/auth';
 
 export const LoginPanel = function () {
     const {handleLogin, errorMessage} = useAuth();

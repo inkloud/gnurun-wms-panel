@@ -1,5 +1,6 @@
-import type {FulfillmentOrder} from '../entities/fulfillment-order';
-import {useAuth, useFulfillmentOrders} from '../hooks';
+import {useAuth} from '../hooks/auth';
+import type {FulfillmentOrder} from '../hooks/fulfillment-orders';
+import {useFulfillmentOrders} from '../hooks/fulfillment-orders';
 import {Header} from '../ui/header';
 import {Page} from '../ui/page';
 

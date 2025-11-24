@@ -1,29 +1,13 @@
 import React from 'react';
 
-import type {Operation} from '../../entities/operation';
 import type {AuthResponse} from '../../hooks/auth';
+import {useOperations} from '../../hooks/operations';
 import {Header} from '../../ui/header';
-import {OperationCard} from '../../ui/operationCard';
-
-const operations: Operation[] = [
-    {
-        name: 'Picker',
-        description: 'Select and coordinate resources for upcoming deployments.',
-        id: 'picker'
-    },
-    {
-        name: 'Dummy Template',
-        description: 'Spin up a sandbox template to prototype new workflows quickly.',
-        id: 'dummy-template'
-    },
-    {
-        name: 'Reports',
-        description: 'Review usage trends and export insights for stakeholders.',
-        id: 'reports'
-    }
-];
+import {OperationCard} from '../../ui/operation-card';
 
 export const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
+    const operations = useOperations();
+
     return (
         <>
             <Header

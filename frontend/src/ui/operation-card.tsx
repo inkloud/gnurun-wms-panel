@@ -1,6 +1,6 @@
 import {Link} from 'react-router';
 
-import type {Operation} from '../entities/operation';
+import type {Operation} from '../hooks/operations';
 
 export const OperationCard: React.FC<{operation: Operation}> = function ({operation}) {
     return (

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import type {FulfillmentOrder} from '../../entities/fulfillment-order';
-import {useFulfillmentOrders} from '../../hooks';
+import type {FulfillmentOrder} from '../../hooks/fulfillment-orders';
+import {useFulfillmentOrders} from '../../hooks/fulfillment-orders';
 import {FulfillmentCard} from './card';
 
 type FulfillmentActions = ReturnType<typeof useFulfillmentOrders>['actions'];

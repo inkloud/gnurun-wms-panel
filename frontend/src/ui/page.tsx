@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link, useNavigate} from 'react-router';
 
-import {useAuth} from '../hooks';
-import {LoginPanel} from './loginPanel';
+import {useAuth} from '../hooks/auth';
+import {LoginPanel} from './login-panel';
 
 const Navbar = function () {
     const navigate = useNavigate();
