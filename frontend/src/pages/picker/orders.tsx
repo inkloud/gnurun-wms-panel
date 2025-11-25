@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {FulfillmentOrder} from '../../hooks/fulfillment-orders';
+import type {FulfillmentOrder} from '../../hooks/fulfillment-orders/types';
 import {useFulfillmentOrders} from '../../hooks/fulfillment-orders';
 import {FulfillmentCard} from './card';
 

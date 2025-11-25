@@ -2,14 +2,13 @@ import axios, {AxiosError} from 'axios';
 import useSWR from 'swr';
 import {z} from 'zod';
 
-import {useAuth} from './auth';
+import {useAuth} from '../auth';
+import type {FulfillmentOrder} from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
 const ASSIGN_ENDPOINT = `${API_BASE_URL}/picker/assign`;
 const UNASSIGN_ENDPOINT = `${API_BASE_URL}/picker/unassign`;
-
-export type FulfillmentOrder = {id: string; date: Date; assigned_to: string[]};
 
 const FulfillmentOrderApiSchema = z.object({
     id: z.string(),

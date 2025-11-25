@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {useAuth} from '../../hooks/auth';
-import type {FulfillmentOrder} from '../../hooks/fulfillment-orders';
+import type {FulfillmentOrder} from '../../hooks/fulfillment-orders/types';
 import {useFulfillmentOrders} from '../../hooks/fulfillment-orders';
 import {Header} from '../../ui/header';
 import {Page} from '../../ui/page';
