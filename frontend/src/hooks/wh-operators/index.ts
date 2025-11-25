@@ -1,7 +1,7 @@
 import {AxiosError} from 'axios';
 import useSWR from 'swr';
 
-import {getOperators} from './api';
+import {getOperators} from '../../api/wh-operators';
 import type {OperatorUser} from './types';
 
 export const useWHOperators = function (token: string): {

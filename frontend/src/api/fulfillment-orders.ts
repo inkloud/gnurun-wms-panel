@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {z} from 'zod';
 
-import type {FulfillmentOrder} from './types';
+import type {FulfillmentOrder} from '../hooks/fulfillment-orders/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;

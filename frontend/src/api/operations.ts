@@ -1,4 +1,4 @@
-import type {Operation} from './types';
+import type {Operation} from '../hooks/operations/types';
 
 const operations: Operation[] = [
     {

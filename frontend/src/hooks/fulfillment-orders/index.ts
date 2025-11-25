@@ -1,8 +1,8 @@
 import {AxiosError} from 'axios';
 import useSWR from 'swr';
 
+import {AssignmentMode, doAssign, getFulfillmentOrders} from '../../api/fulfillment-orders';
 import {useAuth} from '../auth';
-import {AssignmentMode, doAssign, getFulfillmentOrders} from './api';
 import type {FulfillmentOrder} from './types';
 
 const updateAssignments = function (

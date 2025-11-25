@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {z} from 'zod';
 
-import type {OperatorUser} from './types';
+import type {OperatorUser} from '../hooks/wh-operators/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const USERS_ENDPOINT = `${API_BASE_URL}/users`;

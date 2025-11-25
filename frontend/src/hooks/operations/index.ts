@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-import {getOperations} from './api';
+import {getOperations} from '../../api/operations';
 import type {Operation} from './types';
 
 export const useOperations = function (): Operation[] | undefined {
