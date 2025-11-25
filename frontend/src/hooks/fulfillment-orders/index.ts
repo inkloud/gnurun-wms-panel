@@ -1,32 +1,9 @@
-import axios, {AxiosError} from 'axios';
+import {AxiosError} from 'axios';
 import useSWR from 'swr';
-import {z} from 'zod';
 
 import {useAuth} from '../auth';
+import {AssignmentMode, doAssign, getFulfillmentOrders} from './api';
 import type {FulfillmentOrder} from './types';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
-const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
-const ASSIGN_ENDPOINT = `${API_BASE_URL}/picker/assign`;
-const UNASSIGN_ENDPOINT = `${API_BASE_URL}/picker/unassign`;
-
-const FulfillmentOrderApiSchema = z.object({
-    id: z.string(),
-    date: z.preprocess((value: string) => new Date(value), z.date()),
-    assigned_to: z.array(z.string())
-});
-type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
-type FulfillmentOrderApiOutput = z.infer<typeof FulfillmentOrderApiSchema>;
-
-enum AssignmentMode {
-    ASSIGN = 'ASSIGN',
-    UNASSIGN = 'UNASSIGN'
-}
-
-const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {
-    const e: FulfillmentOrderApiOutput = FulfillmentOrderApiSchema.parse(order);
-    return {id: e.id, date: new Date(e.date), assigned_to: [...e.assigned_to]};
-};
 
 const updateAssignments = function (
     orders: FulfillmentOrder[] | undefined,
@@ -44,33 +21,22 @@ const updateAssignments = function (
     });
 };
 
-const doAssign = async function (id: string, token: string, mode: AssignmentMode): Promise<FulfillmentOrder> {
-    const END_POINT = mode === AssignmentMode.ASSIGN ? ASSIGN_ENDPOINT : UNASSIGN_ENDPOINT;
-    const response = await axios.put<FulfillmentOrderApiInput>(`${END_POINT}/${id}`, undefined, {
-        headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
-    });
-    return toFulfillmentOrder(response.data);
-};
-
 export const useFulfillmentOrders = function (): {
     data: FulfillmentOrder[] | undefined;
     error: AxiosError | undefined;
     actions: {assign: (id: string) => Promise<void>; unassign: (id: string) => Promise<void>};
 } {
     const {data: authData} = useAuth();
+    const token = authData!.access_token;
 
-    const fetcher = async function (url: string): Promise<FulfillmentOrder[]> {
-        const token = authData!.access_token;
-
-        const response = await axios.get<FulfillmentOrderApiInput[]>(url, {
-            headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
-        });
-        return response.data.map(toFulfillmentOrder);
+    const fetcher = async function ([_, token]: ['FULFILLMENT_ORDERS_ENDPOINT', string]): Promise<FulfillmentOrder[]> {
+        return getFulfillmentOrders(token);
     };
-
-    const {data, error, mutate} = useSWR<FulfillmentOrder[], AxiosError>(FULFILLMENT_ORDERS_ENDPOINT, fetcher, {
-        dedupingInterval: 60000
-    });
+    const {data, error, mutate} = useSWR<FulfillmentOrder[], AxiosError>(
+        ['FULFILLMENT_ORDERS_ENDPOINT', token],
+        fetcher,
+        {dedupingInterval: 60000}
+    );
 
     const _doAssign = function (id: string, mode: AssignmentMode) {
         const currentLogged = authData!.auth_user.username;

@@ -8,6 +8,7 @@ import {OperationCard} from '../../ui/operation-card';
 export const MainOperator: React.FC<{authData: AuthResponse}> = function ({authData}) {
     const operations = useOperations();
 
+    if (operations === undefined) return null;
     return (
         <>
             <Header

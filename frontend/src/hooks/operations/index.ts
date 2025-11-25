@@ -1,23 +1,13 @@
+import useSWR from 'swr';
+
+import {getOperations} from './api';
 import type {Operation} from './types';
 
-const operations: Operation[] = [
-    {
-        name: 'Picker',
-        description: 'Select and coordinate resources for upcoming deployments.',
-        id: 'picker'
-    },
-    {
-        name: 'Dummy Template',
-        description: 'Spin up a sandbox template to prototype new workflows quickly.',
-        id: 'dummy-template'
-    },
-    {
-        name: 'Reports',
-        description: 'Review usage trends and export insights for stakeholders.',
-        id: 'reports'
-    }
-];
+export const useOperations = function (): Operation[] | undefined {
+    const fetcher = async function (_: 'OPERATIONS'): Promise<Operation[]> {
+        return getOperations();
+    };
+    const {data} = useSWR<Operation[]>('OPERATIONS', fetcher, {dedupingInterval: 60000});
 
-export const useOperations = function (): Operation[] {
-    return operations;
+    return data;
 };
