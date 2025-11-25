@@ -2,10 +2,7 @@ import axios, {AxiosError} from 'axios';
 import useSWR from 'swr';
 import {z} from 'zod';
 
-export type OperatorCandidate = {
-    name: string;
-    username: string;
-};
+import type {OperatorUser} from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 const USERS_ENDPOINT = `${API_BASE_URL}/users`;
@@ -22,22 +19,22 @@ const UsersApiSchema = z.object({
 type UsersApiSchemaInput = z.input<typeof UsersApiSchema>;
 type UsersApiSchemaOutput = z.infer<typeof UsersApiSchema>;
 
-const toOperatorCandidate = function (data: UsersApiSchemaInput): OperatorCandidate {
+const toOperatorUser = function (data: UsersApiSchemaInput): OperatorUser {
     const res: UsersApiSchemaOutput = UsersApiSchema.parse(data);
     return {name: res.name, username: res.username};
 };
 
 export const useWHOperators = function (token: string): {
-    data: OperatorCandidate[] | undefined;
+    data: OperatorUser[] | undefined;
     error: AxiosError | undefined;
 } {
-    const fetcher = async (url: string): Promise<OperatorCandidate[]> => {
+    const fetcher = async (url: string): Promise<OperatorUser[]> => {
         const response = await axios.get<UsersApiSchemaInput[]>(url, {
             headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
         });
-        return response.data.map(toOperatorCandidate);
+        return response.data.map(toOperatorUser);
     };
-    const {data, error} = useSWR<OperatorCandidate[], AxiosError>(USERS_ENDPOINT, fetcher, {
+    const {data, error} = useSWR<OperatorUser[], AxiosError>(USERS_ENDPOINT, fetcher, {
         dedupingInterval: 60000
     });
 

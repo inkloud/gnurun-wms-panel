@@ -3,8 +3,8 @@ import React from 'react';
 
 import type {AuthResponse} from '../../hooks/auth';
 import {useAuth} from '../../hooks/auth';
-import type {OperatorCandidate} from '../../hooks/wh-operators';
 import {useWHOperators} from '../../hooks/wh-operators';
+import type {OperatorUser} from '../../hooks/wh-operators/types';
 import {Header} from '../../ui/header';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
@@ -17,7 +17,7 @@ const authenticateAsOperator = async (username: string, token: string) => {
 };
 
 const OperatorButton: React.FC<{
-    operator: OperatorCandidate;
+    operator: OperatorUser;
     token: string;
     onImpersonate: (authData: AuthResponse) => void;
 }> = function ({operator, token, onImpersonate}) {
