@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {AuthResponse} from '../../hooks/auth';
+import type {AuthResponse} from '../../hooks/auth/types';
 import {useOperations} from '../../hooks/operations';
 import {Header} from '../../ui/header';
 import {OperationCard} from '../../ui/operation-card';

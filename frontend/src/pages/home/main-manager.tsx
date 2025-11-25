@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React from 'react';
 
-import type {AuthResponse} from '../../hooks/auth';
 import {useAuth} from '../../hooks/auth';
+import type {AuthResponse} from '../../hooks/auth/types';
 import {useWHOperators} from '../../hooks/wh-operators';
 import type {OperatorUser} from '../../hooks/wh-operators/types';
 import {Header} from '../../ui/header';

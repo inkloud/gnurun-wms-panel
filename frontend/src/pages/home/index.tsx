@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {useAuth, UserType, type AuthResponse} from '../../hooks/auth';
+import {useAuth} from '../../hooks/auth';
+import {UserType, type AuthResponse} from '../../hooks/auth/types';
 import {Page} from '../../ui/page';
 import {MainManager} from './main-manager';
 import {MainOperator} from './main-operator';
