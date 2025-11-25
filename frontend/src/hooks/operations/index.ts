@@ -1,8 +1,4 @@
-export type Operation = {
-    name: string;
-    description: string;
-    id: string;
-};
+import type {Operation} from './types';
 
 const operations: Operation[] = [
     {
