@@ -1,12 +1,12 @@
 # GnuRun WMS Panel
 
-GnuRun WMS Panel is a React + TypeScript admin interface for warehouse operations built on Vite and Bootstrap. It pairs with a FastAPI backend that lives in the `backend/` directory, while the repository root keeps orchestration files such as `docker-compose.yaml`.
+GnuRun WMS Panel is a React + TypeScript admin interface for warehouse operations built on Vite and Bootstrap. It pairs with a FastAPI backend that lives in the `backend/` directory, while the repository root keeps orchestration files under `dev/docker-compose.yaml`.
 
 ## Project Structure
 
 - `frontend/` – Vite + React source, tooling, and Dockerfile
 - `backend/` – FastAPI service that exposes the WMS API
-- `docker-compose.yaml` – Compose definition for the development services
+- `dev/docker-compose.yaml` – Compose definition for the development services
 
 ## Development
 
@@ -44,7 +44,7 @@ From inside `backend/`:
 From the repository root:
 
 - Export your host IDs so the dev container runs as your user: `export USER_ID=$(id -u)` and `export GROUP_ID=$(id -g)` (or add those values to a `.env` file).
-- With the IDs exported or provided inline, run `docker compose up` to bring up the frontend and, once defined, the FastAPI backend
+- With the IDs exported or provided inline, change into the dev directory and bring up the stack: `cd dev && docker compose up`
 
 ### Starting the Docker Compose Cluster
 
@@ -56,11 +56,13 @@ export GROUP_ID=`id -g`
 ```
 
 ```bash
+cd dev
 docker compose up
 ```
 
 Repeat the same command whenever you need to restart the services:
 
 ```bash
+cd dev
 docker compose up
 ```

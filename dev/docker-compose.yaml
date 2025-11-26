@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile
       args:
         USER_ID: ${USER_ID}
@@ -12,10 +12,10 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     volumes:
-      - ./backend:/app
+      - ../backend:/app
   frontend:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
       args:
         USER_ID: ${USER_ID}
@@ -26,6 +26,6 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend/src:/app/src
+      - ../frontend/src:/app/src
     stdin_open: true
     tty: true
