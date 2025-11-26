@@ -36,6 +36,8 @@ export const FakeAuthProvider: AuthProvider = (function () {
 })();
 
 export const RemoteAuthProvider: AuthProvider = (function () {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+
     const fromRemoteAuthResponse = function (payload: RemoteAuthResponse): AuthResponse {
         return {
             access_token: payload.access_token,
@@ -46,7 +48,7 @@ export const RemoteAuthProvider: AuthProvider = (function () {
     return {
         authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
             try {
-                const response = await axios.post<RemoteAuthResponse>('http://0.0.0.0:8000/auth', credentials);
+                const response = await axios.post<RemoteAuthResponse>(`${API_BASE_URL}/auth`, credentials);
                 return fromRemoteAuthResponse(response.data);
             } catch {
                 return null;
@@ -54,7 +56,7 @@ export const RemoteAuthProvider: AuthProvider = (function () {
         },
         verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {
             try {
-                const response = await axios.get<RemoteAuthResponse>('http://0.0.0.0:8000/auth', {
+                const response = await axios.get<RemoteAuthResponse>(`${API_BASE_URL}/auth`, {
                     headers: {Authorization: `Bearer ${accessToken}`}
                 });
                 return fromRemoteAuthResponse(response.data);
