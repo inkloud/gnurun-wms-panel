@@ -1,6 +1,7 @@
 __all__ = [
     "UserRow",
     "FulfillmentOrderRow",
+    "FulfillmentOrderProductRow",
     "Warehouse",
     "UserType",
     "UserGateway",
@@ -33,6 +34,15 @@ class FulfillmentOrderRow:
 
 
 @dataclass(frozen=True)
+class FulfillmentOrderProductRow:
+    id: int
+    sku: str
+    name: str
+    quantity: int
+    fulfillment_order_id: int
+
+
+@dataclass(frozen=True)
 class UserRow:
     username: str
     name: str
@@ -58,6 +68,9 @@ class FulfillmentGateway(Protocol):
 
     @staticmethod
     def unassign(id: str, operator: str) -> FulfillmentOrderRow: ...
+
+    @staticmethod
+    def get_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]: ...
 
 
 class DBGateway(Protocol):

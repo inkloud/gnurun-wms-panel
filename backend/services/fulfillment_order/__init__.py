@@ -1,7 +1,11 @@
 __all__ = ["FulfillmentOrderService"]
 
-from ...data_gateway.types import DBGateway, FulfillmentOrderRow
-from .types import FulfillmentOrder
+from ...data_gateway.types import (
+    DBGateway,
+    FulfillmentOrderProductRow,
+    FulfillmentOrderRow,
+)
+from .types import FulfillmentOrder, FulfillmentOrderProduct
 
 
 def _to_fulfillment_order(order: FulfillmentOrderRow) -> FulfillmentOrder:
@@ -29,3 +33,18 @@ class FulfillmentOrderService:
             id, operator
         )
         return _to_fulfillment_order(updated)
+
+    def get_products(self, fulfillment_order_id: int) -> list[FulfillmentOrderProduct]:
+        products: list[FulfillmentOrderProductRow] = (
+            self.data_mapper.fulfillment.get_products(fulfillment_order_id)
+        )
+        return [
+            FulfillmentOrderProduct(
+                id=product.id,
+                sku=product.sku,
+                name=product.name,
+                quantity=product.quantity,
+                fulfillment_order_id=product.fulfillment_order_id,
+            )
+            for product in products
+        ]

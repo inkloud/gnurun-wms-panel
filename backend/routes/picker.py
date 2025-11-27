@@ -6,7 +6,7 @@ from ..data_gateway import mock_db
 from ..services.auth import AuthService
 from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.fulfillment_order import FulfillmentOrderService
-from ..services.fulfillment_order.types import FulfillmentOrder
+from ..services.fulfillment_order.types import FulfillmentOrder, FulfillmentOrderProduct
 from ..utils import get_token_from_header
 
 router = APIRouter(prefix="/picker", tags=["picker"])
@@ -47,6 +47,14 @@ async def list_fulfillment_orders(
 ) -> list[FulfillmentOrder]:
     _authorize_operator(auth_header)
     return fulfillment_order_service.get_fulfillment_orders()
+
+
+@router.get("/fulfillment_orders/{fulfillment_order_id}/products")
+async def list_fulfillment_order_products(
+    fulfillment_order_id: int, auth_header: str = Header(..., alias="Authorization")
+) -> list[FulfillmentOrderProduct]:
+    _authorize_operator(auth_header)
+    return fulfillment_order_service.get_products(fulfillment_order_id)
 
 
 @router.put("/assign/{fulfillment_order_id}")

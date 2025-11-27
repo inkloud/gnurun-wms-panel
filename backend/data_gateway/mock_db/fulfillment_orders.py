@@ -1,9 +1,9 @@
-__all__ = ["FULFILLMENT_ORDERS"]
+__all__ = ["FULFILLMENT_ORDERS", "generate_products"]
 
 import random
 from datetime import datetime, timedelta
 
-from ..types import FulfillmentOrderRow
+from ..types import FulfillmentOrderProductRow, FulfillmentOrderRow
 from .users import USERS
 
 _OPERATOR_USERNAMES = [
@@ -41,3 +41,19 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
 
 
 FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
+
+
+def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
+    total = random.randint(1, 25)
+    products: list[FulfillmentOrderProductRow] = []
+    for idx in range(total):
+        products.append(
+            FulfillmentOrderProductRow(
+                id=idx + 1,
+                sku=f"SKU-{fulfillment_order_id}-{idx + 1:03d}",
+                name=f"Product {idx + 1}",
+                quantity=random.randint(1, 5),
+                fulfillment_order_id=fulfillment_order_id,
+            )
+        )
+    return products

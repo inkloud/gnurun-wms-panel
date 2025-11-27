@@ -3,13 +3,14 @@ __all__ = ["DB"]
 from ..types import (
     DBGateway,
     FulfillmentGateway,
+    FulfillmentOrderProductRow,
     FulfillmentOrderRow,
     UserGateway,
     UserRow,
     UserType,
     Warehouse,
 )
-from .fulfillment_orders import FULFILLMENT_ORDERS
+from .fulfillment_orders import FULFILLMENT_ORDERS, generate_products
 from .users import USERS
 
 
@@ -72,6 +73,10 @@ class _FulfillmentGateway(FulfillmentGateway):
         except ValueError:
             pass
         return data
+
+    @staticmethod
+    def get_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
+        return generate_products(fulfillment_order_id)
 
 
 class DB(DBGateway):
