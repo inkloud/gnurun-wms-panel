@@ -1,16 +1,7 @@
 import React from 'react';
 
-import {useFulfillmentOrders} from '../../../hooks/fulfillment-orders';
 import type {FulfillmentOrder} from '../../../hooks/fulfillment-orders/types';
-import {FulfillmentCard} from './card';
-
-type FulfillmentActions = ReturnType<typeof useFulfillmentOrders>['actions'];
-
-const CardsGrid: React.FC<{items: FulfillmentOrder[]; actions: FulfillmentActions}> = function ({items, actions}) {
-    if (items.length === 0) return null;
-    const cards = items.map((item) => <FulfillmentCard key={item.id} item={item} actions={actions} />);
-    return <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">{cards}</div>;
-};
+import {CardsGrid, type FulfillmentActions} from '../ui';
 
 export const OrderCards: React.FC<{items: FulfillmentOrder[]; actions: FulfillmentActions; currentUser: string}> =
     function ({items, actions, currentUser}) {
