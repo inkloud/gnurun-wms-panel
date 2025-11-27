@@ -17,6 +17,7 @@ const PickerWorkerPage = function () {
     const fulfillmentOrders: FulfillmentOrder[] | undefined = useData();
 
     if (fulfillmentOrders === undefined) return null;
+    console.log(fulfillmentOrders);
     return (
         <Page>
             <div className="pb-5 mb-5">

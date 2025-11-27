@@ -1,9 +1,14 @@
 import {AxiosError} from 'axios';
 import useSWR from 'swr';
 
-import {AssignmentMode, doAssign, getFulfillmentOrders} from '../../api/fulfillment-orders';
+import {
+    AssignmentMode,
+    doAssign,
+    getFulfillmentOrderProducts,
+    getFulfillmentOrders
+} from '../../api/fulfillment-orders';
 import {useAuth} from '../auth';
-import type {FulfillmentOrder} from './types';
+import type {FulfillmentOrder, FulfillmentOrderProduct} from './types';
 
 const updateAssignments = function (
     orders: FulfillmentOrder[] | undefined,
@@ -61,4 +66,17 @@ export const useFulfillmentOrders = function (): {
     };
 
     return {data, error, actions: {assign, unassign}};
+};
+
+export const useFulfillmentOrderProducts = function (id_list: number[]): FulfillmentOrderProduct[] | undefined {
+    const {data: authData} = useAuth();
+    const token = authData!.access_token;
+
+    const fetcher = async function ([_, token]: ['FULFILLMENT_ORDERS_ENDPOINT', string]) {
+        const res = await Promise.all(id_list.map((id) => getFulfillmentOrderProducts(token, id)));
+        return res.flat();
+    };
+
+    const {data} = useSWR(['FULFILLMENT_ORDER_PRODUCTS', ...id_list, token], fetcher, {dedupingInterval: 60000});
+    return data;
 };
