@@ -6,8 +6,8 @@ import {HashRouter, Outlet, Route, Routes} from 'react-router';
 import App from './app.tsx';
 import './index.css';
 import NotFound from './pages/not-found';
-import Picker from './pages/picker';
-import PickerWorker from './pages/picker-worker';
+import Picker from './pages/picker/home';
+import PickerWorker from './pages/picker/work';
 
 const PickerRoutes = function () {
     return <Outlet />;
