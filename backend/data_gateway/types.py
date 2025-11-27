@@ -40,6 +40,7 @@ class FulfillmentOrderProductRow:
     name: str
     quantity: int
     fulfillment_order_id: int
+    position: str
 
 
 @dataclass(frozen=True)

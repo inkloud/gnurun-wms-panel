@@ -1,6 +1,7 @@
 __all__ = ["FULFILLMENT_ORDERS", "generate_products"]
 
 import random
+import string
 from datetime import datetime, timedelta
 from functools import lru_cache
 
@@ -44,6 +45,15 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
 FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
 
 
+def generate_random_position():
+    return (
+        f"{random.choice(string.ascii_uppercase)}{random.choice(string.ascii_uppercase + string.digits)}"
+        f".{random.randint(0, 99):02d}"
+        f".{random.randint(0, 99):02d}"
+        f".{random.randint(0, 99):02d}"
+    )
+
+
 @lru_cache(maxsize=None)
 def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
     total = random.randint(1, 25)
@@ -56,6 +66,7 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProduct
                 name=f"Product {idx + 1}",
                 quantity=random.randint(1, 5),
                 fulfillment_order_id=fulfillment_order_id,
+                position=generate_random_position(),
             )
         )
     return products
