@@ -43,7 +43,14 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
 FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
 
 
+_PRODUCT_CACHE: dict[int, list[FulfillmentOrderProductRow]] = {}
+
+
 def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
+    cached = _PRODUCT_CACHE.get(fulfillment_order_id)
+    if cached is not None:
+        return cached
+
     total = random.randint(1, 25)
     products: list[FulfillmentOrderProductRow] = []
     for idx in range(total):
@@ -56,4 +63,5 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProduct
                 fulfillment_order_id=fulfillment_order_id,
             )
         )
+    _PRODUCT_CACHE[fulfillment_order_id] = products
     return products
