@@ -68,16 +68,18 @@ export const useFulfillmentOrders = function (): {
     return {data, error, actions: {assign, unassign}};
 };
 
-export const useFulfillmentOrderProducts = function (id_list: string[]): FulfillmentOrderProduct[] | undefined {
+export const useFulfillmentOrderProducts = function (id_list: Set<string>): FulfillmentOrderProduct[] | undefined {
     const {data: authData} = useAuth();
-    const token = authData!.access_token;
 
-    const fetcher = async function ([_1, token, _2]: ['FULFILLMENT_ORDERS_ENDPOINT', string, string]) {
-        const res = await Promise.all(id_list.map((id) => getFulfillmentOrderProducts(token, id)));
+    const token = authData!.access_token;
+    const ids = [...id_list].sort();
+
+    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_PRODUCTS', string, string]) {
+        const res = await Promise.all(ids.map((id) => getFulfillmentOrderProducts(token, id)));
         return res.flat();
     };
 
-    const {data} = useSWR(['FULFILLMENT_ORDER_PRODUCTS', token, id_list.join(', ')], fetcher, {
+    const {data} = useSWR(['FULFILLMENT_ORDER_PRODUCTS', token, ids.join(', ')], fetcher, {
         dedupingInterval: 60000
     });
     return data;
