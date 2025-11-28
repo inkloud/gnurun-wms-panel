@@ -54,7 +54,7 @@ class FulfillmentOrderService:
                 sku=product.sku,
                 name=product.name,
                 quantity=product.quantity,
-                fulfillment_order_id=product.fulfillment_order_id,
+                fulfillment_order_id=fulfillment_order_id,
                 position=product.position,
             )
             for product in products

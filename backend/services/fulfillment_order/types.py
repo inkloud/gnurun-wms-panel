@@ -17,5 +17,5 @@ class FulfillmentOrderProduct:
     sku: str
     name: str
     quantity: int
-    fulfillment_order_id: int
+    fulfillment_order_id: str
     position: str

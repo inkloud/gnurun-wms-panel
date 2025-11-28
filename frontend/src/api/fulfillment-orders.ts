@@ -20,7 +20,7 @@ const FulfillmentOrderProductSchema = z.object({
     sku: z.string(),
     name: z.string(),
     quantity: z.number(),
-    fulfillment_order_id: z.number(),
+    fulfillment_order_id: z.string(),
     position: z.string()
 });
 type FulfillmentOrderProductInput = z.input<typeof FulfillmentOrderProductSchema>;

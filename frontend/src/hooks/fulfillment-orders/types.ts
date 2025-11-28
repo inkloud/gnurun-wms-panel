@@ -5,6 +5,6 @@ export type FulfillmentOrderProduct = {
     sku: string;
     name: string;
     quantity: number;
-    fulfillment_order_id: number;
+    fulfillment_order_id: string;
     position: string;
 };

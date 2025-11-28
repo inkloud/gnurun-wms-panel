@@ -15,8 +15,49 @@ const useData = function (): FulfillmentOrder[] | undefined {
 
 const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
     const data = useFulfillmentOrderProducts(items.map((item) => item.id));
-    console.log(data);
-    return <p>Here's the table</p>;
+
+    if (data === undefined) return <div className="text-muted text-center py-4">Loading products…</div>;
+    if (data.length === 0)
+        return <div className="text-muted text-center py-4">No products to pick for your orders yet.</div>;
+
+    return (
+        <div className="table-responsive mt-4">
+            <table className="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col" className="text-uppercase text-muted small">
+                            Order
+                        </th>
+                        <th scope="col" className="text-uppercase text-muted small">
+                            SKU
+                        </th>
+                        <th scope="col" className="text-uppercase text-muted small">
+                            Product
+                        </th>
+                        <th scope="col" className="text-uppercase text-muted small text-end">
+                            Qty
+                        </th>
+                        <th scope="col" className="text-uppercase text-muted small text-end">
+                            Position
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item) => (
+                        <tr key={item.sku}>
+                            <td className="fw-semibold">{item.fulfillment_order_id}</td>
+                            <td className="fw-semibold">{item.sku}</td>
+                            <td>{item.name}</td>
+                            <td className="text-end fw-semibold">{item.quantity}</td>
+                            <td className="text-end">
+                                <span className="badge text-bg-light">{item.position}</span>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 };
 
 const PickerWorkerPage = function () {
