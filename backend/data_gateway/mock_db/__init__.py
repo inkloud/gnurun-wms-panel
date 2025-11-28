@@ -55,7 +55,7 @@ class _FulfillmentGateway(FulfillmentGateway):
         return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
 
     @staticmethod
-    def assign(id: str, operator: str) -> FulfillmentOrderRow:
+    def assign(id: int, operator: str) -> FulfillmentOrderRow:
         res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
         data: FulfillmentOrderRow = res[0]
@@ -64,7 +64,7 @@ class _FulfillmentGateway(FulfillmentGateway):
         return data
 
     @staticmethod
-    def unassign(id: str, operator: str) -> FulfillmentOrderRow:
+    def unassign(id: int, operator: str) -> FulfillmentOrderRow:
         res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
         data: FulfillmentOrderRow = res[0]

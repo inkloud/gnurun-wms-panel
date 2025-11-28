@@ -8,9 +8,17 @@ from ...data_gateway.types import (
 from .types import FulfillmentOrder, FulfillmentOrderProduct
 
 
+def _encode_id(id: int):
+    return f"FO-{id:04d}"
+
+
+def _decode_id(id: str):
+    return int(id.split("FO-")[1])
+
+
 def _to_fulfillment_order(order: FulfillmentOrderRow) -> FulfillmentOrder:
     return FulfillmentOrder(
-        id=f"FO-{order.id:04d}", date=order.date, assigned_to=list(order.assigned_to)
+        id=_encode_id(order.id), date=order.date, assigned_to=list(order.assigned_to)
     )
 
 
@@ -25,12 +33,14 @@ class FulfillmentOrderService:
         ]
 
     def assign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
-        updated: FulfillmentOrderRow = self.data_mapper.fulfillment.assign(id, operator)
+        updated: FulfillmentOrderRow = self.data_mapper.fulfillment.assign(
+            _decode_id(id), operator
+        )
         return _to_fulfillment_order(updated)
 
     def unassign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
         updated: FulfillmentOrderRow = self.data_mapper.fulfillment.unassign(
-            id, operator
+            _decode_id(id), operator
         )
         return _to_fulfillment_order(updated)
 
