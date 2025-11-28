@@ -28,7 +28,7 @@ class Warehouse:
 
 @dataclass(frozen=True)
 class FulfillmentOrderRow:
-    id: str
+    id: int
     date: datetime
     assigned_to: list[str] = field(default_factory=list)
 

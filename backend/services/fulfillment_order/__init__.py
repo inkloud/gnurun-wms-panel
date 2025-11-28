@@ -10,7 +10,7 @@ from .types import FulfillmentOrder, FulfillmentOrderProduct
 
 def _to_fulfillment_order(order: FulfillmentOrderRow) -> FulfillmentOrder:
     return FulfillmentOrder(
-        id=order.id, date=order.date, assigned_to=list(order.assigned_to)
+        id=f"FO-{order.id:04d}", date=order.date, assigned_to=list(order.assigned_to)
     )
 
 

@@ -13,16 +13,21 @@ const useData = function (): FulfillmentOrder[] | undefined {
     return fulfillmentOrders.filter((item) => item.assigned_to.includes(authData!.auth_user.username));
 };
 
+const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
+    console.log(items.map((item) => item.id));
+    return <p>Here's the table</p>;
+};
+
 const PickerWorkerPage = function () {
     const fulfillmentOrders: FulfillmentOrder[] | undefined = useData();
 
     if (fulfillmentOrders === undefined) return null;
-    console.log(fulfillmentOrders);
     return (
         <Page>
             <div className="pb-5 mb-5">
                 <Header title="Picker Workbench" subtitle="This screen will guide operators through picking tasks." />
                 <CardsGrid items={fulfillmentOrders} />
+                <ProductsTable items={fulfillmentOrders} />
             </div>
         </Page>
     );

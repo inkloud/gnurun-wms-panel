@@ -34,7 +34,7 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
     for i in range(total):
         orders.append(
             FulfillmentOrderRow(
-                id=f"FO-{base_id + i:04d}",
+                id=base_id + i,
                 date=_random_date_within_last_week(now),
                 assigned_to=_random_assigned_users(),
             )
