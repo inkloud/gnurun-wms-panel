@@ -34,7 +34,9 @@ const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) 
     if (data.length === 0)
         return <div className="text-muted text-center py-4">No products to pick for your orders yet.</div>;
 
-    const tableRows = data.map((item) => <ProductTableRow key={item.sku} item={item} />);
+    const tableRows = data.map((item) => (
+        <ProductTableRow key={`${item.sku}-${item.fulfillment_order_id}`} item={item} />
+    ));
     return (
         <div className="table-responsive mt-4">
             <table className="table table-striped align-middle">
