@@ -44,13 +44,13 @@ const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) 
                 </thead>
                 <tbody>
                     {data.map((item) => (
-                        <tr key={item.id}>
+                        <tr key={item.sku}>
                             <td className="fw-semibold">{item.fulfillment_order_id}</td>
                             <td className="fw-semibold">{item.sku}</td>
-                            <td>{item.name}</td>
+                            <td className="fst-italic">{item.name}</td>
                             <td className="text-end fw-semibold">{item.quantity}</td>
                             <td className="text-end">
-                                <span className="badge text-bg-light">{item.position}</span>
+                                <span className="badge text-bg-light font-monospace">{item.position}</span>
                             </td>
                         </tr>
                     ))}
