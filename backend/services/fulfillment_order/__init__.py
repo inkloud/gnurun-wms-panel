@@ -8,17 +8,19 @@ from ...data_gateway.types import (
 from .types import FulfillmentOrder, FulfillmentOrderProduct
 
 
-def _encode_id(id: int) -> str:
-    return f"FO-{id:04d}"
+def _encode_id(prefix: str, id: int) -> str:
+    return f"{prefix}-{id:04d}"
 
 
-def _decode_id(id: str) -> int:
-    return int(id.split("FO-")[1])
+def _decode_id(prefix: str, id: str) -> int:
+    return int(id.split(f"{prefix}-")[1])
 
 
 def _to_fulfillment_order(order: FulfillmentOrderRow) -> FulfillmentOrder:
     return FulfillmentOrder(
-        id=_encode_id(order.id), date=order.date, assigned_to=list(order.assigned_to)
+        id=_encode_id("FO", order.id),
+        date=order.date,
+        assigned_to=list(order.assigned_to),
     )
 
 
@@ -34,23 +36,25 @@ class FulfillmentOrderService:
 
     def assign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
         updated: FulfillmentOrderRow = self.data_mapper.fulfillment.assign(
-            _decode_id(id), operator
+            _decode_id("FO", id), operator
         )
         return _to_fulfillment_order(updated)
 
     def unassign_fulfillment_orders(self, id: str, operator: str) -> FulfillmentOrder:
         updated: FulfillmentOrderRow = self.data_mapper.fulfillment.unassign(
-            _decode_id(id), operator
+            _decode_id("FO", id), operator
         )
         return _to_fulfillment_order(updated)
 
     def get_products(self, fulfillment_order_id: str) -> list[FulfillmentOrderProduct]:
         products: list[FulfillmentOrderProductRow] = (
-            self.data_mapper.fulfillment.get_products(_decode_id(fulfillment_order_id))
+            self.data_mapper.fulfillment.get_products(
+                _decode_id("FO", fulfillment_order_id)
+            )
         )
         return [
             FulfillmentOrderProduct(
-                id=product.id,
+                id=_encode_id("PR", product.id),
                 sku=product.sku,
                 name=product.name,
                 quantity=product.quantity,

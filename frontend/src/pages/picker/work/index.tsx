@@ -44,7 +44,7 @@ const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) 
                 </thead>
                 <tbody>
                     {data.map((item) => (
-                        <tr key={item.sku}>
+                        <tr key={item.id}>
                             <td className="fw-semibold">{item.fulfillment_order_id}</td>
                             <td className="fw-semibold">{item.sku}</td>
                             <td>{item.name}</td>

@@ -1,7 +1,7 @@
 export type FulfillmentOrder = {id: string; date: Date; assigned_to: string[]};
 
 export type FulfillmentOrderProduct = {
-    id: number;
+    id: string;
     sku: string;
     name: string;
     quantity: number;

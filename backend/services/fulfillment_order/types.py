@@ -13,7 +13,7 @@ class FulfillmentOrder:
 
 @dataclass(frozen=True)
 class FulfillmentOrderProduct:
-    id: int
+    id: str
     sku: str
     name: str
     quantity: int

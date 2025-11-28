@@ -16,7 +16,7 @@ type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
 type FulfillmentOrderApiOutput = z.output<typeof FulfillmentOrderApiSchema>;
 
 const FulfillmentOrderProductSchema = z.object({
-    id: z.number(),
+    id: z.string(),
     sku: z.string(),
     name: z.string(),
     quantity: z.number(),
