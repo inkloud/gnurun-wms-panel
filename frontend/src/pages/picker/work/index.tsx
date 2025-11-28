@@ -1,5 +1,5 @@
 import {useAuth} from '../../../hooks/auth';
-import {useFulfillmentOrders} from '../../../hooks/fulfillment-orders';
+import {useFulfillmentOrderProducts, useFulfillmentOrders} from '../../../hooks/fulfillment-orders';
 import type {FulfillmentOrder} from '../../../hooks/fulfillment-orders/types';
 import {Header} from '../../../ui/header';
 import {Page} from '../../../ui/page';
@@ -14,7 +14,8 @@ const useData = function (): FulfillmentOrder[] | undefined {
 };
 
 const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
-    console.log(items.map((item) => item.id));
+    const data = useFulfillmentOrderProducts(items.map((item) => item.id));
+    console.log(data);
     return <p>Here's the table</p>;
 };
 

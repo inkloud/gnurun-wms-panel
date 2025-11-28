@@ -38,7 +38,7 @@ const toFulfillmentOrderProduct = function (item: FulfillmentOrderProductInput):
 
 export const getFulfillmentOrderProducts = async function (
     token: string,
-    fulfillmentOrderId: number
+    fulfillmentOrderId: string
 ): Promise<FulfillmentOrderProduct[]> {
     const response = await axios.get<FulfillmentOrderProductInput[]>(
         FULFILLMENT_ORDER_PRODUCTS_ENDPOINT + `/${fulfillmentOrderId}/products`,

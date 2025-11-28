@@ -8,11 +8,11 @@ from ...data_gateway.types import (
 from .types import FulfillmentOrder, FulfillmentOrderProduct
 
 
-def _encode_id(id: int):
+def _encode_id(id: int) -> str:
     return f"FO-{id:04d}"
 
 
-def _decode_id(id: str):
+def _decode_id(id: str) -> int:
     return int(id.split("FO-")[1])
 
 
@@ -44,9 +44,9 @@ class FulfillmentOrderService:
         )
         return _to_fulfillment_order(updated)
 
-    def get_products(self, fulfillment_order_id: int) -> list[FulfillmentOrderProduct]:
+    def get_products(self, fulfillment_order_id: str) -> list[FulfillmentOrderProduct]:
         products: list[FulfillmentOrderProductRow] = (
-            self.data_mapper.fulfillment.get_products(fulfillment_order_id)
+            self.data_mapper.fulfillment.get_products(_decode_id(fulfillment_order_id))
         )
         return [
             FulfillmentOrderProduct(

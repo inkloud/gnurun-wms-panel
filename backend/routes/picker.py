@@ -51,7 +51,7 @@ async def list_fulfillment_orders(
 
 @router.get("/fulfillment_orders/{fulfillment_order_id}/products")
 async def list_fulfillment_order_products(
-    fulfillment_order_id: int, auth_header: str = Header(..., alias="Authorization")
+    fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
 ) -> list[FulfillmentOrderProduct]:
     _authorize_operator(auth_header)
     return fulfillment_order_service.get_products(fulfillment_order_id)
