@@ -4,6 +4,7 @@ import type {FulfillmentOrder, FulfillmentOrderProduct} from '../../../hooks/ful
 import {Header} from '../../../ui/header';
 import {Page} from '../../../ui/page';
 import {CardsGrid} from '../ui';
+import {BottomNavbar} from './bottom-navbar';
 
 const useData = function (): FulfillmentOrder[] | undefined {
     const {data: authData} = useAuth();
@@ -27,14 +28,12 @@ const ProductTableRow: React.FC<{item: FulfillmentOrderProduct}> = function ({it
     );
 };
 
-const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) {
-    const data = useFulfillmentOrderProducts(new Set(items.map((item) => item.id)));
-
-    if (data === undefined) return <div className="text-muted text-center py-4">Loading products…</div>;
-    if (data.length === 0)
+const ProductsTable: React.FC<{products: FulfillmentOrderProduct[] | undefined}> = function ({products}) {
+    if (products === undefined) return <div className="text-muted text-center py-4">Loading products…</div>;
+    if (products.length === 0)
         return <div className="text-muted text-center py-4">No products to pick for your orders yet.</div>;
 
-    const tableRows = data.map((item) => (
+    const tableRows = products.map((item) => (
         <ProductTableRow key={`${item.sku}-${item.fulfillment_order_id}`} item={item} />
     ));
     return (
@@ -67,6 +66,9 @@ const ProductsTable: React.FC<{items: FulfillmentOrder[]}> = function ({items}) 
 
 const PickerWorkerPage = function () {
     const fulfillmentOrders: FulfillmentOrder[] | undefined = useData();
+    const products = useFulfillmentOrderProducts(
+        new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
+    );
 
     if (fulfillmentOrders === undefined) return null;
     return (
@@ -74,8 +76,9 @@ const PickerWorkerPage = function () {
             <div className="pb-5 mb-5">
                 <Header title="Picker Workbench" subtitle="This screen will guide operators through picking tasks." />
                 <CardsGrid items={fulfillmentOrders} />
-                <ProductsTable items={fulfillmentOrders} />
+                <ProductsTable products={products} />
             </div>
+            <BottomNavbar orders={fulfillmentOrders} products={products} />
         </Page>
     );
 };
