@@ -7,6 +7,8 @@ __all__ = [
     "UserGateway",
     "FulfillmentGateway",
     "DBGateway",
+    "ProductRow",
+    "LocationInfo",
 ]
 
 from dataclasses import dataclass, field
@@ -24,6 +26,23 @@ class UserType(Enum):
 class Warehouse:
     id: int
     name: str
+
+
+@dataclass(frozen=True)
+class LocationInfo:
+    stock: int
+    position: str
+
+
+@dataclass(frozen=True)
+class ProductRow:
+    id: int
+    sku: str
+    name: str
+    where: list[LocationInfo]
+
+    def get_stock(self) -> int:
+        return sum(p.stock for p in self.where)
 
 
 @dataclass(frozen=True)
