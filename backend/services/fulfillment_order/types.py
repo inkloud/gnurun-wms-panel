@@ -1,6 +1,6 @@
-__all__ = ["FulfillmentOrder", "FulfillmentOrderProduct"]
+__all__ = ["FulfillmentOrder", "FulfillmentOrderProduct", "FulfillmentOrderPosition"]
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 
 
@@ -8,7 +8,7 @@ from datetime import datetime
 class FulfillmentOrder:
     id: str
     date: datetime
-    assigned_to: list[str] = field(default_factory=list)
+    assigned_to: list[str]
 
 
 @dataclass(frozen=True)
@@ -19,3 +19,9 @@ class FulfillmentOrderProduct:
     quantity: int
     fulfillment_order_id: str
     position: str
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderPosition:
+    position: str
+    products: list[FulfillmentOrderProduct]

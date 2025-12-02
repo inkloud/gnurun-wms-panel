@@ -5,7 +5,8 @@ from ...data_gateway.types import (
     FulfillmentOrderProductRow,
     FulfillmentOrderRow,
 )
-from .types import FulfillmentOrder, FulfillmentOrderProduct
+from .ordering import order_by_position
+from .types import FulfillmentOrder, FulfillmentOrderPosition, FulfillmentOrderProduct
 
 
 def _encode_id(prefix: str, id: int) -> str:
@@ -63,3 +64,17 @@ class FulfillmentOrderService:
             )
             for product in products
         ]
+
+    def get_products_by_positions(
+        self, fulfillment_order_id: str
+    ) -> list[FulfillmentOrderPosition]:
+        products = self.get_products(fulfillment_order_id)
+        grouped: dict[str, list[FulfillmentOrderProduct]] = {}
+        for product in products:
+            grouped.setdefault(product.position, []).append(product)
+        return order_by_position(
+            [
+                FulfillmentOrderPosition(position=position, products=items)
+                for position, items in grouped.items()
+            ]
+        )
