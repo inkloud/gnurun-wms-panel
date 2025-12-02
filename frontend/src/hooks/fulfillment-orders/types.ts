@@ -8,3 +8,5 @@ export type FulfillmentOrderProduct = {
     fulfillment_order_id: string;
     position: string;
 };
+
+export type FulfillmentOrderPosition = {position: string; products: FulfillmentOrderProduct[]};

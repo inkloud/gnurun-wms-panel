@@ -1,7 +1,11 @@
 import axios from 'axios';
 import {z} from 'zod';
 
-import type {FulfillmentOrder, FulfillmentOrderProduct} from '../hooks/fulfillment-orders/types';
+import type {
+    FulfillmentOrder,
+    FulfillmentOrderPosition,
+    FulfillmentOrderProduct
+} from '../hooks/fulfillment-orders/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
@@ -47,6 +51,27 @@ export const getFulfillmentOrderProducts = async function (
         }
     );
     return response.data.map(toFulfillmentOrderProduct);
+};
+
+const FulfillmentOrderPositionSchema = z.object({
+    position: z.string(),
+    products: FulfillmentOrderProductSchema.array()
+});
+type FulfillmentOrderPositionInput = z.input<typeof FulfillmentOrderPositionSchema>;
+const toFulfillmentOrderPosition = function (item: FulfillmentOrderPositionInput): FulfillmentOrderPosition {
+    const parsed = FulfillmentOrderPositionSchema.parse(item);
+    return {position: parsed.position, products: parsed.products};
+};
+
+export const getFulfillmentOrderPositions = async function (
+    token: string,
+    fulfillmentOrderId: string
+): Promise<FulfillmentOrderPosition[]> {
+    const response = await axios.get<FulfillmentOrderPositionInput[]>(
+        FULFILLMENT_ORDER_PRODUCTS_ENDPOINT + `/${fulfillmentOrderId}/positions`,
+        {headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}}
+    );
+    return response.data.map(toFulfillmentOrderPosition);
 };
 
 export const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {

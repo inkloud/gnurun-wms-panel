@@ -1,5 +1,9 @@
 import {useAuth} from '../../../hooks/auth';
-import {useFulfillmentOrderProducts, useFulfillmentOrders} from '../../../hooks/fulfillment-orders';
+import {
+    useFulfillmentOrderPositions,
+    useFulfillmentOrderProducts,
+    useFulfillmentOrders
+} from '../../../hooks/fulfillment-orders';
 import type {FulfillmentOrder, FulfillmentOrderProduct} from '../../../hooks/fulfillment-orders/types';
 import {Header} from '../../../ui/header';
 import {Page} from '../../../ui/page';
@@ -69,6 +73,10 @@ const PickerWorkerPage = function () {
     const products = useFulfillmentOrderProducts(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
+    const positions = useFulfillmentOrderPositions(
+        new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
+    );
+    console.log({positions});
 
     if (fulfillmentOrders === undefined) return null;
     return (

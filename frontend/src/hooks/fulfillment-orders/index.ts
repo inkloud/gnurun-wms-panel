@@ -4,11 +4,12 @@ import useSWR from 'swr';
 import {
     AssignmentMode,
     doAssign,
+    getFulfillmentOrderPositions,
     getFulfillmentOrderProducts,
     getFulfillmentOrders
 } from '../../api/fulfillment-orders';
 import {useAuth} from '../auth';
-import type {FulfillmentOrder, FulfillmentOrderProduct} from './types';
+import type {FulfillmentOrder, FulfillmentOrderPosition, FulfillmentOrderProduct} from './types';
 
 const updateAssignments = function (
     orders: FulfillmentOrder[] | undefined,
@@ -80,6 +81,23 @@ export const useFulfillmentOrderProducts = function (id_list: Set<string>): Fulf
     };
 
     const {data} = useSWR(['FULFILLMENT_ORDER_PRODUCTS', token, ids.join(', ')], fetcher, {
+        dedupingInterval: 60000
+    });
+    return data;
+};
+
+export const useFulfillmentOrderPositions = function (id_list: Set<string>): FulfillmentOrderPosition[] | undefined {
+    const {data: authData} = useAuth();
+
+    const token = authData!.access_token;
+    const ids = [...id_list].sort();
+
+    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_POSITIONS', string, string]) {
+        const res = await Promise.all(ids.map((id) => getFulfillmentOrderPositions(token, id)));
+        return res.flat();
+    };
+
+    const {data} = useSWR(['FULFILLMENT_ORDER_POSITIONS', token, ids.join(', ')], fetcher, {
         dedupingInterval: 60000
     });
     return data;
