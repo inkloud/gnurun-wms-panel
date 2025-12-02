@@ -4,11 +4,12 @@ import {
     useFulfillmentOrderProducts,
     useFulfillmentOrders
 } from '../../../hooks/fulfillment-orders';
-import type {FulfillmentOrder, FulfillmentOrderProduct} from '../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrder} from '../../../hooks/fulfillment-orders/types';
 import {Header} from '../../../ui/header';
 import {Page} from '../../../ui/page';
 import {CardsGrid} from '../ui';
 import {BottomNavbar} from './bottom-navbar';
+import {PositionsTable} from './positions-table';
 
 const useData = function (): FulfillmentOrder[] | undefined {
     const {data: authData} = useAuth();
@@ -16,56 +17,6 @@ const useData = function (): FulfillmentOrder[] | undefined {
 
     if (fulfillmentOrders === undefined) return undefined;
     return fulfillmentOrders.filter((item) => item.assigned_to.includes(authData!.auth_user.username));
-};
-
-const ProductTableRow: React.FC<{item: FulfillmentOrderProduct}> = function ({item}) {
-    return (
-        <tr>
-            <td className="fw-semibold">{item.fulfillment_order_id}</td>
-            <td className="fw-semibold">{item.sku}</td>
-            <td className="fst-italic">{item.name}</td>
-            <td className="text-end fw-semibold">{item.quantity}</td>
-            <td className="text-end">
-                <span className="badge text-bg-light font-monospace">{item.position}</span>
-            </td>
-        </tr>
-    );
-};
-
-const ProductsTable: React.FC<{products: FulfillmentOrderProduct[] | undefined}> = function ({products}) {
-    if (products === undefined) return <div className="text-muted text-center py-4">Loading products…</div>;
-    if (products.length === 0)
-        return <div className="text-muted text-center py-4">No products to pick for your orders yet.</div>;
-
-    const tableRows = products.map((item) => (
-        <ProductTableRow key={`${item.sku}-${item.fulfillment_order_id}-${item.position}`} item={item} />
-    ));
-    return (
-        <div className="table-responsive mt-4">
-            <table className="table table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            Order
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            SKU
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            Product
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small text-end">
-                            Qty
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small text-end">
-                            Position
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>{tableRows}</tbody>
-            </table>
-        </div>
-    );
 };
 
 const PickerWorkerPage = function () {
@@ -76,7 +27,6 @@ const PickerWorkerPage = function () {
     const positions = useFulfillmentOrderPositions(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
-    console.log({positions});
 
     if (fulfillmentOrders === undefined) return null;
     return (
@@ -84,7 +34,7 @@ const PickerWorkerPage = function () {
             <div className="pb-5 mb-5">
                 <Header title="Picker Workbench" subtitle="This screen will guide operators through picking tasks." />
                 <CardsGrid items={fulfillmentOrders} />
-                <ProductsTable products={products} />
+                <PositionsTable positions={positions} />
             </div>
             <BottomNavbar orders={fulfillmentOrders} products={products} />
         </Page>

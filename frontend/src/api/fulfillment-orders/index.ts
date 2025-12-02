@@ -5,11 +5,10 @@ import type {
     FulfillmentOrder,
     FulfillmentOrderPosition,
     FulfillmentOrderProduct
-} from '../hooks/fulfillment-orders/types';
+} from '../../hooks/fulfillment-orders/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
-const FULFILLMENT_ORDER_PRODUCTS_ENDPOINT = `${FULFILLMENT_ORDERS_ENDPOINT}`;
 
 const FulfillmentOrderApiSchema = z.object({
     id: z.string(),
@@ -45,7 +44,7 @@ export const getFulfillmentOrderProducts = async function (
     fulfillmentOrderId: string
 ): Promise<FulfillmentOrderProduct[]> {
     const response = await axios.get<FulfillmentOrderProductInput[]>(
-        FULFILLMENT_ORDER_PRODUCTS_ENDPOINT + `/${fulfillmentOrderId}/products`,
+        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderId}/products`,
         {
             headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
         }
@@ -68,13 +67,13 @@ export const getFulfillmentOrderPositions = async function (
     fulfillmentOrderId: string
 ): Promise<FulfillmentOrderPosition[]> {
     const response = await axios.get<FulfillmentOrderPositionInput[]>(
-        FULFILLMENT_ORDER_PRODUCTS_ENDPOINT + `/${fulfillmentOrderId}/positions`,
+        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderId}/positions`,
         {headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}}
     );
     return response.data.map(toFulfillmentOrderPosition);
 };
 
-export const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {
+const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {
     const e: FulfillmentOrderApiOutput = FulfillmentOrderApiSchema.parse(order);
     return {id: e.id, date: new Date(e.date), assigned_to: [...e.assigned_to]};
 };
