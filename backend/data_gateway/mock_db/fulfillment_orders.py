@@ -1,8 +1,7 @@
-__all__ = ["FULFILLMENT_ORDERS", "generate_products"]
+__all__ = ["FULFILLMENT_ORDERS", "FULFILLMENT_ORDERS_PRODUCTS"]
 
 import random
 from datetime import datetime, timedelta
-from functools import lru_cache
 
 from ..types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
 from .products import PRODUCTS
@@ -45,7 +44,6 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
 FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
 
 
-@lru_cache(maxsize=None)
 def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
     picked_products: list[ProductRow] = random.sample(
         PRODUCTS, k=random.randint(1, min(25, len(PRODUCTS)))
@@ -90,3 +88,8 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProduct
                 )
             )
     return products
+
+
+FULFILLMENT_ORDERS_PRODUCTS: list[FulfillmentOrderProductRow] = []
+for o in FULFILLMENT_ORDERS:
+    FULFILLMENT_ORDERS_PRODUCTS.extend(generate_products(o.id))

@@ -10,7 +10,7 @@ from ..types import (
     UserRow,
     UserType,
 )
-from .fulfillment_orders import FULFILLMENT_ORDERS, generate_products
+from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
 from .users import USERS
 
 
@@ -72,8 +72,8 @@ class _FulfillmentGateway(FulfillmentGateway):
         return data
 
     @staticmethod
-    def get_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
-        return generate_products(fulfillment_order_id)
+    def get_products(id: int) -> list[FulfillmentOrderProductRow]:
+        return [e for e in FULFILLMENT_ORDERS_PRODUCTS if e.fulfillment_order_id == id]
 
 
 class DB(DBGateway):
