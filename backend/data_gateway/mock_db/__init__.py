@@ -48,7 +48,7 @@ class _UserGateway(UserGateway):
 
 class _FulfillmentGateway(FulfillmentGateway):
     @staticmethod
-    def get_fulfillment_orders() -> list[FulfillmentOrderRow]:
+    def get_ready() -> list[FulfillmentOrderRow]:
         return sorted(FULFILLMENT_ORDERS, key=lambda order: order.date)
 
     @staticmethod

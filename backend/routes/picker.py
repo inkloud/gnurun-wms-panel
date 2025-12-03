@@ -50,7 +50,7 @@ async def list_fulfillment_orders(
     auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrder]:
     _authorize_operator(auth_header)
-    return fulfillment_order_service.get_fulfillment_orders()
+    return fulfillment_order_service.get_ready()
 
 
 @router.get("/fulfillment_orders/{fulfillment_order_id}/products")
@@ -76,9 +76,7 @@ async def assign_fulfillment_order(
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return fulfillment_order_service.assign_fulfillment_orders(
-        fulfillment_order_id, operator
-    )
+    return fulfillment_order_service.assign(fulfillment_order_id, operator)
 
 
 @router.put("/unassign/{fulfillment_order_id}")
@@ -88,6 +86,4 @@ async def unassign_fulfillment_order(
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return fulfillment_order_service.unassign_fulfillment_orders(
-        fulfillment_order_id, operator
-    )
+    return fulfillment_order_service.unassign(fulfillment_order_id, operator)
