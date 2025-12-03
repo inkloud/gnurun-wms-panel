@@ -1,16 +1,11 @@
-__all__ = ["FULFILLMENT_ORDERS", "PRODUCTS", "generate_products"]
+__all__ = ["FULFILLMENT_ORDERS", "generate_products"]
 
 import random
-import string
 from datetime import datetime, timedelta
 from functools import lru_cache
 
-from ..types import (
-    FulfillmentOrderProductRow,
-    FulfillmentOrderRow,
-    LocationInfo,
-    ProductRow,
-)
+from ..types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
+from .products import PRODUCTS
 from .users import USERS, UserType
 
 _OPERATOR_USERNAMES = [
@@ -48,54 +43,6 @@ def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
 
 
 FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
-
-
-def generate_random_position():
-    return (
-        f"{random.choice(string.ascii_uppercase)}{random.choice(string.ascii_uppercase + string.digits)}"
-        f".{random.randint(0, 99):02d}"
-        f".{random.randint(0, 99):02d}"
-        f".{random.randint(0, 99):02d}"
-    )
-
-
-def _unique_position(used_positions: set[str]) -> str:
-    while True:
-        candidate = generate_random_position()
-        if candidate not in used_positions:
-            used_positions.add(candidate)
-            return candidate
-
-
-def generate_random_product(idx: int, used_positions: set[str]) -> ProductRow:
-    total_stock = random.randint(0, 1000)
-    sku = f"SKU-{idx + 1:03d}"
-    name = f"Product {idx + 1}"
-    has_multiple_locations = total_stock > 1 and random.random() >= 0.9
-
-    if not has_multiple_locations:
-        locations = [
-            LocationInfo(stock=total_stock, position=_unique_position(used_positions))
-        ]
-    else:
-        first_stock = random.randint(1, total_stock - 1)
-        second_stock = total_stock - first_stock
-        locations = [
-            LocationInfo(stock=first_stock, position=_unique_position(used_positions)),
-            LocationInfo(stock=second_stock, position=_unique_position(used_positions)),
-        ]
-    return ProductRow(id=idx + 1, sku=sku, name=name, where=locations)
-
-
-def _generate_products() -> list[ProductRow]:
-    total_products = random.randint(0, 100)
-    used_positions: set[str] = set()
-    return [
-        generate_random_product(idx, used_positions) for idx in range(total_products)
-    ]
-
-
-PRODUCTS: list[ProductRow] = _generate_products()
 
 
 @lru_cache(maxsize=None)
