@@ -7,7 +7,7 @@ from ..types import (
     FulfillmentOrderRow,
     UserGateway,
     UserRow,
-    UserType,
+    UserTypeRow,
 )
 from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
 from .users import USERS
@@ -28,13 +28,13 @@ class _UserGateway(UserGateway):
         manager_user: UserRow | None = _UserGateway.get_user(username)
         if manager_user is None:
             raise KeyError(f"Unknown manager '{username}'")
-        assert manager_user.type == UserType.MANAGER
+        assert manager_user.type == UserTypeRow.MANAGER
         warehouse_id: int = manager_user.warehouse.id
 
         return [
             _to_user_row(user_data)
             for user_data in USERS.values()
-            if user_data.type == UserType.OPERATOR
+            if user_data.type == UserTypeRow.OPERATOR
             and user_data.warehouse.id == warehouse_id
         ]
 

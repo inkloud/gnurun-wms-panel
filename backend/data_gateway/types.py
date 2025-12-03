@@ -2,8 +2,8 @@ __all__ = [
     "UserRow",
     "FulfillmentOrderRow",
     "FulfillmentOrderProductRow",
-    "Warehouse",
-    "UserType",
+    "WarehouseRow",
+    "UserTypeRow",
     "UserGateway",
     "FulfillmentGateway",
     "DBGateway",
@@ -17,13 +17,13 @@ from enum import Enum
 from typing import Protocol
 
 
-class UserType(Enum):
+class UserTypeRow(Enum):
     MANAGER = "MANAGER"
     OPERATOR = "OPERATOR"
 
 
 @dataclass(frozen=True)
-class Warehouse:
+class WarehouseRow:
     id: int
     name: str
 
@@ -67,8 +67,8 @@ class UserRow:
     username: str
     name: str
     pwd: str
-    type: UserType
-    warehouse: Warehouse
+    type: UserTypeRow
+    warehouse: WarehouseRow
 
 
 class UserGateway(Protocol):

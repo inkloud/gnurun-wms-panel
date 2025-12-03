@@ -5,10 +5,10 @@ from datetime import datetime, timedelta
 
 from ..types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
 from .products import PRODUCTS
-from .users import USERS, UserType
+from .users import USERS, UserTypeRow
 
 _OPERATOR_USERNAMES = [
-    username for username, user in USERS.items() if user.type == UserType.OPERATOR
+    username for username, user in USERS.items() if user.type == UserTypeRow.OPERATOR
 ]
 
 
