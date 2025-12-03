@@ -5,7 +5,6 @@ from ..types import (
     FulfillmentGateway,
     FulfillmentOrderProductRow,
     FulfillmentOrderRow,
-    User,
     UserGateway,
     UserRow,
     UserType,
@@ -14,21 +13,15 @@ from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
 from .users import USERS
 
 
-def _to_user_row(username: str, user_data: User) -> UserRow:
-    return UserRow(
-        username=username,
-        name=user_data.name,
-        pwd=user_data.pwd,
-        type=user_data.type,
-        warehouse=user_data.warehouse,
-    )
+def _to_user_row(user_data: UserRow) -> UserRow:
+    return user_data
 
 
 class _UserGateway(UserGateway):
     @staticmethod
     def get_user(username: str) -> UserRow | None:
         user_data = USERS.get(username)
-        return None if user_data is None else _to_user_row(username, user_data)
+        return None if user_data is None else _to_user_row(user_data)
 
     @staticmethod
     def get_operators(username: str) -> list[UserRow]:
@@ -39,8 +32,8 @@ class _UserGateway(UserGateway):
         warehouse_id: int = manager_user.warehouse.id
 
         return [
-            _to_user_row(username, user_data)
-            for username, user_data in USERS.items()
+            _to_user_row(user_data)
+            for user_data in USERS.values()
             if user_data.type == UserType.OPERATOR
             and user_data.warehouse.id == warehouse_id
         ]

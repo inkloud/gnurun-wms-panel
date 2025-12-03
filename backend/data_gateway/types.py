@@ -3,7 +3,6 @@ __all__ = [
     "FulfillmentOrderRow",
     "FulfillmentOrderProductRow",
     "Warehouse",
-    "User",
     "UserType",
     "UserGateway",
     "FulfillmentGateway",
@@ -27,15 +26,6 @@ class UserType(Enum):
 class Warehouse:
     id: int
     name: str
-
-
-@dataclass(frozen=True)
-class User:
-    username: str
-    name: str
-    pwd: str
-    type: UserType
-    warehouse: Warehouse
 
 
 @dataclass(frozen=True)
