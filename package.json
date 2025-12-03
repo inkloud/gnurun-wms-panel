@@ -1,0 +1,21 @@
+{
+  "name": "gnurun-wms-panel",
+  "version": "1.1.0",
+  "description": "GnuRun WMS Panel",
+  "homepage": "https://github.com/inkloud/gnurun-wms-panel",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inkloud/gnurun-wms-panel.git"
+  },
+  "license": "ISC",
+  "author": "Luca Bacchi",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "update": "ncu -u"
+  },
+  "devDependencies": {
+    "@openai/codex": "^0.64.0",
+    "npm-check-updates": "^19.1.2"
+  }
+}
