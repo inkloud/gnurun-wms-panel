@@ -5,25 +5,22 @@ from ..types import (
     FulfillmentGateway,
     FulfillmentOrderProductRow,
     FulfillmentOrderRow,
+    User,
     UserGateway,
     UserRow,
     UserType,
-    Warehouse,
 )
 from .fulfillment_orders import FULFILLMENT_ORDERS, generate_products
 from .users import USERS
 
 
-def _to_user_row(username: str, user_data: dict) -> UserRow:
+def _to_user_row(username: str, user_data: User) -> UserRow:
     return UserRow(
         username=username,
-        name=user_data["name"],
-        pwd=user_data["pwd"],
-        type=UserType(user_data["type"]),
-        warehouse=Warehouse(
-            id=user_data["warehouse"]["id"],
-            name=user_data["warehouse"]["name"],
-        ),
+        name=user_data.name,
+        pwd=user_data.pwd,
+        type=user_data.type,
+        warehouse=user_data.warehouse,
     )
 
 
@@ -34,18 +31,18 @@ class _UserGateway(UserGateway):
         return None if user_data is None else _to_user_row(username, user_data)
 
     @staticmethod
-    def get_operators(user_name: str) -> list[UserRow]:
-        manager_user: UserRow | None = _UserGateway.get_user(user_name)
+    def get_operators(username: str) -> list[UserRow]:
+        manager_user: UserRow | None = _UserGateway.get_user(username)
         if manager_user is None:
-            raise KeyError(f"Unknown manager '{user_name}'")
+            raise KeyError(f"Unknown manager '{username}'")
         assert manager_user.type == UserType.MANAGER
         warehouse_id: int = manager_user.warehouse.id
 
         return [
             _to_user_row(username, user_data)
             for username, user_data in USERS.items()
-            if user_data["type"] == "OPERATOR"
-            and user_data["warehouse"]["id"] == warehouse_id
+            if user_data.type == UserType.OPERATOR
+            and user_data.warehouse.id == warehouse_id
         ]
 
 

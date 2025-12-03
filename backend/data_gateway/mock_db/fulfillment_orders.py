@@ -11,10 +11,10 @@ from ..types import (
     LocationInfo,
     ProductRow,
 )
-from .users import USERS
+from .users import USERS, UserType
 
 _OPERATOR_USERNAMES = [
-    username for username, user in USERS.items() if user["type"] == "OPERATOR"
+    username for username, user in USERS.items() if user.type == UserType.OPERATOR
 ]
 
 

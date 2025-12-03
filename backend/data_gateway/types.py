@@ -3,6 +3,7 @@ __all__ = [
     "FulfillmentOrderRow",
     "FulfillmentOrderProductRow",
     "Warehouse",
+    "User",
     "UserType",
     "UserGateway",
     "FulfillmentGateway",
@@ -11,7 +12,7 @@ __all__ = [
     "LocationInfo",
 ]
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Protocol
@@ -26,6 +27,15 @@ class UserType(Enum):
 class Warehouse:
     id: int
     name: str
+
+
+@dataclass(frozen=True)
+class User:
+    username: str
+    name: str
+    pwd: str
+    type: UserType
+    warehouse: Warehouse
 
 
 @dataclass(frozen=True)
@@ -49,7 +59,7 @@ class ProductRow:
 class FulfillmentOrderRow:
     id: int
     date: datetime
-    assigned_to: list[str] = field(default_factory=list)
+    assigned_to: list[str]
 
 
 @dataclass(frozen=True)
