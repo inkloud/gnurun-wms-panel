@@ -2,7 +2,7 @@ __all__ = ["router"]
 
 from fastapi import APIRouter, Header, HTTPException, status
 
-from ..data_gateway import mock_db
+from ..data_gateway.mock_db import DB
 from ..services.auth import AuthService
 from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.fulfillment_order import FulfillmentOrderService
@@ -16,8 +16,8 @@ from ..utils import get_token_from_header
 router = APIRouter(prefix="/picker", tags=["picker"])
 
 
-auth_service = AuthService(mock_db.DB())
-fulfillment_order_service = FulfillmentOrderService(mock_db.DB())
+auth_service = AuthService(DB())
+fulfillment_order_service = FulfillmentOrderService(DB())
 
 
 def _authorize_operator(auth_header: str):

@@ -4,7 +4,7 @@ __all__ = ["router"]
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
-from ..data_gateway import mock_db
+from ..data_gateway.mock_db import DB
 from ..services.auth import AuthService
 from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.users import UsersService
@@ -12,8 +12,8 @@ from ..utils import get_token_from_header
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-auth_service = AuthService(mock_db.DB())
-users_service = UsersService(mock_db.DB())
+auth_service = AuthService(DB())
+users_service = UsersService(DB())
 
 
 class AuthRequest(BaseModel):
