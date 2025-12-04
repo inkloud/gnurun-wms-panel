@@ -7,8 +7,8 @@ from ...domain.entities.fulfillment_order import (
 )
 from ...domain.entities.users import User, UserType, Warehouse
 from ...domain.interfaces.data_gateway import DBGateway, FulfillmentGateway, UserGateway
-from ..types import UserRow, UserTypeRow
 from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
+from .types import UserRow, UserTypeRow
 from .users import USERS
 
 

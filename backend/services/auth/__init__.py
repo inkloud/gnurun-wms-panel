@@ -3,7 +3,7 @@ __all__ = ["AuthService"]
 from ...domain.entities.auth import AuthPayload, AuthUser, AuthUserType
 from ...domain.entities.users import User
 from ...domain.interfaces.data_gateway import DBGateway
-from .utils import decode, encode
+from .jwt_encoder import decode, encode
 
 
 class AuthService:

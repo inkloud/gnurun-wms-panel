@@ -3,7 +3,7 @@ __all__ = ["PRODUCTS"]
 import random
 import string
 
-from ..types import LocationInfo, ProductRow
+from .types import LocationInfo, ProductRow
 
 
 def _generate_random_position():

@@ -6,7 +6,7 @@ from ...domain.entities.fulfillment_order import (
     FulfillmentOrderProduct,
 )
 from ...domain.interfaces.data_gateway import DBGateway
-from .ordering import order_by_position
+from .optimizer import order_by_position
 
 
 def _decode_id(prefix: str, id: str) -> int:

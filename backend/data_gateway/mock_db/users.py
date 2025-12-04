@@ -1,6 +1,6 @@
 __all__ = ["USERS"]
 
-from ..types import UserRow, UserTypeRow, WarehouseRow
+from .types import UserRow, UserTypeRow, WarehouseRow
 
 _WAREHOUSE = WarehouseRow(id=1, name="Gnu000 Test")
 

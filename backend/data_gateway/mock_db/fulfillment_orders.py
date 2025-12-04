@@ -3,8 +3,8 @@ __all__ = ["FULFILLMENT_ORDERS", "FULFILLMENT_ORDERS_PRODUCTS"]
 import random
 from datetime import datetime, timedelta
 
-from ..types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
 from .products import PRODUCTS
+from .types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
 from .users import USERS, UserTypeRow
 
 _OPERATOR_USERNAMES = [
