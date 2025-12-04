@@ -23,23 +23,37 @@ def _unique_position(used_positions: set[str]) -> str:
             return candidate
 
 
+def _generate_locations(
+    total_stock: int, used_positions: set[str]
+) -> list[LocationInfo]:
+    roll = random.random()
+    has_three_locations = total_stock >= 3 and roll >= 0.99
+    has_two_locations = total_stock >= 2 and roll >= 0.9 and not has_three_locations
+
+    if has_three_locations:
+        first_stock = random.randint(1, total_stock - 2)
+        second_stock = random.randint(1, total_stock - first_stock - 1)
+        third_stock = total_stock - first_stock - second_stock
+        return [
+            LocationInfo(stock=first_stock, position=_unique_position(used_positions)),
+            LocationInfo(stock=second_stock, position=_unique_position(used_positions)),
+            LocationInfo(stock=third_stock, position=_unique_position(used_positions)),
+        ]
+    elif has_two_locations:
+        first_stock = random.randint(1, total_stock - 1)
+        second_stock = total_stock - first_stock
+        return [
+            LocationInfo(stock=first_stock, position=_unique_position(used_positions)),
+            LocationInfo(stock=second_stock, position=_unique_position(used_positions)),
+        ]
+    return [LocationInfo(stock=total_stock, position=_unique_position(used_positions))]
+
+
 def _generate_random_product(idx: int, used_positions: set[str]) -> ProductRow:
     total_stock = random.randint(0, 1000)
     sku = f"SKU-{idx + 1:03d}"
     name = f"Product {idx + 1}"
-    has_multiple_locations = total_stock > 1 and random.random() >= 0.9
-
-    if not has_multiple_locations:
-        locations = [
-            LocationInfo(stock=total_stock, position=_unique_position(used_positions))
-        ]
-    else:
-        first_stock = random.randint(1, total_stock - 1)
-        second_stock = total_stock - first_stock
-        locations = [
-            LocationInfo(stock=first_stock, position=_unique_position(used_positions)),
-            LocationInfo(stock=second_stock, position=_unique_position(used_positions)),
-        ]
+    locations = _generate_locations(total_stock, used_positions)
     return ProductRow(id=idx + 1, sku=sku, name=name, where=locations)
 
 
