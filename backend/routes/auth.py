@@ -4,7 +4,7 @@ __all__ = ["router"]
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
-from ..data_gateway.mock_db import DB
+from ..data_mapper.mock_db import DB
 from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..services.auth import AuthService
 from ..services.users import UsersService

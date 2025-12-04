@@ -3,7 +3,7 @@ __all__ = ["router"]
 
 from fastapi import APIRouter, Header, HTTPException, status
 
-from ..data_gateway.mock_db import DB
+from ..data_mapper.mock_db import DB
 from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..domain.entities.users import User
 from ..services.auth import AuthService
