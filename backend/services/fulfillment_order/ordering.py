@@ -1,7 +1,7 @@
 __all__ = ["order_by_position"]
 
 
-from .types import FulfillmentOrderPosition
+from ...domain.entities.fulfillment_order import FulfillmentOrderPosition
 
 
 def order_by_position(

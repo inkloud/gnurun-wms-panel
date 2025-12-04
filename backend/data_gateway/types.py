@@ -4,9 +4,6 @@ __all__ = [
     "FulfillmentOrderProductRow",
     "WarehouseRow",
     "UserTypeRow",
-    "UserGateway",
-    "FulfillmentGateway",
-    "DBGateway",
     "ProductRow",
     "LocationInfo",
 ]
@@ -14,7 +11,6 @@ __all__ = [
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Protocol
 
 
 class UserTypeRow(Enum):
@@ -69,30 +65,3 @@ class UserRow:
     pwd: str
     type: UserTypeRow
     warehouse: WarehouseRow
-
-
-class UserGateway(Protocol):
-    @staticmethod
-    def get_user(username: str) -> UserRow | None: ...
-
-    @staticmethod
-    def get_operators(username: str) -> list[UserRow]: ...
-
-
-class FulfillmentGateway(Protocol):
-    @staticmethod
-    def get_ready() -> list[FulfillmentOrderRow]: ...
-
-    @staticmethod
-    def assign(id: int, operator: str) -> FulfillmentOrderRow: ...
-
-    @staticmethod
-    def unassign(id: int, operator: str) -> FulfillmentOrderRow: ...
-
-    @staticmethod
-    def get_products(id: int) -> list[FulfillmentOrderProductRow]: ...
-
-
-class DBGateway(Protocol):
-    user: UserGateway
-    fulfillment: FulfillmentGateway

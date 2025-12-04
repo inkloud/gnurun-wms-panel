@@ -1,7 +1,7 @@
-__all__ = ["UsersService", "User"]
+__all__ = ["UsersService"]
 
-from ...data_gateway.types import DBGateway, UserRow
-from .types import User, UserType, Warehouse
+from ...domain.entities.users import User
+from ...domain.interfaces.data_gateway import DBGateway
 
 
 class UsersService:
@@ -9,14 +9,4 @@ class UsersService:
         self.data_mapper = data_mapper
 
     def get_operators(self, username: str) -> list[User]:
-        rows: list[UserRow] = self.data_mapper.user.get_operators(username)
-        return [
-            User(
-                username=row.username,
-                name=row.name,
-                pwd=row.pwd,
-                type=UserType(row.type.value),
-                warehouse=Warehouse(id=row.warehouse.id, name=row.warehouse.name),
-            )
-            for row in rows
-        ]
+        return self.data_mapper.user.get_operators(username)

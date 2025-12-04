@@ -5,8 +5,8 @@ from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
 from ..data_gateway.mock_db import DB
+from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..services.auth import AuthService
-from ..services.auth.types import AuthPayload, AuthUserType
 from ..services.users import UsersService
 from ..utils import get_token_from_header
 

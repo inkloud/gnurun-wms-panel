@@ -1,7 +1,8 @@
 __all__ = ["AuthService"]
 
-from ...data_gateway.types import DBGateway, UserRow
-from .types import AuthPayload, AuthUser, AuthUserType
+from ...domain.entities.auth import AuthPayload, AuthUser, AuthUserType
+from ...domain.entities.users import User
+from ...domain.interfaces.data_gateway import DBGateway
 from .utils import decode, encode
 
 
@@ -10,7 +11,7 @@ class AuthService:
         self.data_mapper = data_mapper
 
     def check_credentials(self, username: str, password: str) -> AuthPayload | None:
-        user_data: UserRow | None = self.data_mapper.user.get_user(username)
+        user_data: User | None = self.data_mapper.user.get_user(username)
         if user_data is not None and user_data.pwd == password:
             auth_user = AuthUser(
                 username=username,
@@ -24,7 +25,7 @@ class AuthService:
 
     def check_token(self, token: str) -> AuthPayload:
         auth_user: AuthUser = decode(token)
-        user_data: UserRow | None = self.data_mapper.user.get_user(auth_user.username)
+        user_data: User | None = self.data_mapper.user.get_user(auth_user.username)
         if user_data is None:
             raise KeyError(f"Unknown user '{auth_user.username}'")
         fresh_auth_user = AuthUser(
