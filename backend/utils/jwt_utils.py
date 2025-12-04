@@ -8,13 +8,12 @@ ALGORITHM: str = "HS256"
 
 
 def encode_jwt(payload: dict[str, Any]) -> str:
-    EXP: datetime = datetime.now(timezone.utc) + timedelta(hours=24)
-
-    return jwt.encode({**payload, "exp": EXP}, SECRET, algorithm=ALGORITHM)
+    exp: datetime = datetime.now(timezone.utc) + timedelta(hours=24)
+    return jwt.encode({**payload, "exp": exp}, SECRET, algorithm=ALGORITHM)  # type: ignore
 
 
 def decode_jwt(token: str) -> dict[str, Any]:
     try:
-        return jwt.decode(token, SECRET, algorithms=[ALGORITHM])
+        return jwt.decode(token, SECRET, algorithms=[ALGORITHM])  # type: ignore
     except jwt.InvalidTokenError as exc:
         raise Exception() from exc
