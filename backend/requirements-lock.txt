@@ -5,7 +5,7 @@ certifi==2025.11.12
 click==8.3.1
 dnspython==2.8.0
 email-validator==2.3.0
-fastapi==0.123.5
+fastapi==0.123.6
 fastapi-cli==0.0.16
 fastapi-cloud-cli==0.5.2
 fastar==0.8.0
@@ -28,7 +28,7 @@ PyYAML==6.0.3
 rich==14.2.0
 rich-toolkit==0.17.0
 rignore==0.7.6
-sentry-sdk==2.46.0
+sentry-sdk==2.47.0
 shellingham==1.5.4
 starlette==0.50.0
 typer==0.20.0
