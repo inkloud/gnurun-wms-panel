@@ -54,12 +54,17 @@ export const getFulfillmentOrderProducts = async function (
 
 const FulfillmentOrderPositionSchema = z.object({
     position: z.string(),
-    products: FulfillmentOrderProductSchema.array()
+    product: z.object({id: z.string(), sku: z.string(), name: z.string()}),
+    orders: z.array(z.object({id: z.string(), quantity: z.number()}))
 });
+
 type FulfillmentOrderPositionInput = z.input<typeof FulfillmentOrderPositionSchema>;
-const toFulfillmentOrderPosition = function (item: FulfillmentOrderPositionInput): FulfillmentOrderPosition {
-    const parsed = FulfillmentOrderPositionSchema.parse(item);
-    return {position: parsed.position, products: parsed.products};
+
+type FulfillmentOrderPositionOutput = z.output<typeof FulfillmentOrderPositionSchema>;
+
+const toFulfillmentOrderPosition = function (item: FulfillmentOrderPositionInput): FulfillmentOrderPositionInput {
+    const parsed: FulfillmentOrderPositionOutput = FulfillmentOrderPositionSchema.parse(item);
+    return {position: parsed.position, product: {...parsed.product}, orders: parsed.orders.map((o) => ({...o}))};
 };
 
 export const getFulfillmentOrderPositions = async function (

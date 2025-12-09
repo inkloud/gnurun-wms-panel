@@ -9,4 +9,8 @@ export type FulfillmentOrderProduct = {
     position: string;
 };
 
-export type FulfillmentOrderPosition = {position: string; products: FulfillmentOrderProduct[]};
+export type FulfillmentOrderPosition = {
+    position: string;
+    product: {id: string; sku: string; name: string};
+    orders: {id: string; quantity: number}[];
+};

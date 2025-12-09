@@ -4,6 +4,8 @@ from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderPosition,
     FulfillmentOrderProduct,
+    SimpleOrder,
+    SimpleProduct,
 )
 from ...domain.interfaces.data_gateway import DBGateway
 from .optimizer import order_by_position
@@ -40,7 +42,18 @@ class FulfillmentOrderService:
             grouped.setdefault(product.position, []).append(product)
         return order_by_position(
             [
-                FulfillmentOrderPosition(position=position, products=items)
+                FulfillmentOrderPosition(
+                    position=position,
+                    product=SimpleProduct(
+                        id=items[0].id, sku=items[0].sku, name=items[0].name
+                    ),
+                    orders=[
+                        SimpleOrder(
+                            id=item.fulfillment_order_id, quantity=item.quantity
+                        )
+                        for item in items
+                    ],
+                )
                 for position, items in grouped.items()
             ]
         )

@@ -1,29 +1,37 @@
-import type {FulfillmentOrderPosition, FulfillmentOrderProduct} from '../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrderPosition} from '../../../hooks/fulfillment-orders/types';
 
 const TableRow: React.FC<{
     isFirst: boolean;
     position: FulfillmentOrderPosition;
-    product: FulfillmentOrderProduct;
+    orderId: string;
+    quantity: number;
+    rowSpan: number;
     totalUnits: number;
-}> = function ({isFirst, position, product, totalUnits}) {
+}> = function ({isFirst, position, orderId, quantity, rowSpan, totalUnits}) {
     return (
         <tr>
             {isFirst ? (
-                <td rowSpan={position.products.length} className="align-top" style={{width: '200px'}}>
-                    <div className="d-flex flex-column gap-1">
-                        <span className="badge text-bg-secondary px-3 py-2 fs-6">{position.position}</span>
-                        <span className="text-muted small">
-                            {position.products.length} products · {totalUnits} units
-                        </span>
-                    </div>
-                </td>
+                <>
+                    <td rowSpan={rowSpan} className="align-top" style={{width: '200px'}}>
+                        <div className="d-flex flex-column gap-1">
+                            <span className="badge text-bg-secondary px-3 py-2 fs-6">{position.position}</span>
+                            <span className="text-muted small">
+                                {position.orders.length} orders · {totalUnits} units
+                            </span>
+                        </div>
+                    </td>
+                    <td rowSpan={rowSpan} className="fw-semibold font-monospace">
+                        {position.product.sku}
+                    </td>
+                    <td rowSpan={rowSpan} className="text-muted">
+                        {position.product.name}
+                    </td>
+                </>
             ) : null}
-            <td className="fw-semibold font-monospace">{product.sku}</td>
-            <td className="text-muted">{product.name}</td>
             <td>
-                <span className="badge text-bg-light text-body-emphasis">{product.fulfillment_order_id}</span>
+                <span className="badge text-bg-light text-body-emphasis">{orderId}</span>
             </td>
-            <td className="text-end fw-semibold">×{product.quantity}</td>
+            <td className="text-end fw-semibold">×{quantity}</td>
         </tr>
     );
 };
@@ -34,13 +42,17 @@ export const PositionsTable: React.FC<{positions: FulfillmentOrderPosition[] | u
         return <div className="text-muted text-center py-4">No positions assigned to your orders yet.</div>;
 
     const rows = positions.flatMap((position) => {
-        const totalUnits = position.products.reduce((sum, product) => sum + product.quantity, 0);
-        return position.products.map((product, idx) => (
+        const orders = position.orders.length > 0 ? position.orders : [{id: '—', quantity: 0}];
+        const totalUnits = position.orders.reduce((sum, order) => sum + order.quantity, 0);
+        const rowSpan = orders.length;
+        return orders.map((order, idx) => (
             <TableRow
-                key={`${position.position}-${product.fulfillment_order_id}-${product.sku}`}
+                key={`${position.position}-${order.id}-${idx}`}
                 isFirst={idx === 0}
                 position={position}
-                product={product}
+                orderId={order.id}
+                quantity={order.quantity}
+                rowSpan={rowSpan}
                 totalUnits={totalUnits}
             />
         ));
