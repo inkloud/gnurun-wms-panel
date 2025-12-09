@@ -92,12 +92,12 @@ export const useFulfillmentOrderPositions = function (id_list: Set<string>): Ful
     const token = authData!.access_token;
     const ids = [...id_list].sort();
 
-    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_POSITIONS_2', string, string]) {
+    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_POSITIONS', string, string]) {
         const res = await Promise.all(ids.map((id) => getFulfillmentOrderPositions(token, id)));
         return res.flat();
     };
 
-    const {data} = useSWR(['FULFILLMENT_ORDER_POSITIONS_2', token, ids.join(', ')], fetcher, {
+    const {data} = useSWR(['FULFILLMENT_ORDER_POSITIONS', token, ids.join(', ')], fetcher, {
         dedupingInterval: 60000
     });
     return data;
