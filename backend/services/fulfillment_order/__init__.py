@@ -33,10 +33,12 @@ class FulfillmentOrderService:
             _decode_id("FO", fulfillment_order_id)
         )
 
-    def get_products_by_positions(
-        self, fulfillment_order_id: str
+    def get_products_by_positions_list(
+        self, fulfillment_order_id_list: list[str]
     ) -> list[FulfillmentOrderPosition]:
-        products = self.get_products(fulfillment_order_id)
+        products: list[FulfillmentOrderProduct] = []
+        for fulfillment_order_id in fulfillment_order_id_list:
+            products.extend(self.get_products(fulfillment_order_id))
         grouped: dict[str, list[FulfillmentOrderProduct]] = {}
         for product in products:
             grouped.setdefault(product.position, []).append(product)

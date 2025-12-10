@@ -69,10 +69,10 @@ const toFulfillmentOrderPosition = function (item: FulfillmentOrderPositionInput
 
 export const getFulfillmentOrderPositions = async function (
     token: string,
-    fulfillmentOrderId: string
+    fulfillmentOrderIdList: string[]
 ): Promise<FulfillmentOrderPosition[]> {
     const response = await axios.get<FulfillmentOrderPositionInput[]>(
-        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderId}/positions`,
+        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderIdList.join(',')}/positions`,
         {headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}}
     );
     return response.data.map(toFulfillmentOrderPosition);

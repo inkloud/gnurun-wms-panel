@@ -61,12 +61,15 @@ async def list_fulfillment_order_products(
     return fulfillment_order_service.get_products(fulfillment_order_id)
 
 
-@router.get("/fulfillment_orders/{fulfillment_order_id}/positions")
+@router.get("/fulfillment_orders/{fulfillment_order_id_list}/positions")
 async def list_fulfillment_order_positions(
-    fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
+    fulfillment_order_id_list: str,
+    auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrderPosition]:
     _authorize_operator(auth_header)
-    return fulfillment_order_service.get_products_by_positions(fulfillment_order_id)
+    return fulfillment_order_service.get_products_by_positions_list(
+        fulfillment_order_id_list.split(",")
+    )
 
 
 @router.put("/assign/{fulfillment_order_id}")
