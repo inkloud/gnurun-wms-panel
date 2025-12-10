@@ -78,20 +78,18 @@ class _FulfillmentGateway(FulfillmentGateway):
 
     @staticmethod
     def unassign(id: int, operator: str) -> FulfillmentOrder:
-        res: list[FulfillmentOrder] = [
-            FulfillmentOrder(
-                id=_encode_id("FO", f.id), date=f.date, assigned_to=f.assigned_to[:]
-            )
-            for f in FULFILLMENT_ORDERS
-            if f.id == id
-        ]
+        res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
-        data: FulfillmentOrder = res[0]
+        data: FulfillmentOrderRow = res[0]
         try:
             data.assigned_to.remove(operator)
         except ValueError:
             pass
-        return data
+        return FulfillmentOrder(
+            id=_encode_id("FO", data.id),
+            date=data.date,
+            assigned_to=data.assigned_to[:],
+        )
 
     @staticmethod
     def get_products(id: int) -> list[FulfillmentOrderProduct]:

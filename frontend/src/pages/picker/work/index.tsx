@@ -59,6 +59,7 @@ const PickerWorkerPage = function () {
     const handleScan = function (value: string) {
         setScanValue(value);
         setShowModal(true);
+        console.log(positions);
     };
 
     if (fulfillmentOrders === undefined) return null;
