@@ -5,7 +5,7 @@ import {
     useFulfillmentOrderProducts,
     useFulfillmentOrders
 } from '../../../hooks/fulfillment-orders';
-import type {FulfillmentOrder} from '../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrder, FulfillmentOrderPosition} from '../../../hooks/fulfillment-orders/types';
 import {Header} from '../../../ui/header';
 import {Page} from '../../../ui/page';
 import {CardsGrid} from '../ui';
@@ -20,30 +20,32 @@ const useData = function (): FulfillmentOrder[] | undefined {
     return fulfillmentOrders.filter((item) => item.assigned_to.includes(authData!.auth_user.username));
 };
 
-const ScanModal: React.FC<{handleHide: () => void; scanValue: string}> = function ({handleHide, scanValue}) {
-    return (
-        <>
-            <div className="modal fade show" style={{display: 'block'}} role="dialog" aria-modal="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Scan captured</h5>
-                        </div>
-                        <div className="modal-body">
-                            <p className="mb-0">{scanValue}</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={handleHide}>
-                                Close
-                            </button>
+const ScanModal: React.FC<{handleHide: () => void; scanValue: string; positions: FulfillmentOrderPosition[]}> =
+    function ({handleHide, scanValue, positions}) {
+        console.log({positions, scanValue});
+        return (
+            <>
+                <div className="modal fade show" style={{display: 'block'}} role="dialog" aria-modal="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Scan captured</h5>
+                            </div>
+                            <div className="modal-body">
+                                <p className="mb-0">{scanValue}</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={handleHide}>
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="modal-backdrop fade show" />
-        </>
-    );
-};
+                <div className="modal-backdrop fade show" />
+            </>
+        );
+    };
 
 const PickerWorkerPage = function () {
     const fulfillmentOrders: FulfillmentOrder[] | undefined = useData();
@@ -59,7 +61,6 @@ const PickerWorkerPage = function () {
     const handleScan = function (value: string) {
         setScanValue(value);
         setShowModal(true);
-        console.log(positions);
     };
 
     if (fulfillmentOrders === undefined) return null;
@@ -71,7 +72,9 @@ const PickerWorkerPage = function () {
                 <PositionsTable positions={positions} />
             </div>
             <BottomNavbar orders={fulfillmentOrders} products={products} onScan={handleScan} />
-            {showModal ? <ScanModal handleHide={() => setShowModal(false)} scanValue={scanValue} /> : null}
+            {showModal ? (
+                <ScanModal handleHide={() => setShowModal(false)} scanValue={scanValue} positions={positions!} />
+            ) : null}
         </Page>
     );
 };
