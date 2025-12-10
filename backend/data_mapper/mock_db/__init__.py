@@ -12,7 +12,7 @@ from ...domain.interfaces.data_gateway import (
     UserGateway,
 )
 from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
-from .types import UserRow, UserTypeRow
+from .types import FulfillmentOrderRow, UserRow, UserTypeRow
 from .users import USERS
 
 
@@ -65,18 +65,16 @@ class _FulfillmentGateway(FulfillmentGateway):
 
     @staticmethod
     def assign(id: int, operator: str) -> FulfillmentOrder:
-        res: list[FulfillmentOrder] = [
-            FulfillmentOrder(
-                id=_encode_id("FO", f.id), date=f.date, assigned_to=f.assigned_to[:]
-            )
-            for f in FULFILLMENT_ORDERS
-            if f.id == id
-        ]
+        res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
-        data: FulfillmentOrder = res[0]
+        data: FulfillmentOrderRow = res[0]
         if operator not in data.assigned_to:
             data.assigned_to.append(operator)
-        return data
+        return FulfillmentOrder(
+            id=_encode_id("FO", data.id),
+            date=data.date,
+            assigned_to=data.assigned_to[:],
+        )
 
     @staticmethod
     def unassign(id: int, operator: str) -> FulfillmentOrder:
