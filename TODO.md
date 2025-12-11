@@ -1,6 +1,6 @@
 # TODO
 
-## Development \*\*
+## Development \*\*\*
 
 - Focus on the **Picker** working page:
 
@@ -60,6 +60,8 @@
   ~~Let's try to use both in services and data_gateway what I defined under domain. Let's start with the interface and then with the entities.~~
 
 - ~~When I reload the [page](/picker) I lost the state?~~
+
+- Linter!
 
 - Every SKU should have a specific position (currently random: same SKU shows different positions across orders). Only occasionally should the same SKU appear in more than one position.
 

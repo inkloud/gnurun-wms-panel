@@ -9,8 +9,10 @@ export type FulfillmentOrderProduct = {
     position: string;
 };
 
+export type OrderType = {id: string; quantity: number};
+
 export type FulfillmentOrderPosition = {
     position: string;
     product: {id: string; sku: string; name: string};
-    orders: {id: string; quantity: number}[];
+    orders: OrderType[];
 };

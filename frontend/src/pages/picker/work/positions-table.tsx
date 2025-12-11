@@ -76,7 +76,7 @@ export const PositionsTable: React.FC<{positions: FulfillmentOrderPosition[] | u
                             Order
                         </th>
                         <th scope="col" className="text-uppercase text-muted small text-end">
-                            Qty
+                            Quantity
                         </th>
                     </tr>
                 </thead>
