@@ -1,7 +1,7 @@
 {
     "name": "gnurun-wms-panel-frontend",
     "private": true,
-    "version": "3.10.0",
+    "version": "3.11.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -29,7 +29,7 @@
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-refresh": "^0.4.24",
         "globals": "^16.5.0",
-        "npm-check-updates": "^19.1.2",
+        "npm-check-updates": "^19.2.0",
         "serve": "^14.2.5",
         "typescript": "~5.9.3",
         "typescript-eslint": "^8.49.0",
