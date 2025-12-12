@@ -2,16 +2,16 @@ import React from 'react';
 
 import type {OrderType} from '../../../../hooks/fulfillment-orders/types';
 
-const PositionBadge: React.FC<{children: React.ReactNode}> = function ({children}) {
-    return (
-        <span
-            className="badge text-bg-light align-self-start px-3 py-2 fs-6 text-center"
-            style={{display: 'inline-block'}}
-        >
-            {children}
-        </span>
-    );
-};
+// const PositionBadge: React.FC<{children: React.ReactNode}> = function ({children}) {
+//     return (
+//         <span
+//             className="badge text-bg-light align-self-start px-3 py-2 fs-6 text-center"
+//             style={{display: 'inline-block'}}
+//         >
+//             {children}
+//         </span>
+//     );
+// };
 
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
     return (
