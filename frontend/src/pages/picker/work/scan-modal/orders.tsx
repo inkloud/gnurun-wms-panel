@@ -19,7 +19,7 @@ const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({
     );
 };
 
-const CurrentOrder: React.FC<{order: OrderType}> = function ({order}) {
+const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}> = function ({order, onConfirm}) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     React.useEffect(() => {
         inputRef.current!.select();
@@ -35,7 +35,7 @@ const CurrentOrder: React.FC<{order: OrderType}> = function ({order}) {
 
     const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.log({orderId: order.id, quantity});
+        onConfirm(quantity);
     };
 
     return (
@@ -71,7 +71,9 @@ const CurrentOrder: React.FC<{order: OrderType}> = function ({order}) {
 export const Orders: React.FC<{orders: OrderType[]}> = function ({orders}) {
     const [currentOrder, setCurrentPosition] = React.useState<OrderType | null>(null);
 
-    console.log(currentOrder);
+    const handleConfirm = function (quantity: number) {
+        console.log({orderId: currentOrder!.id, quantity});
+    };
 
     const list = orders.map((order) => {
         const handleClick = function () {
@@ -82,7 +84,7 @@ export const Orders: React.FC<{orders: OrderType[]}> = function ({orders}) {
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? list : <CurrentOrder order={currentOrder} />}
+            {currentOrder === null ? list : <CurrentOrder order={currentOrder} onConfirm={handleConfirm} />}
         </div>
     );
 };
