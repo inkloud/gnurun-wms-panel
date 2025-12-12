@@ -2,17 +2,6 @@ import React from 'react';
 
 import type {OrderType} from '../../../../hooks/fulfillment-orders/types';
 
-// const PositionBadge: React.FC<{children: React.ReactNode}> = function ({children}) {
-//     return (
-//         <span
-//             className="badge text-bg-light align-self-start px-3 py-2 fs-6 text-center"
-//             style={{display: 'inline-block'}}
-//         >
-//             {children}
-//         </span>
-//     );
-// };
-
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
     return (
         <div className="card" style={{cursor: 'pointer'}} onClick={onClick}>
@@ -25,6 +14,55 @@ const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({
                     <span className="text-uppercase text-muted small d-block">Quantity</span>
                     <span className="fw-semibold fs-5">x{order.quantity}</span>
                 </div>
+            </div>
+        </div>
+    );
+};
+
+const CurrentOrder: React.FC<{order: OrderType}> = function ({order}) {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    React.useEffect(() => {
+        inputRef.current!.select();
+    }, [inputRef.current]);
+    const [quantity, setQuantity] = React.useState<number>(order.quantity);
+    React.useEffect(() => {
+        setQuantity(order.quantity);
+    }, [order.id, order.quantity]);
+
+    const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+        setQuantity(e.target.value === '' ? 0 : Number(e.target.value));
+    };
+
+    const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        console.log({orderId: order.id, quantity});
+    };
+
+    return (
+        <div className="d-flex flex-column gap-3">
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        ref={inputRef}
+                        type="number"
+                        min={0}
+                        max={order.quantity}
+                        step={1}
+                        className="form-control form-control-lg text-center fs-1 fw-bold mx-auto"
+                        style={{maxWidth: 180}}
+                        value={quantity}
+                        onChange={handleChange}
+                        onFocus={(e) => e.currentTarget.select()}
+                        autoFocus
+                    />
+                    <button
+                        type="submit"
+                        className="btn btn-success btn-lg mt-3 d-flex justify-content-center align-items-center gap-2 mx-auto"
+                        style={{maxWidth: 180}}
+                    >
+                        {order.id}
+                    </button>
+                </form>
             </div>
         </div>
     );
@@ -44,13 +82,7 @@ export const Orders: React.FC<{orders: OrderType[]}> = function ({orders}) {
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? (
-                list
-            ) : (
-                <h2>
-                    <span className="badge text-bg-light align-self-start">{currentOrder.id}</span>
-                </h2>
-            )}
+            {currentOrder === null ? list : <CurrentOrder order={currentOrder} />}
         </div>
     );
 };
