@@ -52,7 +52,7 @@ export const FulfillmentCard: React.FC<{item: FulfillmentOrder; actions?: Fulfil
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title mb-1">{item.id}</h5>
                     <p className="card-text text-muted flex-grow-1">
-                        <time dateTime={item.date.toISOString()}>{formatOrderDate(item.date)}</time>
+                        <time dateTime={item.created_at.toISOString()}>{formatOrderDate(item.created_at)}</time>
                     </p>
                     <div className="mb-3">
                         <div className="d-flex flex-wrap gap-2 mt-1">{assigned_to}</div>

@@ -12,7 +12,7 @@ const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
 
 const FulfillmentOrderApiSchema = z.object({
     id: z.string(),
-    date: z.preprocess((value: string) => new Date(value), z.date()),
+    created_at: z.preprocess((value: string) => new Date(value), z.date()),
     assigned_to: z.array(z.string())
 });
 type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
@@ -80,7 +80,7 @@ export const getFulfillmentOrderPositions = async function (
 
 const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {
     const e: FulfillmentOrderApiOutput = FulfillmentOrderApiSchema.parse(order);
-    return {id: e.id, date: new Date(e.date), assigned_to: [...e.assigned_to]};
+    return {id: e.id, created_at: new Date(e.created_at), assigned_to: [...e.assigned_to]};
 };
 
 export const getFulfillmentOrders = async function (token: string): Promise<FulfillmentOrder[]> {

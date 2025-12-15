@@ -13,7 +13,7 @@ from datetime import datetime
 @dataclass(frozen=True)
 class FulfillmentOrder:
     id: str
-    date: datetime
+    created_at: datetime
     assigned_to: list[str]
 
 

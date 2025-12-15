@@ -57,11 +57,13 @@ class _FulfillmentGateway(FulfillmentGateway):
     def get_ready() -> list[FulfillmentOrder]:
         data: list[FulfillmentOrder] = [
             FulfillmentOrder(
-                id=_encode_id("FO", f.id), date=f.date, assigned_to=f.assigned_to[:]
+                id=_encode_id("FO", f.id),
+                created_at=f.date,
+                assigned_to=f.assigned_to[:],
             )
             for f in FULFILLMENT_ORDERS
         ]
-        return sorted(data, key=lambda order: order.date)
+        return sorted(data, key=lambda order: order.created_at)
 
     @staticmethod
     def assign(id: int, operator: str) -> FulfillmentOrder:
@@ -72,7 +74,7 @@ class _FulfillmentGateway(FulfillmentGateway):
             data.assigned_to.append(operator)
         return FulfillmentOrder(
             id=_encode_id("FO", data.id),
-            date=data.date,
+            created_at=data.date,
             assigned_to=data.assigned_to[:],
         )
 
@@ -87,7 +89,7 @@ class _FulfillmentGateway(FulfillmentGateway):
             pass
         return FulfillmentOrder(
             id=_encode_id("FO", data.id),
-            date=data.date,
+            created_at=data.date,
             assigned_to=data.assigned_to[:],
         )
 

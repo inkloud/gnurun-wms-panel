@@ -1,4 +1,4 @@
-export type FulfillmentOrder = {id: string; date: Date; assigned_to: string[]};
+export type FulfillmentOrder = {id: string; created_at: Date; assigned_to: string[]};
 
 export type FulfillmentOrderLine = {
     id: string;
