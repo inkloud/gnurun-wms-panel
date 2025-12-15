@@ -2,6 +2,7 @@ __all__ = [
     "UserRow",
     "FulfillmentOrderRow",
     "FulfillmentOrderProductRow",
+    "FulfillmentOrderSessionRow",
     "WarehouseRow",
     "UserTypeRow",
     "ProductRow",
@@ -45,7 +46,13 @@ class ProductRow:
 class FulfillmentOrderRow:
     id: int
     date: datetime
-    assigned_to: list[str]
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderSessionRow:
+    operator_id: str
+    fulfillment_order_id: int
+    started_at: datetime
 
 
 @dataclass(frozen=True)

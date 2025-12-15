@@ -1,10 +1,19 @@
-__all__ = ["FULFILLMENT_ORDERS", "FULFILLMENT_ORDERS_PRODUCTS"]
+__all__ = [
+    "FULFILLMENT_ORDERS",
+    "FULFILLMENT_ORDERS_PRODUCTS",
+    "FULFILLMENT_ORDER_SESSIONS",
+]
 
 import random
 from datetime import datetime, timedelta
 
 from .products import PRODUCTS
-from .types import FulfillmentOrderProductRow, FulfillmentOrderRow, ProductRow
+from .types import (
+    FulfillmentOrderProductRow,
+    FulfillmentOrderRow,
+    FulfillmentOrderSessionRow,
+    ProductRow,
+)
 from .users import USERS, UserTypeRow
 
 _OPERATOR_USERNAMES = [
@@ -17,31 +26,50 @@ def _random_date_within_last_week(now: datetime) -> datetime:
     return now - timedelta(seconds=seconds_back)
 
 
-def _random_assigned_users() -> list[str]:
+def _random_sessions(
+    fulfillment_order_id: int, created_at: datetime
+) -> list[FulfillmentOrderSessionRow]:
     if random.random() < 0.5:
         return []
     desired = 1 if random.random() < 0.5 else 2
     count = min(desired, len(_OPERATOR_USERNAMES))
-    return random.sample(_OPERATOR_USERNAMES, k=count)
+    operator_ids = random.sample(_OPERATOR_USERNAMES, k=count)
+    return [
+        FulfillmentOrderSessionRow(
+            operator_id=operator_id,
+            fulfillment_order_id=fulfillment_order_id,
+            started_at=created_at,
+        )
+        for operator_id in operator_ids
+    ]
 
 
-def _generate_fulfillment_orders() -> list[FulfillmentOrderRow]:
+def _generate_fulfillment_orders() -> tuple[
+    list[FulfillmentOrderRow], list[FulfillmentOrderSessionRow]
+]:
     now = datetime.now()
     total = random.randint(0, 10)
     base_id = 1001
     orders: list[FulfillmentOrderRow] = []
+    sessions: list[FulfillmentOrderSessionRow] = []
     for i in range(total):
+        fulfillment_order_id = base_id + i
+        created_at = _random_date_within_last_week(now)
         orders.append(
             FulfillmentOrderRow(
-                id=base_id + i,
-                date=_random_date_within_last_week(now),
-                assigned_to=_random_assigned_users(),
+                id=fulfillment_order_id,
+                date=created_at,
             )
         )
-    return orders
+        sessions.extend(
+            _random_sessions(
+                fulfillment_order_id=fulfillment_order_id, created_at=created_at
+            )
+        )
+    return orders, sessions
 
 
-FULFILLMENT_ORDERS: list[FulfillmentOrderRow] = _generate_fulfillment_orders()
+FULFILLMENT_ORDERS, FULFILLMENT_ORDER_SESSIONS = _generate_fulfillment_orders()
 
 
 def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:

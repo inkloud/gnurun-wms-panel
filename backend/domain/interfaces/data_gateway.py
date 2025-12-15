@@ -4,7 +4,11 @@ __all__ = ["DBGateway", "UserGateway", "FulfillmentGateway"]
 
 from typing import Protocol
 
-from ..entities.fulfillment_order import FulfillmentOrder, FulfillmentOrderLine
+from ..entities.fulfillment_order import (
+    FulfillmentOrder,
+    FulfillmentOrderLine,
+    FulfillmentOrderSession,
+)
 from ..entities.users import User
 
 
@@ -21,10 +25,16 @@ class FulfillmentGateway(Protocol):
     def get_ready() -> list[FulfillmentOrder]: ...
 
     @staticmethod
-    def assign(id: int, operator: str) -> FulfillmentOrder: ...
+    def get(id: int) -> FulfillmentOrder: ...
 
     @staticmethod
-    def unassign(id: int, operator: str) -> FulfillmentOrder: ...
+    def get_sessions(id: int) -> set[FulfillmentOrderSession]: ...
+
+    @staticmethod
+    def assign(id: int, operator: str) -> set[FulfillmentOrderSession]: ...
+
+    @staticmethod
+    def unassign(id: int, operator: str) -> set[FulfillmentOrderSession]: ...
 
     @staticmethod
     def get_lines(id: int) -> list[FulfillmentOrderLine]: ...

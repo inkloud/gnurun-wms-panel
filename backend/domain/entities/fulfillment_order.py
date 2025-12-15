@@ -2,6 +2,7 @@ __all__ = [
     "FulfillmentOrder",
     "FulfillmentOrderLine",
     "FulfillmentOrderPosition",
+    "FulfillmentOrderSession",
     "SimpleOrder",
     "SimpleProduct",
 ]
@@ -14,7 +15,13 @@ from datetime import datetime
 class FulfillmentOrder:
     id: str
     created_at: datetime
-    assigned_to: list[str]
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderSession:
+    operator_id: str
+    fulfillment_order_id: str
+    started_at: datetime
 
 
 @dataclass(frozen=True)

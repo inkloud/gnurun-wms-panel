@@ -4,6 +4,7 @@ from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderPosition,
+    FulfillmentOrderSession,
     SimpleOrder,
     SimpleProduct,
 )
@@ -22,10 +23,16 @@ class FulfillmentOrderService:
     def get_ready(self) -> list[FulfillmentOrder]:
         return self.data_mapper.fulfillment.get_ready()
 
-    def assign(self, id: str, operator: str) -> FulfillmentOrder:
+    def get(self, id: str) -> FulfillmentOrder:
+        return self.data_mapper.fulfillment.get(_decode_id("FO", id))
+
+    def get_sessions(self, id: str) -> set[FulfillmentOrderSession]:
+        return self.data_mapper.fulfillment.get_sessions(_decode_id("FO", id))
+
+    def assign(self, id: str, operator: str) -> set[FulfillmentOrderSession]:
         return self.data_mapper.fulfillment.assign(_decode_id("FO", id), operator)
 
-    def unassign(self, id: str, operator: str) -> FulfillmentOrder:
+    def unassign(self, id: str, operator: str) -> set[FulfillmentOrderSession]:
         return self.data_mapper.fulfillment.unassign(_decode_id("FO", id), operator)
 
     def get_lines(self, fulfillment_order_id: str) -> list[FulfillmentOrderLine]:

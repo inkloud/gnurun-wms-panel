@@ -1,9 +1,11 @@
 __all__ = ["DB"]
 
+from datetime import datetime
 
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
+    FulfillmentOrderSession,
 )
 from ...domain.entities.users import User, UserType, Warehouse
 from ...domain.interfaces.data_gateway import (
@@ -11,8 +13,12 @@ from ...domain.interfaces.data_gateway import (
     FulfillmentGateway,
     UserGateway,
 )
-from .fulfillment_orders import FULFILLMENT_ORDERS, FULFILLMENT_ORDERS_PRODUCTS
-from .types import FulfillmentOrderRow, UserRow, UserTypeRow
+from .fulfillment_orders import (
+    FULFILLMENT_ORDER_SESSIONS,
+    FULFILLMENT_ORDERS,
+    FULFILLMENT_ORDERS_PRODUCTS,
+)
+from .types import FulfillmentOrderRow, FulfillmentOrderSessionRow, UserRow, UserTypeRow
 from .users import USERS
 
 
@@ -59,39 +65,58 @@ class _FulfillmentGateway(FulfillmentGateway):
             FulfillmentOrder(
                 id=_encode_id("FO", f.id),
                 created_at=f.date,
-                assigned_to=f.assigned_to[:],
             )
             for f in FULFILLMENT_ORDERS
         ]
         return sorted(data, key=lambda order: order.created_at)
 
     @staticmethod
-    def assign(id: int, operator: str) -> FulfillmentOrder:
+    def get(id: int) -> FulfillmentOrder:
         res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
         assert len(res) == 1
         data: FulfillmentOrderRow = res[0]
-        if operator not in data.assigned_to:
-            data.assigned_to.append(operator)
         return FulfillmentOrder(
             id=_encode_id("FO", data.id),
             created_at=data.date,
-            assigned_to=data.assigned_to[:],
         )
 
     @staticmethod
-    def unassign(id: int, operator: str) -> FulfillmentOrder:
-        res: list[FulfillmentOrderRow] = [f for f in FULFILLMENT_ORDERS if f.id == id]
-        assert len(res) == 1
-        data: FulfillmentOrderRow = res[0]
-        try:
-            data.assigned_to.remove(operator)
-        except ValueError:
-            pass
-        return FulfillmentOrder(
-            id=_encode_id("FO", data.id),
-            created_at=data.date,
-            assigned_to=data.assigned_to[:],
-        )
+    def get_sessions(id: int) -> set[FulfillmentOrderSession]:
+        return {
+            FulfillmentOrderSession(
+                operator_id=row.operator_id,
+                fulfillment_order_id=_encode_id("FO", row.fulfillment_order_id),
+                started_at=row.started_at,
+            )
+            for row in FULFILLMENT_ORDER_SESSIONS
+            if row.fulfillment_order_id == id
+        }
+
+    @staticmethod
+    def assign(id: int, operator: str) -> set[FulfillmentOrderSession]:
+        _FulfillmentGateway.get(id)
+        if not any(
+            row.fulfillment_order_id == id and row.operator_id == operator
+            for row in FULFILLMENT_ORDER_SESSIONS
+        ):
+            FULFILLMENT_ORDER_SESSIONS.append(
+                FulfillmentOrderSessionRow(
+                    operator_id=operator,
+                    fulfillment_order_id=id,
+                    started_at=datetime.now(),
+                )
+            )
+        return _FulfillmentGateway.get_sessions(id)
+
+    @staticmethod
+    def unassign(id: int, operator: str) -> set[FulfillmentOrderSession]:
+        _FulfillmentGateway.get(id)
+        FULFILLMENT_ORDER_SESSIONS[:] = [
+            row
+            for row in FULFILLMENT_ORDER_SESSIONS
+            if not (row.fulfillment_order_id == id and row.operator_id == operator)
+        ]
+        return _FulfillmentGateway.get_sessions(id)
 
     @staticmethod
     def get_lines(id: int) -> list[FulfillmentOrderLine]:

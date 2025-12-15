@@ -1,5 +1,7 @@
 __all__ = ["router"]
 
+from dataclasses import dataclass
+
 from fastapi import APIRouter, Header, HTTPException, status
 
 from ..data_mapper.mock_db import DB
@@ -18,6 +20,23 @@ router = APIRouter(prefix="/picker", tags=["picker"])
 
 auth_service = AuthService(DB())
 fulfillment_order_service = FulfillmentOrderService(DB())
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderResponse:
+    id: str
+    created_at: str
+    assigned_to: list[str]
+
+
+def _to_fulfillment_order_response(order: FulfillmentOrder) -> FulfillmentOrderResponse:
+    sessions = fulfillment_order_service.get_sessions(order.id)
+    assigned_to = sorted({s.operator_id for s in sessions})
+    return FulfillmentOrderResponse(
+        id=order.id,
+        created_at=order.created_at.isoformat(),
+        assigned_to=assigned_to,
+    )
 
 
 def _authorize_operator(auth_header: str):
@@ -48,9 +67,12 @@ async def hello_picker(
 @router.get("/fulfillment_orders")
 async def list_fulfillment_orders(
     auth_header: str = Header(..., alias="Authorization"),
-) -> list[FulfillmentOrder]:
+) -> list[FulfillmentOrderResponse]:
     _authorize_operator(auth_header)
-    return fulfillment_order_service.get_ready()
+    return [
+        _to_fulfillment_order_response(order)
+        for order in fulfillment_order_service.get_ready()
+    ]
 
 
 @router.get("/fulfillment_orders/{fulfillment_order_id}/products")
@@ -75,18 +97,24 @@ async def list_fulfillment_order_positions(
 @router.put("/assign/{fulfillment_order_id}")
 async def assign_fulfillment_order(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
-) -> FulfillmentOrder:
+) -> FulfillmentOrderResponse:
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return fulfillment_order_service.assign(fulfillment_order_id, operator)
+    fulfillment_order_service.assign(fulfillment_order_id, operator)
+    return _to_fulfillment_order_response(
+        fulfillment_order_service.get(fulfillment_order_id)
+    )
 
 
 @router.put("/unassign/{fulfillment_order_id}")
 async def unassign_fulfillment_order(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
-) -> FulfillmentOrder:
+) -> FulfillmentOrderResponse:
     auth_payload: AuthPayload = _authorize_operator(auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     operator: str = auth_payload.auth_user.username
-    return fulfillment_order_service.unassign(fulfillment_order_id, operator)
+    fulfillment_order_service.unassign(fulfillment_order_id, operator)
+    return _to_fulfillment_order_response(
+        fulfillment_order_service.get(fulfillment_order_id)
+    )
