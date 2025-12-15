@@ -6,8 +6,8 @@ from ..data_mapper.mock_db import DB
 from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..domain.entities.fulfillment_order import (
     FulfillmentOrder,
+    FulfillmentOrderLine,
     FulfillmentOrderPosition,
-    FulfillmentOrderProduct,
 )
 from ..services.auth import AuthService
 from ..services.fulfillment_order import FulfillmentOrderService
@@ -56,9 +56,9 @@ async def list_fulfillment_orders(
 @router.get("/fulfillment_orders/{fulfillment_order_id}/products")
 async def list_fulfillment_order_products(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
-) -> list[FulfillmentOrderProduct]:
+) -> list[FulfillmentOrderLine]:
     _authorize_operator(auth_header)
-    return fulfillment_order_service.get_products(fulfillment_order_id)
+    return fulfillment_order_service.get_lines(fulfillment_order_id)
 
 
 @router.get("/fulfillment_orders/{fulfillment_order_id_list}/positions")

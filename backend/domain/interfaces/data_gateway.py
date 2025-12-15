@@ -4,7 +4,7 @@ __all__ = ["DBGateway", "UserGateway", "FulfillmentGateway"]
 
 from typing import Protocol
 
-from ..entities.fulfillment_order import FulfillmentOrder, FulfillmentOrderProduct
+from ..entities.fulfillment_order import FulfillmentOrder, FulfillmentOrderLine
 from ..entities.users import User
 
 
@@ -27,7 +27,7 @@ class FulfillmentGateway(Protocol):
     def unassign(id: int, operator: str) -> FulfillmentOrder: ...
 
     @staticmethod
-    def get_products(id: int) -> list[FulfillmentOrderProduct]: ...
+    def get_lines(id: int) -> list[FulfillmentOrderLine]: ...
 
 
 class DBGateway(Protocol):

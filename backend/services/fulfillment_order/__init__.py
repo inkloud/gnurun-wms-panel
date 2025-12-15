@@ -2,8 +2,8 @@ __all__ = ["FulfillmentOrderService"]
 
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
+    FulfillmentOrderLine,
     FulfillmentOrderPosition,
-    FulfillmentOrderProduct,
     SimpleOrder,
     SimpleProduct,
 )
@@ -28,20 +28,20 @@ class FulfillmentOrderService:
     def unassign(self, id: str, operator: str) -> FulfillmentOrder:
         return self.data_mapper.fulfillment.unassign(_decode_id("FO", id), operator)
 
-    def get_products(self, fulfillment_order_id: str) -> list[FulfillmentOrderProduct]:
-        return self.data_mapper.fulfillment.get_products(
+    def get_lines(self, fulfillment_order_id: str) -> list[FulfillmentOrderLine]:
+        return self.data_mapper.fulfillment.get_lines(
             _decode_id("FO", fulfillment_order_id)
         )
 
     def get_products_by_positions_list(
         self, fulfillment_order_id_list: list[str]
     ) -> list[FulfillmentOrderPosition]:
-        products: list[FulfillmentOrderProduct] = []
+        products: list[FulfillmentOrderLine] = []
         for fulfillment_order_id in fulfillment_order_id_list:
-            products.extend(self.get_products(fulfillment_order_id))
-        grouped: dict[str, list[FulfillmentOrderProduct]] = {}
+            products.extend(self.get_lines(fulfillment_order_id))
+        grouped: dict[str, list[FulfillmentOrderLine]] = {}
         for product in products:
-            grouped.setdefault(product.position, []).append(product)
+            grouped.setdefault(product.position_code, []).append(product)
         return order_by_position(
             [
                 FulfillmentOrderPosition(
@@ -51,7 +51,8 @@ class FulfillmentOrderService:
                     ),
                     orders=[
                         SimpleOrder(
-                            id=item.fulfillment_order_id, quantity=item.quantity
+                            id=item.fulfillment_order_id,
+                            quantity=item.quantity_required,
                         )
                         for item in items
                     ],

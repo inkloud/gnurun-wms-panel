@@ -3,7 +3,7 @@ __all__ = ["DB"]
 
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
-    FulfillmentOrderProduct,
+    FulfillmentOrderLine,
 )
 from ...domain.entities.users import User, UserType, Warehouse
 from ...domain.interfaces.data_gateway import (
@@ -92,15 +92,15 @@ class _FulfillmentGateway(FulfillmentGateway):
         )
 
     @staticmethod
-    def get_products(id: int) -> list[FulfillmentOrderProduct]:
+    def get_lines(id: int) -> list[FulfillmentOrderLine]:
         return [
-            FulfillmentOrderProduct(
+            FulfillmentOrderLine(
                 id=_encode_id("PR", e.id),
-                sku=e.sku,
-                name=e.name,
-                quantity=e.quantity,
                 fulfillment_order_id=_encode_id("FO", e.fulfillment_order_id),
-                position=e.position,
+                sku=e.sku,
+                position_code=e.position,
+                quantity_required=e.quantity,
+                name=e.name,
             )
             for e in FULFILLMENT_ORDERS_PRODUCTS
             if e.fulfillment_order_id == id

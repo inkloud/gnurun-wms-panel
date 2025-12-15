@@ -1,6 +1,6 @@
 __all__ = [
     "FulfillmentOrder",
-    "FulfillmentOrderProduct",
+    "FulfillmentOrderLine",
     "FulfillmentOrderPosition",
     "SimpleOrder",
     "SimpleProduct",
@@ -18,13 +18,13 @@ class FulfillmentOrder:
 
 
 @dataclass(frozen=True)
-class FulfillmentOrderProduct:
+class FulfillmentOrderLine:
     id: str
-    sku: str
-    name: str
-    quantity: int
     fulfillment_order_id: str
-    position: str
+    sku: str
+    position_code: str
+    quantity_required: int
+    name: str
 
 
 @dataclass(frozen=True)

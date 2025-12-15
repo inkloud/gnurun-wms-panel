@@ -1,12 +1,12 @@
 import React from 'react';
 
-import type {FulfillmentOrder, FulfillmentOrderProduct} from '../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrder, FulfillmentOrderLine} from '../../../hooks/fulfillment-orders/types';
 
 export const BottomNavbar: React.FC<{
     orders: FulfillmentOrder[];
-    products: FulfillmentOrderProduct[] | undefined;
+    lines: FulfillmentOrderLine[] | undefined;
     onScan: (v: string) => void;
-}> = function ({orders, products, onScan}) {
+}> = function ({orders, lines, onScan}) {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const [scanValue, setScanValue] = React.useState('');
     const [isFocused, setIsFocused] = React.useState(false);
@@ -14,8 +14,8 @@ export const BottomNavbar: React.FC<{
         inputRef.current?.focus();
     }, []);
 
-    const isLoading = products === undefined;
-    const totalQty = products?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+    const isLoading = lines === undefined;
+    const totalQty = lines?.reduce((sum, item) => sum + item.quantity_required, 0) ?? 0;
 
     const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
         setScanValue(e.target.value);
@@ -44,7 +44,7 @@ export const BottomNavbar: React.FC<{
                             Orders assigned: <span className="fw-semibold">{orders.length}</span>
                         </span>
                         <span className="badge text-bg-light text-dark">
-                            Product lines: <span className="fw-semibold">{isLoading ? '…' : products.length}</span>
+                            Product lines: <span className="fw-semibold">{isLoading ? '…' : lines.length}</span>
                         </span>
                         <span className="text-muted small">
                             {isLoading ? 'Calculating quantities…' : `${totalQty} units to pick`}

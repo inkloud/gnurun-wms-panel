@@ -2,8 +2,8 @@ import React from 'react';
 
 import {useAuth} from '../../../hooks/auth';
 import {
+    useFulfillmentOrderLines,
     useFulfillmentOrderPositions,
-    useFulfillmentOrderProducts,
     useFulfillmentOrders
 } from '../../../hooks/fulfillment-orders';
 import type {FulfillmentOrder} from '../../../hooks/fulfillment-orders/types';
@@ -24,7 +24,7 @@ const useData = function (): FulfillmentOrder[] | undefined {
 
 const PickerWorkerPage = function () {
     const fulfillmentOrders: FulfillmentOrder[] | undefined = useData();
-    const products = useFulfillmentOrderProducts(
+    const lines = useFulfillmentOrderLines(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
     const positions = useFulfillmentOrderPositions(
@@ -46,7 +46,7 @@ const PickerWorkerPage = function () {
                 <CardsGrid items={fulfillmentOrders} />
                 <PositionsTable positions={positions} />
             </div>
-            <BottomNavbar orders={fulfillmentOrders} products={products} onScan={handleScan} />
+            <BottomNavbar orders={fulfillmentOrders} lines={lines} onScan={handleScan} />
             {showModal ? (
                 <ScanModal handleHide={() => setShowModal(false)} scanValue={scanValue} positions={positions!} />
             ) : null}

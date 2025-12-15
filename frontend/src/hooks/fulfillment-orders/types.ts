@@ -1,12 +1,12 @@
 export type FulfillmentOrder = {id: string; date: Date; assigned_to: string[]};
 
-export type FulfillmentOrderProduct = {
+export type FulfillmentOrderLine = {
     id: string;
-    sku: string;
-    name: string;
-    quantity: number;
     fulfillment_order_id: string;
-    position: string;
+    sku: string;
+    position_code: string;
+    quantity_required: number;
+    name: string;
 };
 
 export type OrderType = {id: string; quantity: number};

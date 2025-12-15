@@ -3,8 +3,8 @@ import {z} from 'zod';
 
 import type {
     FulfillmentOrder,
-    FulfillmentOrderPosition,
-    FulfillmentOrderProduct
+    FulfillmentOrderLine,
+    FulfillmentOrderPosition
 } from '../../hooks/fulfillment-orders/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
@@ -18,38 +18,38 @@ const FulfillmentOrderApiSchema = z.object({
 type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
 type FulfillmentOrderApiOutput = z.output<typeof FulfillmentOrderApiSchema>;
 
-const FulfillmentOrderProductSchema = z.object({
+const FulfillmentOrderLineSchema = z.object({
     id: z.string(),
     sku: z.string(),
     name: z.string(),
-    quantity: z.number(),
     fulfillment_order_id: z.string(),
-    position: z.string()
+    position_code: z.string(),
+    quantity_required: z.number()
 });
-type FulfillmentOrderProductInput = z.input<typeof FulfillmentOrderProductSchema>;
-const toFulfillmentOrderProduct = function (item: FulfillmentOrderProductInput): FulfillmentOrderProduct {
-    const parsed = FulfillmentOrderProductSchema.parse(item);
+type FulfillmentOrderLineInput = z.input<typeof FulfillmentOrderLineSchema>;
+const toFulfillmentOrderLine = function (item: FulfillmentOrderLineInput): FulfillmentOrderLine {
+    const parsed = FulfillmentOrderLineSchema.parse(item);
     return {
         id: parsed.id,
         sku: parsed.sku,
         name: parsed.name,
-        quantity: parsed.quantity,
         fulfillment_order_id: parsed.fulfillment_order_id,
-        position: parsed.position
+        position_code: parsed.position_code,
+        quantity_required: parsed.quantity_required
     };
 };
 
-export const getFulfillmentOrderProducts = async function (
+export const getFulfillmentOrderLines = async function (
     token: string,
     fulfillmentOrderId: string
-): Promise<FulfillmentOrderProduct[]> {
-    const response = await axios.get<FulfillmentOrderProductInput[]>(
+): Promise<FulfillmentOrderLine[]> {
+    const response = await axios.get<FulfillmentOrderLineInput[]>(
         FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderId}/products`,
         {
             headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
         }
     );
-    return response.data.map(toFulfillmentOrderProduct);
+    return response.data.map(toFulfillmentOrderLine);
 };
 
 const FulfillmentOrderPositionSchema = z.object({

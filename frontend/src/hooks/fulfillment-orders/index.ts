@@ -4,12 +4,12 @@ import useSWR from 'swr';
 import {
     AssignmentMode,
     doAssign,
+    getFulfillmentOrderLines,
     getFulfillmentOrderPositions,
-    getFulfillmentOrderProducts,
     getFulfillmentOrders
 } from '../../api/fulfillment-orders';
 import {useAuth} from '../auth';
-import type {FulfillmentOrder, FulfillmentOrderPosition, FulfillmentOrderProduct} from './types';
+import type {FulfillmentOrder, FulfillmentOrderLine, FulfillmentOrderPosition} from './types';
 
 const updateAssignments = function (
     orders: FulfillmentOrder[] | undefined,
@@ -69,18 +69,18 @@ export const useFulfillmentOrders = function (): {
     return {data, error, actions: {assign, unassign}};
 };
 
-export const useFulfillmentOrderProducts = function (id_list: Set<string>): FulfillmentOrderProduct[] | undefined {
+export const useFulfillmentOrderLines = function (id_list: Set<string>): FulfillmentOrderLine[] | undefined {
     const {data: authData} = useAuth();
 
     const token = authData!.access_token;
     const ids = [...id_list].sort();
 
-    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_PRODUCTS', string, string]) {
-        const res = await Promise.all(ids.map((id) => getFulfillmentOrderProducts(token, id)));
+    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_LINES', string, string]) {
+        const res = await Promise.all(ids.map((id) => getFulfillmentOrderLines(token, id)));
         return res.flat();
     };
 
-    const {data} = useSWR(['FULFILLMENT_ORDER_PRODUCTS', token, ids.join(', ')], fetcher, {
+    const {data} = useSWR(['FULFILLMENT_ORDER_LINES', token, ids.join(', ')], fetcher, {
         dedupingInterval: 60000
     });
     return data;
