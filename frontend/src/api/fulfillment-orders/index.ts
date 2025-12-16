@@ -19,7 +19,6 @@ type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
 type FulfillmentOrderApiOutput = z.output<typeof FulfillmentOrderApiSchema>;
 
 const FulfillmentOrderLineSchema = z.object({
-    id: z.string(),
     sku: z.string(),
     name: z.string(),
     fulfillment_order_id: z.string(),
@@ -30,7 +29,6 @@ type FulfillmentOrderLineInput = z.input<typeof FulfillmentOrderLineSchema>;
 const toFulfillmentOrderLine = function (item: FulfillmentOrderLineInput): FulfillmentOrderLine {
     const parsed = FulfillmentOrderLineSchema.parse(item);
     return {
-        id: parsed.id,
         sku: parsed.sku,
         name: parsed.name,
         fulfillment_order_id: parsed.fulfillment_order_id,
@@ -54,7 +52,7 @@ export const getFulfillmentOrderLines = async function (
 
 const FulfillmentOrderPositionSchema = z.object({
     position: z.string(),
-    product: z.object({id: z.string(), sku: z.string(), name: z.string()}),
+    product: z.object({sku: z.string(), name: z.string()}),
     orders: z.array(z.object({id: z.string(), quantity: z.number()}))
 });
 

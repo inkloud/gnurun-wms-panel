@@ -20,7 +20,7 @@ export const PositionSelector: React.FC<{
         };
 
         return (
-            <PositionButton key={`${result.product.id}-${result.position}`} onClick={handleClick}>
+            <PositionButton key={`${result.product.sku}-${result.position}`} onClick={handleClick}>
                 {result.position}
             </PositionButton>
         );

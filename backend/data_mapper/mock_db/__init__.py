@@ -122,7 +122,6 @@ class _FulfillmentGateway(FulfillmentGateway):
     def get_lines(id: int) -> list[FulfillmentOrderLine]:
         return [
             FulfillmentOrderLine(
-                id=_encode_id("PR", e.id),
                 fulfillment_order_id=_encode_id("FO", e.fulfillment_order_id),
                 sku=e.sku,
                 position_code=e.position,

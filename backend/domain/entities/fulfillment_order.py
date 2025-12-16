@@ -26,7 +26,6 @@ class FulfillmentOrderSession:
 
 @dataclass(frozen=True)
 class FulfillmentOrderLine:
-    id: str
     fulfillment_order_id: str
     sku: str
     position_code: str
@@ -36,7 +35,6 @@ class FulfillmentOrderLine:
 
 @dataclass(frozen=True)
 class SimpleProduct:
-    id: str
     sku: str
     name: str
 

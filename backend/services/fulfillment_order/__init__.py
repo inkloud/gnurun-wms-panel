@@ -53,9 +53,7 @@ class FulfillmentOrderService:
             [
                 FulfillmentOrderPosition(
                     position=position,
-                    product=SimpleProduct(
-                        id=items[0].id, sku=items[0].sku, name=items[0].name
-                    ),
+                    product=SimpleProduct(sku=items[0].sku, name=items[0].name),
                     orders=[
                         SimpleOrder(
                             id=item.fulfillment_order_id,
