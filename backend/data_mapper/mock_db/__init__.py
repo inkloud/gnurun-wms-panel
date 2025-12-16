@@ -84,11 +84,12 @@ class _FulfillmentGateway(FulfillmentGateway):
     def get_sessions(id: int) -> set[FulfillmentOrderSession]:
         return {
             FulfillmentOrderSession(
+                id=_encode_id("FO-SESS", idx),
                 operator_id=row.operator_id,
                 fulfillment_order_id=_encode_id("FO", row.fulfillment_order_id),
                 started_at=row.started_at,
             )
-            for row in FULFILLMENT_ORDER_SESSIONS
+            for idx, row in enumerate(FULFILLMENT_ORDER_SESSIONS, start=1)
             if row.fulfillment_order_id == id
         }
 
@@ -122,6 +123,7 @@ class _FulfillmentGateway(FulfillmentGateway):
     def get_lines(id: int) -> list[FulfillmentOrderLine]:
         return [
             FulfillmentOrderLine(
+                id=_encode_id("FO-LINE", e.id),
                 fulfillment_order_id=_encode_id("FO", e.fulfillment_order_id),
                 sku=e.sku,
                 position_code=e.position,

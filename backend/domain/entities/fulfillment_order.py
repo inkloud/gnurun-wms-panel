@@ -19,6 +19,7 @@ class FulfillmentOrder:
 
 @dataclass(frozen=True)
 class FulfillmentOrderSession:
+    id: str
     operator_id: str
     fulfillment_order_id: str
     started_at: datetime
@@ -26,6 +27,7 @@ class FulfillmentOrderSession:
 
 @dataclass(frozen=True)
 class FulfillmentOrderLine:
+    id: str
     fulfillment_order_id: str
     sku: str
     position_code: str

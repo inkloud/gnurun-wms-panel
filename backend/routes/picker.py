@@ -10,6 +10,7 @@ from ..domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderPosition,
+    FulfillmentOrderSession,
 )
 from ..services.auth import AuthService
 from ..services.fulfillment_order import FulfillmentOrderService
@@ -30,8 +31,10 @@ class FulfillmentOrderResponse:
 
 
 def _to_fulfillment_order_response(order: FulfillmentOrder) -> FulfillmentOrderResponse:
-    sessions = fulfillment_order_service.get_sessions(order.id)
-    assigned_to = sorted({s.operator_id for s in sessions})
+    sessions: set[FulfillmentOrderSession] = fulfillment_order_service.get_sessions(
+        order.id
+    )
+    assigned_to: list[str] = sorted({s.operator_id for s in sessions})
     return FulfillmentOrderResponse(
         id=order.id,
         created_at=order.created_at.isoformat(),
