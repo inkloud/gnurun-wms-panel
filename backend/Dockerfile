@@ -1,4 +1,4 @@
-FROM python:3.14.1
+FROM python:3.14.2
 LABEL maintainer="Luca Bacchi <bacchilu@gmail.com> (https://github.com/bacchilu)"
 
 ARG USER_ID
