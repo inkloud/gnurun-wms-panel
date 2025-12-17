@@ -104,9 +104,9 @@
 
 - Consolidate shared UI primitives (buttons, alerts) into a design system folder; more work needed here.
 
-## DevOps
+## DevOps \*
 
-- Consider a production configuration with Caddy as a separate component. Maybe [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/) instead?
+- Consider a production configuration with Caddy as a separate component. Maybe [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/) instead? Go on with the separate caddy project.
 
   - First consider an experiment with `caddy` as a separate project, but using this solution:
 
