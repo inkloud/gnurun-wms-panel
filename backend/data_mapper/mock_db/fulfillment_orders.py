@@ -1,4 +1,5 @@
 __all__ = [
+    "FULFILLMENT_ORDER_LINE_PICKS",
     "FULFILLMENT_ORDERS",
     "FULFILLMENT_ORDERS_PRODUCTS",
     "FULFILLMENT_ORDER_SESSIONS",
@@ -9,6 +10,7 @@ from datetime import datetime, timedelta
 
 from .products import PRODUCTS
 from .types import (
+    FulfillmentOrderLinePickRow,
     FulfillmentOrderLineRow,
     FulfillmentOrderRow,
     FulfillmentOrderSessionRow,
@@ -74,6 +76,7 @@ def _generate_fulfillment_orders() -> tuple[
 
 
 FULFILLMENT_ORDERS, FULFILLMENT_ORDER_SESSIONS = _generate_fulfillment_orders()
+FULFILLMENT_ORDER_LINE_PICKS: list[FulfillmentOrderLinePickRow] = []
 
 
 def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow]:

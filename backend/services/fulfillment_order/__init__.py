@@ -3,6 +3,7 @@ __all__ = ["FulfillmentOrderService"]
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
+    FulfillmentOrderLinePick,
     FulfillmentOrderPosition,
     FulfillmentOrderSession,
     SimpleOrder,
@@ -38,6 +39,18 @@ class FulfillmentOrderService:
     def get_lines(self, fulfillment_order_id: str) -> list[FulfillmentOrderLine]:
         return self.data_mapper.fulfillment.get_lines(
             _decode_id("FO", fulfillment_order_id)
+        )
+
+    def new_pick(
+        self,
+        fulfillment_order_session_id: str,
+        fulfillment_order_line_id: str,
+        quantity_picked: int,
+    ) -> FulfillmentOrderLinePick:
+        return self.data_mapper.fulfillment.new_pick(
+            fulfillment_order_session_id=fulfillment_order_session_id,
+            fulfillment_order_line_id=fulfillment_order_line_id,
+            quantity_picked=quantity_picked,
         )
 
     def get_products_by_positions_list(

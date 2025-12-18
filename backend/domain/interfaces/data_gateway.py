@@ -7,6 +7,7 @@ from typing import Protocol
 from ..entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
+    FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
 from ..entities.users import User
@@ -38,6 +39,13 @@ class FulfillmentGateway(Protocol):
 
     @staticmethod
     def get_lines(id: int) -> list[FulfillmentOrderLine]: ...
+
+    @staticmethod
+    def new_pick(
+        fulfillment_order_session_id: str,
+        fulfillment_order_line_id: str,
+        quantity_picked: int,
+    ) -> FulfillmentOrderLinePick: ...
 
 
 class DBGateway(Protocol):

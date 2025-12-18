@@ -5,6 +5,7 @@ from datetime import datetime
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
+    FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
 from ...domain.entities.users import User, UserType, Warehouse
@@ -14,16 +15,28 @@ from ...domain.interfaces.data_gateway import (
     UserGateway,
 )
 from .fulfillment_orders import (
+    FULFILLMENT_ORDER_LINE_PICKS,
     FULFILLMENT_ORDER_SESSIONS,
     FULFILLMENT_ORDERS,
     FULFILLMENT_ORDERS_PRODUCTS,
 )
-from .types import FulfillmentOrderRow, FulfillmentOrderSessionRow, UserRow, UserTypeRow
+from .types import (
+    FulfillmentOrderLinePickRow,
+    FulfillmentOrderLineRow,
+    FulfillmentOrderRow,
+    FulfillmentOrderSessionRow,
+    UserRow,
+    UserTypeRow,
+)
 from .users import USERS
 
 
 def _encode_id(prefix: str, id: int) -> str:
     return f"{prefix}-{id:04d}"
+
+
+def _decode_id(prefix: str, id: str) -> int:
+    return int(id.split(f"{prefix}-")[1])
 
 
 def _to_user_row(user_data: UserRow) -> User:
@@ -135,6 +148,49 @@ class _FulfillmentGateway(FulfillmentGateway):
             for e in FULFILLMENT_ORDERS_PRODUCTS
             if e.fulfillment_order_id == id
         ]
+
+    @staticmethod
+    def new_pick(
+        fulfillment_order_session_id: str,
+        fulfillment_order_line_id: str,
+        quantity_picked: int,
+    ) -> FulfillmentOrderLinePick:
+        if quantity_picked <= 0:
+            raise ValueError("quantity_picked must be > 0")
+
+        session_id: int = _decode_id("FO-SESS", fulfillment_order_session_id)
+        session_rows: list[FulfillmentOrderSessionRow] = [
+            row for row in FULFILLMENT_ORDER_SESSIONS if row.id == session_id
+        ]
+        assert len(session_rows) > 0
+        session_row: FulfillmentOrderSessionRow = session_rows[0]
+
+        line_id: int = _decode_id("FO-LINE", fulfillment_order_line_id)
+        line_rows: list[FulfillmentOrderLineRow] = [
+            row
+            for row in FULFILLMENT_ORDERS_PRODUCTS
+            if row.id == line_id
+            and row.fulfillment_order_id == session_row.fulfillment_order_id
+        ]
+        assert len(line_rows) > 0
+
+        row_id = max((row.id for row in FULFILLMENT_ORDER_LINE_PICKS), default=0) + 1
+        pick_row = FulfillmentOrderLinePickRow(
+            id=row_id,
+            fulfillment_order_session_id=session_id,
+            fulfillment_order_line_id=line_id,
+            quantity_picked=quantity_picked,
+            picked_at=datetime.now(),
+        )
+        FULFILLMENT_ORDER_LINE_PICKS.append(pick_row)
+
+        return FulfillmentOrderLinePick(
+            id=_encode_id("LINE-PICK", pick_row.id),
+            fulfillment_order_session_id=fulfillment_order_session_id,
+            fulfillment_order_line_id=fulfillment_order_line_id,
+            quantity_picked=pick_row.quantity_picked,
+            picked_at=pick_row.picked_at,
+        )
 
 
 class DB(DBGateway):
