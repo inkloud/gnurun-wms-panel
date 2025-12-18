@@ -5,7 +5,7 @@ certifi==2025.11.12
 click==8.3.1
 dnspython==2.8.0
 email-validator==2.3.0
-fastapi==0.124.4
+fastapi==0.125.0
 fastapi-cli==0.0.16
 fastapi-cloud-cli==0.7.0
 fastar==0.8.0
@@ -23,10 +23,10 @@ pydantic_core==2.41.5
 Pygments==2.19.2
 PyJWT==2.10.1
 python-dotenv==1.2.1
-python-multipart==0.0.20
+python-multipart==0.0.21
 PyYAML==6.0.3
 rich==14.2.0
-rich-toolkit==0.17.0
+rich-toolkit==0.17.1
 rignore==0.7.6
 sentry-sdk==2.48.0
 shellingham==1.5.4
