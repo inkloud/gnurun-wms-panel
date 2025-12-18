@@ -1,31 +1,8 @@
 # TODO
 
-## Development \*\*\*\*
+## Development \*
 
 - Focus on the **Picker** working page:
-
-  - ~~Refactor the table to use a structure like~~:
-
-    ```python
-    @dataclass(frozen=True)
-    class SimpleProduct:
-      id: str
-      sku: str
-      name: str
-
-    @dataclass(frozen=True)
-    class SimpleOrder:
-      id: str
-      quantity: int
-
-    @dataclass(frozen=True)
-    class FulfillmentOrderPosition:
-      position: str
-      product: SimpleProduct
-      orders: list[SimpleOrder]
-    ```
-
-    ~~Update backend and frontend as needed; the router may produce the desired view model~~.
 
   - When I scan a product, a modal will show quantity and order to put the product. Confirm the position if necessary! Then show quantity and order.
 

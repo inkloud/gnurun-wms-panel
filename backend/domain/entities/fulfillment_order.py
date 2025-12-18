@@ -1,6 +1,7 @@
 __all__ = [
     "FulfillmentOrder",
     "FulfillmentOrderLine",
+    "FulfillmentOrderLinePick",
     "FulfillmentOrderPosition",
     "FulfillmentOrderSession",
     "SimpleOrder",
@@ -33,6 +34,15 @@ class FulfillmentOrderLine:
     position_code: str
     quantity_required: int
     name: str
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderLinePick:
+    id: str
+    fulfillment_order_session_id: str
+    fulfillment_order_line_id: str
+    quantity_picked: int
+    picked_at: datetime
 
 
 @dataclass(frozen=True)

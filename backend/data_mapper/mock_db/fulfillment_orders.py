@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 from .products import PRODUCTS
 from .types import (
-    FulfillmentOrderProductRow,
+    FulfillmentOrderLineRow,
     FulfillmentOrderRow,
     FulfillmentOrderSessionRow,
     ProductRow,
@@ -27,21 +27,23 @@ def _random_date_within_last_week(now: datetime) -> datetime:
 
 
 def _random_sessions(
-    fulfillment_order_id: int, created_at: datetime
-) -> list[FulfillmentOrderSessionRow]:
+    fulfillment_order_id: int, created_at: datetime, start_id: int
+) -> tuple[list[FulfillmentOrderSessionRow], int]:
     if random.random() < 0.5:
-        return []
+        return [], start_id
     desired = 1 if random.random() < 0.5 else 2
     count = min(desired, len(_OPERATOR_USERNAMES))
     operator_ids = random.sample(_OPERATOR_USERNAMES, k=count)
-    return [
+    rows = [
         FulfillmentOrderSessionRow(
+            id=start_id + idx,
             operator_id=operator_id,
             fulfillment_order_id=fulfillment_order_id,
             started_at=created_at,
         )
-        for operator_id in operator_ids
+        for idx, operator_id in enumerate(operator_ids)
     ]
+    return rows, start_id + len(rows)
 
 
 def _generate_fulfillment_orders() -> tuple[
@@ -52,6 +54,7 @@ def _generate_fulfillment_orders() -> tuple[
     base_id = 1001
     orders: list[FulfillmentOrderRow] = []
     sessions: list[FulfillmentOrderSessionRow] = []
+    session_id = 1
     for i in range(total):
         fulfillment_order_id = base_id + i
         created_at = _random_date_within_last_week(now)
@@ -61,33 +64,34 @@ def _generate_fulfillment_orders() -> tuple[
                 date=created_at,
             )
         )
-        sessions.extend(
-            _random_sessions(
-                fulfillment_order_id=fulfillment_order_id, created_at=created_at
-            )
+        new_sessions, session_id = _random_sessions(
+            fulfillment_order_id=fulfillment_order_id,
+            created_at=created_at,
+            start_id=session_id,
         )
+        sessions.extend(new_sessions)
     return orders, sessions
 
 
 FULFILLMENT_ORDERS, FULFILLMENT_ORDER_SESSIONS = _generate_fulfillment_orders()
 
 
-def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProductRow]:
+def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow]:
     picked_products: list[ProductRow] = random.sample(
         PRODUCTS, k=random.randint(1, min(25, len(PRODUCTS)))
     )
-    products: list[FulfillmentOrderProductRow] = []
+    products: list[FulfillmentOrderLineRow] = []
     for idx, picked_product in enumerate(picked_products):
         quantity = random.randint(1, picked_product.get_stock())
         if quantity <= picked_product.where[0].stock:
             products.append(
-                FulfillmentOrderProductRow(
+                FulfillmentOrderLineRow(
                     id=idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
-                    quantity=quantity,
                     fulfillment_order_id=fulfillment_order_id,
-                    position=picked_product.where[0].position,
+                    position_code=picked_product.where[0].position,
+                    quantity_required=quantity,
                 )
             )
         else:
@@ -96,28 +100,28 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderProduct
                 quantity - picked_product.where[0].stock,
             )
             products.append(
-                FulfillmentOrderProductRow(
+                FulfillmentOrderLineRow(
                     id=idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
-                    quantity=q[0],
                     fulfillment_order_id=fulfillment_order_id,
-                    position=picked_product.where[0].position,
+                    position_code=picked_product.where[0].position,
+                    quantity_required=q[0],
                 )
             )
             products.append(
-                FulfillmentOrderProductRow(
+                FulfillmentOrderLineRow(
                     id=idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
-                    quantity=q[1],
                     fulfillment_order_id=fulfillment_order_id,
-                    position=picked_product.where[1].position,
+                    position_code=picked_product.where[1].position,
+                    quantity_required=q[1],
                 )
             )
     return products
 
 
-FULFILLMENT_ORDERS_PRODUCTS: list[FulfillmentOrderProductRow] = []
+FULFILLMENT_ORDERS_PRODUCTS: list[FulfillmentOrderLineRow] = []
 for o in FULFILLMENT_ORDERS:
     FULFILLMENT_ORDERS_PRODUCTS.extend(generate_products(o.id))
