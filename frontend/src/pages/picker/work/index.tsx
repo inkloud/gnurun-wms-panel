@@ -34,7 +34,7 @@ const PickerWorkerPage = function () {
     const picks = useFulfillmentOrderPicks(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
-    console.log(picks);
+    console.log({picks});
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 

@@ -42,7 +42,7 @@ export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; pos
                                             <PositionBadge>{currentPosition.position}</PositionBadge>
                                         </p>
                                         <div className="p-2">
-                                            <Orders orders={currentPosition.orders} />
+                                            <Orders position={currentPosition} />
                                         </div>
                                     </div>
                                 )}

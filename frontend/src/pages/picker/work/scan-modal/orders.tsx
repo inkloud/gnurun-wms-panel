@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {OrderType} from '../../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
 
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
     return (
@@ -68,16 +68,21 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
     );
 };
 
-export const Orders: React.FC<{orders: OrderType[]}> = function ({orders}) {
-    const [currentOrder, setCurrentPosition] = React.useState<OrderType | null>(null);
+export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
+    const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
 
-    const handleConfirm = function (quantity: number) {
-        console.log({orderId: currentOrder!.id, quantity});
+    const handleConfirm = function (quantity_picked: number) {
+        console.log({
+            fulfillment_order_id: currentOrder!.id,
+            position_code: position.position,
+            quantity_picked,
+            sku: position.product.sku
+        });
     };
 
-    const list = orders.map((order) => {
+    const list = position.orders.map((order) => {
         const handleClick = function () {
-            setCurrentPosition(order);
+            setCurrentOrder(order);
         };
 
         return <OrderCard key={order.id} order={order} onClick={handleClick} />;
