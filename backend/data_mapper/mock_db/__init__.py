@@ -192,6 +192,23 @@ class _FulfillmentGateway(FulfillmentGateway):
             picked_at=pick_row.picked_at,
         )
 
+    @staticmethod
+    def get_picks() -> list[FulfillmentOrderLinePick]:
+        return [
+            FulfillmentOrderLinePick(
+                id=_encode_id("LINE-PICK", row.id),
+                fulfillment_order_session_id=_encode_id(
+                    "FO-SESS", row.fulfillment_order_session_id
+                ),
+                fulfillment_order_line_id=_encode_id(
+                    "FO-LINE", row.fulfillment_order_line_id
+                ),
+                quantity_picked=row.quantity_picked,
+                picked_at=row.picked_at,
+            )
+            for row in FULFILLMENT_ORDER_LINE_PICKS
+        ]
+
 
 class DB(DBGateway):
     def __init__(self) -> None:

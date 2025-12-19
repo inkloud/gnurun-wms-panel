@@ -53,6 +53,9 @@ class FulfillmentOrderService:
             quantity_picked=quantity_picked,
         )
 
+    def get_picks(self) -> list[FulfillmentOrderLinePick]:
+        return self.data_mapper.fulfillment.get_picks()
+
     def get_products_by_positions_list(
         self, fulfillment_order_id_list: list[str]
     ) -> list[FulfillmentOrderPosition]:

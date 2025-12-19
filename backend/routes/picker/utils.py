@@ -2,6 +2,7 @@ __all__ = [
     "authorize_operator",
     "get_operator_fulfillment_order_session",
     "get_fulfillment_order_line",
+    "get_fulfillment_order_line_picks",
     "FulfillmentOrderResponse",
 ]
 
@@ -13,6 +14,7 @@ from ...domain.entities.auth import AuthPayload, AuthUserType
 from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
+    FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
 from ...services.auth import AuthService
@@ -86,3 +88,23 @@ def get_fulfillment_order_line(
     if len(line_matches) == 0:
         raise ValueError("Fulfillment order line not found")
     return sorted(line_matches, key=lambda item: item.id)[0]
+
+
+def get_fulfillment_order_line_picks(
+    fulfillment_order_service: FulfillmentOrderService, fulfillment_order_id_list: str
+) -> list[FulfillmentOrderLinePick]:
+    fulfillment_order_ids: list[str] = fulfillment_order_id_list.split(",")
+    sessions: list[FulfillmentOrderSession] = []
+    lines: list[FulfillmentOrderLine] = []
+    for fulfillment_order_id in fulfillment_order_ids:
+        sessions.extend(fulfillment_order_service.get_sessions(fulfillment_order_id))
+        lines.extend(fulfillment_order_service.get_lines(fulfillment_order_id))
+
+    session_ids = {session.id for session in sessions}
+    line_ids = {line.id for line in lines}
+    return [
+        pick
+        for pick in fulfillment_order_service.get_picks()
+        if pick.fulfillment_order_session_id in session_ids
+        and pick.fulfillment_order_line_id in line_ids
+    ]

@@ -47,6 +47,9 @@ class FulfillmentGateway(Protocol):
         quantity_picked: int,
     ) -> FulfillmentOrderLinePick: ...
 
+    @staticmethod
+    def get_picks() -> list[FulfillmentOrderLinePick]: ...
+
 
 class DBGateway(Protocol):
     user: UserGateway

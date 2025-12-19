@@ -17,6 +17,7 @@ from .utils import (
     FulfillmentOrderResponse,
     authorize_operator,
     get_fulfillment_order_line,
+    get_fulfillment_order_line_picks,
     get_operator_fulfillment_order_session,
 )
 
@@ -64,6 +65,17 @@ async def list_fulfillment_order_positions(
     authorize_operator(auth_service, auth_header)
     return fulfillment_order_service.get_products_by_positions_list(
         fulfillment_order_id_list.split(",")
+    )
+
+
+@router.get("/fulfillment_orders/{fulfillment_order_id_list}/picks")
+async def list_fulfillment_order_picks(
+    fulfillment_order_id_list: str,
+    auth_header: str = Header(..., alias="Authorization"),
+) -> list[FulfillmentOrderLinePick]:
+    authorize_operator(auth_service, auth_header)
+    return get_fulfillment_order_line_picks(
+        fulfillment_order_service, fulfillment_order_id_list
     )
 
 
