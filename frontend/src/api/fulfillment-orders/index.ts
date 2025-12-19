@@ -6,17 +6,10 @@ import type {
     FulfillmentOrderLine,
     FulfillmentOrderPosition
 } from '../../hooks/fulfillment-orders/types';
+import {toFulfillmentOrder, type FulfillmentOrderApiInput} from './utils';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
-
-const FulfillmentOrderApiSchema = z.object({
-    id: z.string(),
-    created_at: z.preprocess((value: string) => new Date(value), z.date()),
-    assigned_to: z.array(z.string())
-});
-type FulfillmentOrderApiInput = z.input<typeof FulfillmentOrderApiSchema>;
-type FulfillmentOrderApiOutput = z.output<typeof FulfillmentOrderApiSchema>;
 
 const FulfillmentOrderLineSchema = z.object({
     sku: z.string(),
@@ -26,8 +19,9 @@ const FulfillmentOrderLineSchema = z.object({
     quantity_required: z.number()
 });
 type FulfillmentOrderLineInput = z.input<typeof FulfillmentOrderLineSchema>;
+type FulfillmentOrderLineOutput = z.output<typeof FulfillmentOrderLineSchema>;
 const toFulfillmentOrderLine = function (item: FulfillmentOrderLineInput): FulfillmentOrderLine {
-    const parsed = FulfillmentOrderLineSchema.parse(item);
+    const parsed: FulfillmentOrderLineOutput = FulfillmentOrderLineSchema.parse(item);
     return {
         sku: parsed.sku,
         name: parsed.name,
@@ -55,11 +49,8 @@ const FulfillmentOrderPositionSchema = z.object({
     product: z.object({sku: z.string(), name: z.string()}),
     orders: z.array(z.object({id: z.string(), quantity: z.number()}))
 });
-
 type FulfillmentOrderPositionInput = z.input<typeof FulfillmentOrderPositionSchema>;
-
 type FulfillmentOrderPositionOutput = z.output<typeof FulfillmentOrderPositionSchema>;
-
 const toFulfillmentOrderPosition = function (item: FulfillmentOrderPositionInput): FulfillmentOrderPositionInput {
     const parsed: FulfillmentOrderPositionOutput = FulfillmentOrderPositionSchema.parse(item);
     return {position: parsed.position, product: {...parsed.product}, orders: parsed.orders.map((o) => ({...o}))};
@@ -76,30 +67,9 @@ export const getFulfillmentOrderPositions = async function (
     return response.data.map(toFulfillmentOrderPosition);
 };
 
-const toFulfillmentOrder = function (order: FulfillmentOrderApiInput): FulfillmentOrder {
-    const e: FulfillmentOrderApiOutput = FulfillmentOrderApiSchema.parse(order);
-    return {id: e.id, created_at: new Date(e.created_at), assigned_to: [...e.assigned_to]};
-};
-
 export const getFulfillmentOrders = async function (token: string): Promise<FulfillmentOrder[]> {
     const response = await axios.get<FulfillmentOrderApiInput[]>(FULFILLMENT_ORDERS_ENDPOINT, {
         headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
     });
     return response.data.map(toFulfillmentOrder);
-};
-
-export enum AssignmentMode {
-    ASSIGN = 'ASSIGN',
-    UNASSIGN = 'UNASSIGN'
-}
-
-const ASSIGN_ENDPOINT = `${API_BASE_URL}/picker/assign`;
-const UNASSIGN_ENDPOINT = `${API_BASE_URL}/picker/unassign`;
-
-export const doAssign = async function (id: string, token: string, mode: AssignmentMode): Promise<FulfillmentOrder> {
-    const END_POINT = mode === AssignmentMode.ASSIGN ? ASSIGN_ENDPOINT : UNASSIGN_ENDPOINT;
-    const response = await axios.put<FulfillmentOrderApiInput>(`${END_POINT}/${id}`, undefined, {
-        headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
-    });
-    return toFulfillmentOrder(response.data);
 };

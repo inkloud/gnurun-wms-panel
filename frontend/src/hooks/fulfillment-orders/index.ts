@@ -2,12 +2,11 @@ import {AxiosError} from 'axios';
 import useSWR from 'swr';
 
 import {
-    AssignmentMode,
-    doAssign,
     getFulfillmentOrderLines,
     getFulfillmentOrderPositions,
     getFulfillmentOrders
 } from '../../api/fulfillment-orders';
+import {AssignmentMode, doAssign} from '../../api/fulfillment-orders/assign';
 import {useAuth} from '../auth';
 import type {FulfillmentOrder, FulfillmentOrderLine, FulfillmentOrderPosition} from './types';
 
