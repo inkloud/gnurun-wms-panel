@@ -7,8 +7,9 @@ import {
     getFulfillmentOrders
 } from '../../api/fulfillment-orders';
 import {AssignmentMode, doAssign} from '../../api/fulfillment-orders/assign';
+import {getFulfillmentOrderPicks} from '../../api/fulfillment-orders/pick';
 import {useAuth} from '../auth';
-import type {FulfillmentOrder, FulfillmentOrderLine, FulfillmentOrderPosition} from './types';
+import type {FulfillmentOrder, FulfillmentOrderLine, FulfillmentOrderLinePick, FulfillmentOrderPosition} from './types';
 
 const updateAssignments = function (
     orders: FulfillmentOrder[] | undefined,
@@ -96,6 +97,22 @@ export const useFulfillmentOrderPositions = function (id_list: Set<string>): Ful
     };
 
     const {data} = useSWR(['FULFILLMENT_ORDER_POSITIONS', token, ids.join(',')], fetcher, {
+        dedupingInterval: 60000
+    });
+    return data;
+};
+
+export const useFulfillmentOrderPicks = function (id_list: Set<string>): FulfillmentOrderLinePick[] | undefined {
+    const {data: authData} = useAuth();
+
+    const token = authData!.access_token;
+    const ids = [...id_list].sort();
+
+    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_PICKS', string, string]) {
+        return getFulfillmentOrderPicks(token, ids);
+    };
+
+    const {data} = useSWR(['FULFILLMENT_ORDER_PICKS', token, ids.join(',')], fetcher, {
         dedupingInterval: 60000
     });
     return data;

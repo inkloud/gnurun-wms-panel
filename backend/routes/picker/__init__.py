@@ -14,10 +14,11 @@ from ...domain.entities.fulfillment_order import (
 from ...services.auth import AuthService
 from ...services.fulfillment_order import FulfillmentOrderService
 from .utils import (
+    FulfillmentOrderPickDetail,
     FulfillmentOrderResponse,
     authorize_operator,
     get_fulfillment_order_line,
-    get_fulfillment_order_line_picks,
+    get_fulfillment_order_pick_details,
     get_operator_fulfillment_order_session,
 )
 
@@ -72,9 +73,9 @@ async def list_fulfillment_order_positions(
 async def list_fulfillment_order_picks(
     fulfillment_order_id_list: str,
     auth_header: str = Header(..., alias="Authorization"),
-) -> list[FulfillmentOrderLinePick]:
+) -> list[FulfillmentOrderPickDetail]:
     authorize_operator(auth_service, auth_header)
-    return get_fulfillment_order_line_picks(
+    return get_fulfillment_order_pick_details(
         fulfillment_order_service, fulfillment_order_id_list
     )
 

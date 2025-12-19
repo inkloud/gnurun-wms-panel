@@ -3,6 +3,7 @@ import React from 'react';
 import {useAuth} from '../../../hooks/auth';
 import {
     useFulfillmentOrderLines,
+    useFulfillmentOrderPicks,
     useFulfillmentOrderPositions,
     useFulfillmentOrders
 } from '../../../hooks/fulfillment-orders';
@@ -30,6 +31,10 @@ const PickerWorkerPage = function () {
     const positions = useFulfillmentOrderPositions(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
+    const picks = useFulfillmentOrderPicks(
+        new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
+    );
+    console.log(picks);
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 

@@ -15,3 +15,12 @@ export type FulfillmentOrderPosition = {
     product: {sku: string; name: string};
     orders: OrderType[];
 };
+
+export type FulfillmentOrderLinePick = {
+    operator_id: string;
+    fulfillment_order_id: string;
+    sku: string;
+    position_code: string;
+    quantity_picked: number;
+    picked_at: Date;
+};

@@ -2,11 +2,13 @@ __all__ = [
     "authorize_operator",
     "get_operator_fulfillment_order_session",
     "get_fulfillment_order_line",
-    "get_fulfillment_order_line_picks",
+    "get_fulfillment_order_pick_details",
     "FulfillmentOrderResponse",
+    "FulfillmentOrderPickDetail",
 ]
 
 from dataclasses import dataclass
+from datetime import datetime
 
 from fastapi import HTTPException, status
 
@@ -41,6 +43,16 @@ class FulfillmentOrderResponse:
             created_at=order.created_at.isoformat(),
             assigned_to=assigned_to,
         )
+
+
+@dataclass(frozen=True)
+class FulfillmentOrderPickDetail:
+    operator_id: str
+    fulfillment_order_id: str
+    sku: str
+    position_code: str
+    quantity_picked: int
+    picked_at: datetime
 
 
 def authorize_operator(auth_service: AuthService, auth_header: str) -> AuthPayload:
@@ -90,9 +102,9 @@ def get_fulfillment_order_line(
     return sorted(line_matches, key=lambda item: item.id)[0]
 
 
-def get_fulfillment_order_line_picks(
+def get_fulfillment_order_pick_details(
     fulfillment_order_service: FulfillmentOrderService, fulfillment_order_id_list: str
-) -> list[FulfillmentOrderLinePick]:
+) -> list[FulfillmentOrderPickDetail]:
     fulfillment_order_ids: list[str] = fulfillment_order_id_list.split(",")
     sessions: list[FulfillmentOrderSession] = []
     lines: list[FulfillmentOrderLine] = []
@@ -100,11 +112,24 @@ def get_fulfillment_order_line_picks(
         sessions.extend(fulfillment_order_service.get_sessions(fulfillment_order_id))
         lines.extend(fulfillment_order_service.get_lines(fulfillment_order_id))
 
-    session_ids = {session.id for session in sessions}
-    line_ids = {line.id for line in lines}
-    return [
+    session_by_id = {session.id: session for session in sessions}
+    line_by_id = {line.id: line for line in lines}
+    picks: list[FulfillmentOrderLinePick] = [
         pick
         for pick in fulfillment_order_service.get_picks()
-        if pick.fulfillment_order_session_id in session_ids
-        and pick.fulfillment_order_line_id in line_ids
+        if pick.fulfillment_order_session_id in session_by_id
+        and pick.fulfillment_order_line_id in line_by_id
+    ]
+    return [
+        FulfillmentOrderPickDetail(
+            operator_id=session_by_id[pick.fulfillment_order_session_id].operator_id,
+            fulfillment_order_id=line_by_id[
+                pick.fulfillment_order_line_id
+            ].fulfillment_order_id,
+            sku=line_by_id[pick.fulfillment_order_line_id].sku,
+            position_code=line_by_id[pick.fulfillment_order_line_id].position_code,
+            quantity_picked=pick.quantity_picked,
+            picked_at=pick.picked_at,
+        )
+        for pick in picks
     ]
