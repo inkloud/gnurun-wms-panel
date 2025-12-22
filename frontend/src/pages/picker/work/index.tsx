@@ -29,12 +29,12 @@ const PickerWorkerPage = function () {
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
     const positions = useFulfillmentOrderPositions(
-        new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
+        fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    const {data} = useFulfillmentOrderPicks(
-        new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
+    const {data: picks} = useFulfillmentOrderPicks(
+        fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    console.log({picks: data});
+    console.log({picks});
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 
@@ -43,7 +43,7 @@ const PickerWorkerPage = function () {
         setShowModal(true);
     };
 
-    if (fulfillmentOrders === undefined) return null;
+    if (fulfillmentOrders === undefined || positions === undefined) return null;
     return (
         <Page>
             <div className="pb-5 mb-5">

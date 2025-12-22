@@ -86,41 +86,45 @@ export const useFulfillmentOrderLines = function (id_list: Set<string>): Fulfill
     return data;
 };
 
-export const useFulfillmentOrderPositions = function (id_list: Set<string>): FulfillmentOrderPosition[] | undefined {
+export const useFulfillmentOrderPositions = function (
+    id_list: Set<string> | undefined
+): FulfillmentOrderPosition[] | undefined {
+    type KEY = ['FULFILLMENT_ORDER_POSITIONS', string, string];
+
     const {data: authData} = useAuth();
 
     const token = authData!.access_token;
-    const ids = [...id_list].sort();
 
-    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_POSITIONS', string, string]) {
-        return getFulfillmentOrderPositions(token, ids);
+    const fetcher = async function ([_key, token, joined]: KEY) {
+        return getFulfillmentOrderPositions(token, joined.split(','));
     };
 
-    const {data} = useSWR(['FULFILLMENT_ORDER_POSITIONS', token, ids.join(',')], fetcher, {
-        dedupingInterval: 60000
-    });
+    const key: KEY | null =
+        id_list === undefined ? null : ['FULFILLMENT_ORDER_POSITIONS', token, [...id_list].sort().join(',')];
+    const {data} = useSWR(key, fetcher, {dedupingInterval: 60000});
     return data;
 };
 
-export const useFulfillmentOrderPicks = function (id_list: Set<string>): {
+export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefined): {
     data: FulfillmentOrderLinePick[] | undefined;
     actions: {pick: (position_code: string, fulfillment_order_id: string, qty: number) => void};
 } {
+    type KEY = ['FULFILLMENT_ORDER_PICKS', string, string];
+
     const {data: authData} = useAuth();
 
     const token = authData!.access_token;
-    const ids = [...id_list].sort();
 
     const pick = function (position_code: string, fulfillment_order_id: string, qty: number) {
         createFulfillmentOrderPick(token, {position_code, fulfillment_order_id, qty});
     };
 
-    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_PICKS', string, string]) {
-        return getFulfillmentOrderPicks(token, ids);
+    const fetcher = async function ([_key, token, joined]: KEY) {
+        return getFulfillmentOrderPicks(token, joined.split(','));
     };
 
-    const {data} = useSWR(['FULFILLMENT_ORDER_PICKS', token, ids.join(',')], fetcher, {
-        dedupingInterval: 60000
-    });
+    const key: KEY | null =
+        id_list === undefined ? null : ['FULFILLMENT_ORDER_PICKS', token, [...id_list].sort().join(',')];
+    const {data} = useSWR(key, fetcher, {dedupingInterval: 60000});
     return {data, actions: {pick}};
 };
