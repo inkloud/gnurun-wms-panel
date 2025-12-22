@@ -34,7 +34,7 @@ const PickerWorkerPage = function () {
     const {data: picks} = useFulfillmentOrderPicks(
         fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    console.log({picks});
+    console.table(picks);
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 
@@ -53,7 +53,12 @@ const PickerWorkerPage = function () {
             </div>
             <BottomNavbar orders={fulfillmentOrders} lines={lines} onScan={handleScan} />
             {showModal ? (
-                <ScanModal handleHide={() => setShowModal(false)} scanValue={scanValue} positions={positions!} />
+                <ScanModal
+                    handleHide={() => setShowModal(false)}
+                    scanValue={scanValue}
+                    positions={positions!}
+                    orders={fulfillmentOrders}
+                />
             ) : null}
         </Page>
     );

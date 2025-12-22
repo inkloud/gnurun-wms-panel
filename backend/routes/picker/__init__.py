@@ -117,7 +117,7 @@ class PickRequest(BaseModel):
 @router.post("/pick")
 async def create_pick(
     payload: PickRequest, auth_header: str = Header(..., alias="Authorization")
-) -> FulfillmentOrderLinePick:
+) -> FulfillmentOrderPickDetail:
     auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
     if payload.qty <= 0:
@@ -141,8 +141,16 @@ async def create_pick(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
         ) from exc
 
-    return fulfillment_order_service.new_pick(
+    pick: FulfillmentOrderLinePick = fulfillment_order_service.new_pick(
         fulfillment_order_session_id=session.id,
         fulfillment_order_line_id=line.id,
         quantity_picked=payload.qty,
+    )
+    return FulfillmentOrderPickDetail(
+        operator_id=session.operator_id,
+        fulfillment_order_id=line.fulfillment_order_id,
+        sku=line.sku,
+        position_code=line.position_code,
+        quantity_picked=pick.quantity_picked,
+        picked_at=pick.picked_at,
     )
