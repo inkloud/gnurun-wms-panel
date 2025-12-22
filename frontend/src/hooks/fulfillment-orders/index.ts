@@ -115,16 +115,37 @@ export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefin
 
     const token = authData!.access_token;
 
-    const pick = function (position_code: string, fulfillment_order_id: string, qty: number) {
-        createFulfillmentOrderPick(token, {position_code, fulfillment_order_id, qty});
-    };
-
     const fetcher = async function ([_key, token, joined]: KEY) {
         return getFulfillmentOrderPicks(token, joined.split(','));
     };
 
     const key: KEY | null =
         id_list === undefined ? null : ['FULFILLMENT_ORDER_PICKS', token, [...id_list].sort().join(',')];
-    const {data} = useSWR(key, fetcher, {dedupingInterval: 60000});
+    const {data, mutate} = useSWR(key, fetcher, {dedupingInterval: 60000});
+
+    const pick = async function (position_code: string, fulfillment_order_id: string, qty: number) {
+        // console.log({
+        //     operator_id: authData!.auth_user.username,
+        //     fulfillment_order_id,
+        //     sku: 'TODO',
+        //     position_code,
+        //     quantity_picked: qty,
+        //     picked_at: new Date()
+        // });
+        const updateFn = async function () {
+            const res: FulfillmentOrderLinePick = await createFulfillmentOrderPick(token, {
+                position_code,
+                fulfillment_order_id,
+                qty
+            });
+            return [...data!, res];
+        };
+        try {
+            mutate(updateFn);
+        } catch (err) {
+            mutate();
+            throw err;
+        }
+    };
     return {data, actions: {pick}};
 };
