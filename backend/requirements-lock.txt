@@ -5,7 +5,7 @@ certifi==2025.11.12
 click==8.3.1
 dnspython==2.8.0
 email-validator==2.3.0
-fastapi==0.125.0
+fastapi==0.127.0
 fastapi-cli==0.0.16
 fastapi-cloud-cli==0.7.0
 fastar==0.8.0
@@ -19,6 +19,8 @@ markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
 pydantic==2.12.5
+pydantic-extra-types==2.10.6
+pydantic-settings==2.12.0
 pydantic_core==2.41.5
 Pygments==2.19.2
 PyJWT==2.10.1
@@ -31,11 +33,11 @@ rignore==0.7.6
 sentry-sdk==2.48.0
 shellingham==1.5.4
 starlette==0.50.0
-typer==0.20.0
+typer==0.20.1
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.6.2
-uvicorn==0.38.0
+uvicorn==0.40.0
 uvloop==0.22.1
 watchfiles==1.1.1
 websockets==15.0.1
