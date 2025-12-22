@@ -69,7 +69,7 @@ async def list_fulfillment_order_positions(
     )
 
 
-@router.get("/fulfillment_orders/{fulfillment_order_id_list}/picks")
+@router.get("/fulfillment_orders/{fulfillment_order_id_list}/pick")
 async def list_fulfillment_order_picks(
     fulfillment_order_id_list: str,
     auth_header: str = Header(..., alias="Authorization"),

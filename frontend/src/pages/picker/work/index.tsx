@@ -31,10 +31,10 @@ const PickerWorkerPage = function () {
     const positions = useFulfillmentOrderPositions(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
-    const picks = useFulfillmentOrderPicks(
+    const {data} = useFulfillmentOrderPicks(
         new Set(fulfillmentOrders === undefined ? [] : fulfillmentOrders.map((item) => item.id))
     );
-    console.log({picks});
+    console.log({picks: data});
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 

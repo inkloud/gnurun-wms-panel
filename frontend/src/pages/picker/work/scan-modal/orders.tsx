@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {useFulfillmentOrderPicks} from '../../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
 
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
@@ -70,14 +71,10 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
 
 export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
     const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
+    const {actions} = useFulfillmentOrderPicks(new Set([currentOrder!.id]));
 
     const handleConfirm = function (quantity_picked: number) {
-        console.log({
-            fulfillment_order_id: currentOrder!.id,
-            position_code: position.position,
-            quantity_picked,
-            sku: position.product.sku
-        });
+        actions.pick(position.position, currentOrder!.id, quantity_picked);
     };
 
     const list = position.orders.map((order) => {

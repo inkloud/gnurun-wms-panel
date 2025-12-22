@@ -34,8 +34,18 @@ export const getFulfillmentOrderPicks = async function (
     fulfillmentOrderIdList: string[]
 ): Promise<FulfillmentOrderLinePick[]> {
     const response = await axios.get<FulfillmentOrderLinePickInput[]>(
-        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderIdList.join(',')}/picks`,
+        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderIdList.join(',')}/pick`,
         {headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}}
     );
     return response.data.map(toFulfillmentOrderLinePick);
+};
+
+export const createFulfillmentOrderPick = async function (
+    token: string,
+    payload: {position_code: string; fulfillment_order_id: string; qty: number}
+): Promise<FulfillmentOrderLinePick> {
+    const response = await axios.post<FulfillmentOrderLinePickInput>(`${API_BASE_URL}/picker/pick`, payload, {
+        headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}
+    });
+    return toFulfillmentOrderLinePick(response.data);
 };
