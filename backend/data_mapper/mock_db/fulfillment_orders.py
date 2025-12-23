@@ -79,7 +79,9 @@ FULFILLMENT_ORDERS, FULFILLMENT_ORDER_SESSIONS = _generate_fulfillment_orders()
 FULFILLMENT_ORDER_LINE_PICKS: list[FulfillmentOrderLinePickRow] = []
 
 
-def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow]:
+def generate_products(
+    fulfillment_order_id: int, base: int
+) -> list[FulfillmentOrderLineRow]:
     picked_products: list[ProductRow] = random.sample(
         PRODUCTS, k=random.randint(1, min(25, len(PRODUCTS)))
     )
@@ -89,7 +91,7 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow
         if quantity <= picked_product.where[0].stock:
             products.append(
                 FulfillmentOrderLineRow(
-                    id=idx + 1,
+                    id=base + idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
                     fulfillment_order_id=fulfillment_order_id,
@@ -104,7 +106,7 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow
             )
             products.append(
                 FulfillmentOrderLineRow(
-                    id=idx + 1,
+                    id=base + idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
                     fulfillment_order_id=fulfillment_order_id,
@@ -114,7 +116,7 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow
             )
             products.append(
                 FulfillmentOrderLineRow(
-                    id=idx + 1,
+                    id=base + idx + 1,
                     sku=picked_product.sku,
                     name=picked_product.name,
                     fulfillment_order_id=fulfillment_order_id,
@@ -127,4 +129,5 @@ def generate_products(fulfillment_order_id: int) -> list[FulfillmentOrderLineRow
 
 FULFILLMENT_ORDERS_PRODUCTS: list[FulfillmentOrderLineRow] = []
 for o in FULFILLMENT_ORDERS:
-    FULFILLMENT_ORDERS_PRODUCTS.extend(generate_products(o.id))
+    base: int = len(FULFILLMENT_ORDERS_PRODUCTS)
+    FULFILLMENT_ORDERS_PRODUCTS.extend(generate_products(o.id, base))
