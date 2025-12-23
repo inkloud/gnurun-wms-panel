@@ -31,10 +31,9 @@ const PickerWorkerPage = function () {
     const positions = useFulfillmentOrderPositions(
         fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    const {data: picks} = useFulfillmentOrderPicks(
+    const {data: linePicks} = useFulfillmentOrderPicks(
         fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    console.table(picks);
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 
@@ -43,13 +42,13 @@ const PickerWorkerPage = function () {
         setShowModal(true);
     };
 
-    if (fulfillmentOrders === undefined || positions === undefined) return null;
+    if (fulfillmentOrders === undefined || positions === undefined || linePicks === undefined) return null;
     return (
         <Page>
             <div className="pb-5 mb-5">
                 <Header title="Picker Workbench" subtitle="This screen will guide operators through picking tasks." />
                 <CardsGrid items={fulfillmentOrders} />
-                <PositionsTable positions={positions} />
+                <PositionsTable positions={positions} linePicks={linePicks} />
             </div>
             <BottomNavbar orders={fulfillmentOrders} lines={lines} onScan={handleScan} />
             {showModal ? (
