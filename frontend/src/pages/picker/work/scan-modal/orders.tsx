@@ -24,7 +24,7 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
     const inputRef = React.useRef<HTMLInputElement>(null);
     React.useEffect(() => {
         inputRef.current!.select();
-    }, [inputRef.current]);
+    }, [inputRef]);
     const [quantity, setQuantity] = React.useState<number>(order.quantity);
     React.useEffect(() => {
         setQuantity(order.quantity);

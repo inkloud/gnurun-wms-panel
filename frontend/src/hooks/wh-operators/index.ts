@@ -9,6 +9,7 @@ export const useWHOperators = function (token: string): {
     error: AxiosError | undefined;
 } {
     const fetcher = async function ([_, token]: ['USERS_ENDPOINT', string]): Promise<OperatorUser[]> {
+        void _;
         return getOperators(token);
     };
     const {data, error} = useSWR<OperatorUser[], AxiosError>(['USERS_ENDPOINT', token], fetcher, {

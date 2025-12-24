@@ -35,7 +35,7 @@ export const useFulfillmentOrders = function (): {
     const {data: authData} = useAuth();
     const token = authData!.access_token;
 
-    const fetcher = async function ([_, token]: ['FULFILLMENT_ORDERS_ENDPOINT', string]): Promise<FulfillmentOrder[]> {
+    const fetcher = async function ([, token]: ['FULFILLMENT_ORDERS_ENDPOINT', string]): Promise<FulfillmentOrder[]> {
         return getFulfillmentOrders(token);
     };
     const {data, error, mutate} = useSWR<FulfillmentOrder[], AxiosError>(
@@ -75,7 +75,7 @@ export const useFulfillmentOrderLines = function (id_list: Set<string>): Fulfill
     const token = authData!.access_token;
     const ids = [...id_list].sort();
 
-    const fetcher = async function ([_key, token, _joined]: ['FULFILLMENT_ORDER_LINES', string, string]) {
+    const fetcher = async function ([, token]: ['FULFILLMENT_ORDER_LINES', string, string]) {
         const res = await Promise.all(ids.map((id) => getFulfillmentOrderLines(token, id)));
         return res.flat();
     };
@@ -95,7 +95,7 @@ export const useFulfillmentOrderPositions = function (
 
     const token = authData!.access_token;
 
-    const fetcher = async function ([_key, token, joined]: KEY) {
+    const fetcher = async function ([, token, joined]: KEY) {
         return getFulfillmentOrderPositions(token, joined.split(','));
     };
 
@@ -115,7 +115,7 @@ export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefin
 
     const token = authData!.access_token;
 
-    const fetcher = async function ([_key, token, joined]: KEY) {
+    const fetcher = async function ([, token, joined]: KEY) {
         return getFulfillmentOrderPicks(token, joined.split(','));
     };
 
