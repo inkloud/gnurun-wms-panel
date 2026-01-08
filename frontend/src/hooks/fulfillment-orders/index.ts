@@ -105,7 +105,7 @@ export const useFulfillmentOrderPositions = function (
     return data;
 };
 
-export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefined): {
+export const useFulfillmentOrderPicks = function (orderId: string): {
     data: FulfillmentOrderLinePick[] | undefined;
     actions: {pick: (position_code: string, fulfillment_order_id: string, qty: number) => void};
 } {
@@ -115,13 +115,11 @@ export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefin
 
     const token = authData!.access_token;
 
-    const fetcher = async function ([, token, joined]: KEY) {
-        const res = await Promise.all(joined.split(',').map((id) => getFulfillmentOrderPicks(token, id)));
-        return res.flat();
+    const fetcher = function ([, token, orderId]: KEY) {
+        return getFulfillmentOrderPicks(token, orderId);
     };
 
-    const key: KEY | null =
-        id_list === undefined ? null : ['FULFILLMENT_ORDER_PICKS', token, [...id_list].sort().join(',')];
+    const key: KEY = ['FULFILLMENT_ORDER_PICKS', token, orderId];
     const {data, mutate} = useSWR(key, fetcher, {dedupingInterval: 60000});
 
     const pick = async function (position_code: string, fulfillment_order_id: string, qty: number) {

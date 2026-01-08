@@ -3,7 +3,6 @@ import React from 'react';
 import {useAuth} from '../../../hooks/auth';
 import {
     useFulfillmentOrderLines,
-    useFulfillmentOrderPicks,
     useFulfillmentOrderPositions,
     useFulfillmentOrders
 } from '../../../hooks/fulfillment-orders';
@@ -31,9 +30,6 @@ const PickerWorkerPage = function () {
     const positions = useFulfillmentOrderPositions(
         fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
     );
-    const {data: linePicks} = useFulfillmentOrderPicks(
-        fulfillmentOrders === undefined ? undefined : new Set(fulfillmentOrders.map((item) => item.id))
-    );
     const [scanValue, setScanValue] = React.useState<string>('');
     const [showModal, setShowModal] = React.useState(false);
 
@@ -42,22 +38,17 @@ const PickerWorkerPage = function () {
         setShowModal(true);
     };
 
-    if (fulfillmentOrders === undefined || positions === undefined || linePicks === undefined) return null;
+    if (fulfillmentOrders === undefined || positions === undefined) return null;
     return (
         <Page>
             <div className="pb-5 mb-5">
                 <Header title="Picker Workbench" subtitle="This screen will guide operators through picking tasks." />
                 <CardsGrid items={fulfillmentOrders} />
-                <PositionsTable positions={positions} linePicks={linePicks} />
+                <PositionsTable positions={positions} />
             </div>
             <BottomNavbar orders={fulfillmentOrders} lines={lines} onScan={handleScan} />
             {showModal ? (
-                <ScanModal
-                    handleHide={() => setShowModal(false)}
-                    scanValue={scanValue}
-                    positions={positions!}
-                    orders={fulfillmentOrders}
-                />
+                <ScanModal handleHide={() => setShowModal(false)} scanValue={scanValue} positions={positions!} />
             ) : null}
         </Page>
     );

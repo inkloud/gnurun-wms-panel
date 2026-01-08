@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {useFulfillmentOrderPicks} from '../../../../hooks/fulfillment-orders';
-import type {FulfillmentOrder, FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
 
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
     return (
@@ -20,7 +20,7 @@ const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({
     );
 };
 
-const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}> = function ({order, onConfirm}) {
+const CurrentOrder: React.FC<{order: OrderType; position: string}> = function ({order, position}) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     React.useEffect(() => {
         inputRef.current!.select();
@@ -29,6 +29,7 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
     React.useEffect(() => {
         setQuantity(order.quantity);
     }, [order.id, order.quantity]);
+    const {actions} = useFulfillmentOrderPicks(order.id);
 
     const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
         setQuantity(e.target.value === '' ? 0 : Number(e.target.value));
@@ -36,7 +37,7 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
 
     const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        onConfirm(quantity);
+        actions.pick(position, order.id, quantity);
     };
 
     return (
@@ -69,16 +70,8 @@ const CurrentOrder: React.FC<{order: OrderType; onConfirm: (q: number) => void}>
     );
 };
 
-export const Orders: React.FC<{position: FulfillmentOrderPosition; orders: FulfillmentOrder[]}> = function ({
-    position,
-    orders
-}) {
+export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
     const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
-    const {actions} = useFulfillmentOrderPicks(new Set(orders.map((o) => o.id)));
-
-    const handleConfirm = function (quantity_picked: number) {
-        actions.pick(position.position, currentOrder!.id, quantity_picked);
-    };
 
     const list = position.orders.map((order) => {
         const handleClick = function () {
@@ -89,7 +82,7 @@ export const Orders: React.FC<{position: FulfillmentOrderPosition; orders: Fulfi
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? list : <CurrentOrder order={currentOrder} onConfirm={handleConfirm} />}
+            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position.position} />}
         </div>
     );
 };
