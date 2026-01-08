@@ -31,10 +31,10 @@ const toFulfillmentOrderLinePick = function (item: FulfillmentOrderLinePickInput
 
 export const getFulfillmentOrderPicks = async function (
     token: string,
-    fulfillmentOrderIdList: string[]
+    fulfillmentOrderId: string
 ): Promise<FulfillmentOrderLinePick[]> {
     const response = await axios.get<FulfillmentOrderLinePickInput[]>(
-        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderIdList.join(',')}/pick`,
+        FULFILLMENT_ORDERS_ENDPOINT + `/${fulfillmentOrderId}/pick`,
         {headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}}
     );
     return response.data.map(toFulfillmentOrderLinePick);

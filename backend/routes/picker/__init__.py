@@ -69,14 +69,13 @@ async def list_fulfillment_order_positions(
     )
 
 
-@router.get("/fulfillment_orders/{fulfillment_order_id_list}/pick")
+@router.get("/fulfillment_orders/{fulfillment_order_id}/pick")
 async def list_fulfillment_order_picks(
-    fulfillment_order_id_list: str,
-    auth_header: str = Header(..., alias="Authorization"),
+    fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
 ) -> list[FulfillmentOrderPickDetail]:
     authorize_operator(auth_service, auth_header)
     return get_fulfillment_order_pick_details(
-        fulfillment_order_service, fulfillment_order_id_list
+        fulfillment_order_service, fulfillment_order_id
     )
 
 

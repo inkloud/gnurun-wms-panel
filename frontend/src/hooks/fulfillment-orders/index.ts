@@ -72,8 +72,8 @@ export const useFulfillmentOrders = function (): {
 export const useFulfillmentOrderLines = function (id_list: Set<string>): FulfillmentOrderLine[] | undefined {
     const {data: authData} = useAuth();
 
-    const token = authData!.access_token;
-    const ids = [...id_list].sort();
+    const token: string = authData!.access_token;
+    const ids: string[] = [...id_list].sort();
 
     const fetcher = async function ([, token]: ['FULFILLMENT_ORDER_LINES', string, string]) {
         const res = await Promise.all(ids.map((id) => getFulfillmentOrderLines(token, id)));
@@ -116,7 +116,8 @@ export const useFulfillmentOrderPicks = function (id_list: Set<string> | undefin
     const token = authData!.access_token;
 
     const fetcher = async function ([, token, joined]: KEY) {
-        return getFulfillmentOrderPicks(token, joined.split(','));
+        const res = await Promise.all(joined.split(',').map((id) => getFulfillmentOrderPicks(token, id)));
+        return res.flat();
     };
 
     const key: KEY | null =

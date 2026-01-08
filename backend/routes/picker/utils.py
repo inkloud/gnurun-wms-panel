@@ -103,14 +103,14 @@ def get_fulfillment_order_line(
 
 
 def get_fulfillment_order_pick_details(
-    fulfillment_order_service: FulfillmentOrderService, fulfillment_order_id_list: str
+    fulfillment_order_service: FulfillmentOrderService, fulfillment_order_id: str
 ) -> list[FulfillmentOrderPickDetail]:
-    fulfillment_order_ids: list[str] = fulfillment_order_id_list.split(",")
-    sessions: list[FulfillmentOrderSession] = []
-    lines: list[FulfillmentOrderLine] = []
-    for fulfillment_order_id in fulfillment_order_ids:
-        sessions.extend(fulfillment_order_service.get_sessions(fulfillment_order_id))
-        lines.extend(fulfillment_order_service.get_lines(fulfillment_order_id))
+    sessions: list[FulfillmentOrderSession] = list(
+        fulfillment_order_service.get_sessions(fulfillment_order_id)
+    )
+    lines: list[FulfillmentOrderLine] = fulfillment_order_service.get_lines(
+        fulfillment_order_id
+    )
 
     session_by_id = {session.id: session for session in sessions}
     line_by_id = {line.id: line for line in lines}
