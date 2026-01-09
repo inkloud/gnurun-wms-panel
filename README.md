@@ -29,6 +29,8 @@ or
 cd prod
 docker compose up
 ```
+The production stack expects an external Docker network named `public` to exist for
+services that need ingress, alongside the `internal-life365-net` network.
 
 ## Development
 

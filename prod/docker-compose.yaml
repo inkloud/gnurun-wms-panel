@@ -13,6 +13,7 @@ services:
       - PYTHONDONTWRITEBYTECODE=0
     networks:
       - internal-life365-net
+      - public
     restart: unless-stopped
   frontend:
     build:
@@ -31,5 +32,7 @@ services:
     restart: unless-stopped
 
 networks:
+  public:
+    external: true
   internal-life365-net:
     external: true
