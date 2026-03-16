@@ -22,11 +22,11 @@ from .utils import (
     get_operator_fulfillment_order_session,
 )
 
-router = APIRouter(prefix="/picker", tags=["picker"])
+router: APIRouter = APIRouter(prefix="/picker", tags=["picker"])
 
 
-auth_service = AuthService(DB())
-fulfillment_order_service = FulfillmentOrderService(DB())
+auth_service: AuthService = AuthService(DB())
+fulfillment_order_service: FulfillmentOrderService = FulfillmentOrderService(DB())
 
 
 @router.get("")

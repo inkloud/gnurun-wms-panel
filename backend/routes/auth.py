@@ -40,7 +40,7 @@ async def authenticate(payload: AuthRequest) -> AuthPayload:
 async def verify_authentication(
     auth_header: str = Header(..., alias="Authorization"),
 ) -> AuthPayload:
-    token = get_token_from_header(auth_header)
+    token: str | None = get_token_from_header(auth_header)
     if token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
