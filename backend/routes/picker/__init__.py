@@ -13,6 +13,7 @@ from ...domain.entities.fulfillment_order import (
 )
 from ...services.auth import AuthService
 from ...services.fulfillment_order import FulfillmentOrderService
+from ...services.interfaces import DBGateway
 from .utils import (
     FulfillmentOrderPickDetail,
     FulfillmentOrderResponse,
@@ -25,8 +26,10 @@ from .utils import (
 router: APIRouter = APIRouter(prefix="/picker", tags=["picker"])
 
 
-auth_service: AuthService = AuthService(DB())
-fulfillment_order_service: FulfillmentOrderService = FulfillmentOrderService(DB())
+db: DBGateway = DB()
+
+auth_service: AuthService = AuthService(db)
+fulfillment_order_service: FulfillmentOrderService = FulfillmentOrderService(db)
 
 
 @router.get("")

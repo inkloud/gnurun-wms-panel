@@ -7,14 +7,17 @@ from ..data_mapper.mock_db import DB
 from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..domain.entities.users import User
 from ..services.auth import AuthService
+from ..services.interfaces import DBGateway
 from ..services.users import UsersService
 from ..utils import get_token_from_header
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-users_service = UsersService(DB())
-auth_service = AuthService(DB())
+db: DBGateway = DB()
+
+users_service = UsersService(db)
+auth_service = AuthService(db)
 
 
 @router.get("")
