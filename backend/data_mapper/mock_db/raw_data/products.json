@@ -1,0 +1,156 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "sku": "SKU-001",
+            "name": "Wireless Barcode Scanner",
+            "where": [
+                {
+                    "stock": 12,
+                    "position": "A1.01.01.01"
+                },
+                {
+                    "stock": 8,
+                    "position": "A1.01.02.01"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "sku": "SKU-002",
+            "name": "Thermal Label Roll",
+            "where": [
+                {
+                    "stock": 60,
+                    "position": "B1.02.01.01"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "sku": "SKU-003",
+            "name": "Packing Tape 48mm",
+            "where": [
+                {
+                    "stock": 40,
+                    "position": "C1.03.02.01"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "sku": "SKU-004",
+            "name": "Bubble Mailer Medium",
+            "where": [
+                {
+                    "stock": 30,
+                    "position": "C1.03.05.02"
+                },
+                {
+                    "stock": 20,
+                    "position": "C1.03.05.03"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "sku": "SKU-005",
+            "name": "USB-C Dock Station",
+            "where": [
+                {
+                    "stock": 10,
+                    "position": "D1.01.01.05"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "sku": "SKU-006",
+            "name": "RFID Reader",
+            "where": [
+                {
+                    "stock": 6,
+                    "position": "D1.01.02.05"
+                },
+                {
+                    "stock": 4,
+                    "position": "D1.01.02.06"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "sku": "SKU-007",
+            "name": "Safety Gloves Large",
+            "where": [
+                {
+                    "stock": 25,
+                    "position": "E1.05.01.02"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "sku": "SKU-008",
+            "name": "Shipping Box Small",
+            "where": [
+                {
+                    "stock": 80,
+                    "position": "E1.05.03.01"
+                },
+                {
+                    "stock": 50,
+                    "position": "E1.05.03.02"
+                },
+                {
+                    "stock": 20,
+                    "position": "E1.05.03.03"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "sku": "SKU-009",
+            "name": "Fragile Stickers",
+            "where": [
+                {
+                    "stock": 100,
+                    "position": "F1.02.04.02"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "sku": "SKU-010",
+            "name": "Mobile Printer Battery",
+            "where": [
+                {
+                    "stock": 14,
+                    "position": "G1.04.01.04"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "sku": "SKU-011",
+            "name": "Pallet Wrap Film",
+            "where": [
+                {
+                    "stock": 24,
+                    "position": "H1.06.02.01"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "sku": "SKU-012",
+            "name": "Inventory Tags Pack",
+            "where": [
+                {
+                    "stock": 70,
+                    "position": "B1.02.01.02"
+                }
+            ]
+        }
+    ]
+}

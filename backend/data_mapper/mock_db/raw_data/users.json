@@ -1,0 +1,50 @@
+{
+    "warehouse": {
+        "id": 1,
+        "name": "Gnu000 Test"
+    },
+    "users": [
+        {
+            "username": "bacchilu@gmail.com",
+            "pwd": "bacchilu",
+            "name": "Luca Bacchi",
+            "type": "MANAGER"
+        },
+        {
+            "username": "alice.porter@gnurun.example",
+            "pwd": "alice.porter",
+            "name": "Alice Porter",
+            "type": "OPERATOR"
+        },
+        {
+            "username": "marco.jimenez@gnurun.example",
+            "pwd": "marco.jimenez",
+            "name": "Marco Jimenez",
+            "type": "OPERATOR"
+        },
+        {
+            "username": "priya.desai@gnurun.example",
+            "pwd": "priya.desai",
+            "name": "Priya Desai",
+            "type": "OPERATOR"
+        },
+        {
+            "username": "ethan.wright@gnurun.example",
+            "pwd": "ethan.wright",
+            "name": "Ethan Wright",
+            "type": "OPERATOR"
+        },
+        {
+            "username": "sofia.conti@gnurun.example",
+            "pwd": "sofia.conti",
+            "name": "Sofia Conti",
+            "type": "OPERATOR"
+        },
+        {
+            "username": "luca@life365.eu",
+            "pwd": "luca",
+            "name": "Luca Bacchi",
+            "type": "OPERATOR"
+        }
+    ]
+}

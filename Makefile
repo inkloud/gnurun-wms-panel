@@ -18,8 +18,6 @@ build:
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
-	rm -rf .venv/
-	rm -rf frontend/node_modules/
 
 codex:
 	npm install @openai/codex --save-dev
