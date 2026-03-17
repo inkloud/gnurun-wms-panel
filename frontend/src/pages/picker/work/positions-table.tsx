@@ -6,8 +6,8 @@ const Picks: React.FC<{orderId: string; position: FulfillmentOrderPosition}> = f
 
     const d: FulfillmentOrderLinePick[] = data === undefined ? [] : data;
     const e: FulfillmentOrderLinePick[] = d.filter((lp) => lp.position_code === position.position);
-    return e.map((lp: FulfillmentOrderLinePick) => (
-        <span key={lp.operator_id} className="badge text-bg-secondary">
+    return e.map((lp: FulfillmentOrderLinePick, idx: number) => (
+        <span key={`${lp.operator_id}-${idx}`} className="badge text-bg-secondary">
             {lp.operator_id} - {lp.quantity_picked}
         </span>
     ));
