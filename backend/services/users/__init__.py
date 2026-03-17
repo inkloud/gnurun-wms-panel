@@ -1,7 +1,7 @@
 __all__ = ["UsersService"]
 
 from ...domain.entities.users import User
-from ...domain.interfaces.data_gateway import DBGateway
+from ..interfaces.data_gateway import DBGateway
 
 
 class UsersService:

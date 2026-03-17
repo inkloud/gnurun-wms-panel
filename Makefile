@@ -10,6 +10,7 @@ update:
 
 build:
 	python3 -m venv .venv
+	rm -rf .venv/.gitignore
 	./.venv/bin/pip3 install -r backend/requirements-lock.txt
 	cd frontend && npm install
 	rm frontend/package-lock.json

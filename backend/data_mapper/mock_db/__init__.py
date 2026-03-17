@@ -9,7 +9,7 @@ from ...domain.entities.fulfillment_order import (
     FulfillmentOrderSession,
 )
 from ...domain.entities.users import User, UserType, Warehouse
-from ...domain.interfaces.data_gateway import (
+from ...services.interfaces.data_gateway import (
     DBGateway,
     FulfillmentGateway,
     UserGateway,

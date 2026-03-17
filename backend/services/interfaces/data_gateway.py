@@ -4,13 +4,13 @@ __all__ = ["DBGateway", "UserGateway", "FulfillmentGateway"]
 
 from typing import Protocol
 
-from ..entities.fulfillment_order import (
+from ...domain.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
-from ..entities.users import User
+from ...domain.entities.users import User
 
 
 class UserGateway(Protocol):

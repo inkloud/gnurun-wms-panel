@@ -9,7 +9,7 @@ from ...domain.entities.fulfillment_order import (
     SimpleOrder,
     SimpleProduct,
 )
-from ...domain.interfaces.data_gateway import DBGateway
+from ..interfaces.data_gateway import DBGateway
 from .optimizer import order_by_position
 
 
