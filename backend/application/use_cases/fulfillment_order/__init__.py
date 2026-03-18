@@ -1,6 +1,6 @@
 __all__ = ["FulfillmentOrderService"]
 
-from backend.domain.entities.fulfillment_order import (
+from backend.application.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
@@ -9,7 +9,7 @@ from backend.domain.entities.fulfillment_order import (
     SimpleOrder,
     SimpleProduct,
 )
-from backend.services.interfaces.data_gateway import DBGateway
+from backend.application.ports.data_gateway import DBGateway
 from .optimizer import order_by_position
 
 

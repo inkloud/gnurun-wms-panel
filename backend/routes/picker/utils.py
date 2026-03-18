@@ -12,15 +12,15 @@ from datetime import datetime
 
 from fastapi import HTTPException, status
 
-from backend.domain.entities.auth import AuthPayload, AuthUserType
-from backend.domain.entities.fulfillment_order import (
+from backend.application.entities.auth import AuthPayload, AuthUserType
+from backend.application.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
-from backend.services.auth import AuthService
-from backend.services.fulfillment_order import FulfillmentOrderService
+from backend.application.use_cases.auth import AuthService
+from backend.application.use_cases.fulfillment_order import FulfillmentOrderService
 from ..utils import get_token_from_header
 
 

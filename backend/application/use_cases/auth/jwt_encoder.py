@@ -1,6 +1,6 @@
 __all__ = ["encode", "decode"]
 
-from backend.domain.entities.auth import AuthUser, AuthUserType
+from backend.application.entities.auth import AuthUser, AuthUserType
 from .jwt_utils import decode_jwt, encode_jwt
 
 

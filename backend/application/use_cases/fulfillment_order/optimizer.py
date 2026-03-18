@@ -1,7 +1,7 @@
 __all__ = ["order_by_position"]
 
 
-from backend.domain.entities.fulfillment_order import FulfillmentOrderPosition
+from backend.application.entities.fulfillment_order import FulfillmentOrderPosition
 
 
 def order_by_position(

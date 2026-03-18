@@ -1,7 +1,7 @@
 __all__ = ["UsersService"]
 
-from backend.domain.entities.users import User
-from backend.services.interfaces.data_gateway import DBGateway
+from backend.application.entities.users import User
+from backend.application.ports.data_gateway import DBGateway
 
 
 class UsersService:

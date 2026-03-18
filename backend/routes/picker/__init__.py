@@ -3,17 +3,17 @@ __all__ = ["router"]
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
-from backend.domain.entities.auth import AuthPayload, AuthUserType
-from backend.domain.entities.fulfillment_order import (
+from backend.application.entities.auth import AuthPayload, AuthUserType
+from backend.application.entities.fulfillment_order import (
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
     FulfillmentOrderPosition,
     FulfillmentOrderSession,
 )
+from backend.application.ports import DBGateway
+from backend.application.use_cases.auth import AuthService
+from backend.application.use_cases.fulfillment_order import FulfillmentOrderService
 from backend.infrastructure.persistence.mock_db import DB
-from backend.services.auth import AuthService
-from backend.services.fulfillment_order import FulfillmentOrderService
-from backend.services.interfaces import DBGateway
 from .utils import (
     FulfillmentOrderPickDetail,
     FulfillmentOrderResponse,

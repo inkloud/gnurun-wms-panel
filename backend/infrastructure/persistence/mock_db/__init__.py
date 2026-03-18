@@ -2,14 +2,14 @@ __all__ = ["DB"]
 
 from datetime import datetime
 
-from backend.domain.entities.fulfillment_order import (
+from backend.application.entities.fulfillment_order import (
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
     FulfillmentOrderSession,
 )
-from backend.domain.entities.users import User, UserType, Warehouse
-from backend.services.interfaces.data_gateway import (
+from backend.application.entities.users import User, UserType, Warehouse
+from backend.application.ports.data_gateway import (
     DBGateway,
     FulfillmentGateway,
     UserGateway,
