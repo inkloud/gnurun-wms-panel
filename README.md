@@ -49,7 +49,7 @@ From the repository root:
 
 - Create and activate a Python virtual environment for the API
 - Install dependencies with `pip install -r backend/requirements.txt`
-- Start the development server with `fastapi dev backend/main.py`
+- Start the development server with `fastapi dev backend/api/app.py`
 
 ### Docker
 
