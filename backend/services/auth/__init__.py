@@ -1,8 +1,8 @@
 __all__ = ["AuthService"]
 
-from ...domain.entities.auth import AuthPayload, AuthUser, AuthUserType
-from ...domain.entities.users import User
-from ..interfaces.data_gateway import DBGateway
+from backend.domain.entities.auth import AuthPayload, AuthUser, AuthUserType
+from backend.domain.entities.users import User
+from backend.services.interfaces.data_gateway import DBGateway
 from .jwt_encoder import decode, encode
 
 

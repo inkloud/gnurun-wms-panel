@@ -45,11 +45,11 @@ From inside the `frontend/` directory:
 
 ### Backend (FastAPI)
 
-From inside the `backend/` directory (once the service scaffold is in place):
+From the repository root:
 
 - Create and activate a Python virtual environment for the API
-- Install dependencies with `pip install -r requirements.txt`
-- Start the development server with `fastapi dev main.py`
+- Install dependencies with `pip install -r backend/requirements.txt`
+- Start the development server with `fastapi dev backend/main.py`
 
 ### Docker
 
@@ -58,7 +58,7 @@ From inside `frontend/`:
 - Build the dev container with `docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t gnrwms-dev .`
 - Run the dev container with `docker run --rm -it -p 5173:5173 -v "$(pwd)"/src:/app/src gnrwms-dev`
 
-From inside `backend/`:
+From the repository root:
 
-- Build the backend container with `docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t gnrwms-dev-backend .`
-- Run the backend container with `docker run --rm -it -p 8000:8000 -v "$(pwd)"/:/app/ gnrwms-dev-backend`
+- Build the backend container with `docker build -f backend/Dockerfile --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t gnrwms-dev-backend .`
+- Run the backend container with `docker run --rm -it -p 8000:8000 -v "$(pwd)"/backend:/app/backend gnrwms-dev-backend`

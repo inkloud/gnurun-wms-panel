@@ -10,14 +10,14 @@ RUN useradd -m -u ${USER_ID} -g ${USERNAME} ${USERNAME}
 
 WORKDIR /app
 
-COPY . .
+COPY backend /app/backend
 
 RUN chown -R ${USERNAME}:${USERNAME} /app
 USER ${USERNAME}
 
 ENV PATH="$PATH:/home/$USERNAME/.local/bin"
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r backend/requirements.txt
 
-CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0"]
+CMD ["fastapi", "dev", "backend/main.py", "--host", "0.0.0.0"]
 
 EXPOSE 8000
