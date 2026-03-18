@@ -6,7 +6,7 @@ from .routes.picker import router as picker_router
 from .routes.root import router as root_router
 from .routes.users import router as users_router
 
-app = FastAPI()
+app: FastAPI = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,

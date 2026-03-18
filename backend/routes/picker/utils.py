@@ -21,7 +21,7 @@ from ...domain.entities.fulfillment_order import (
 )
 from ...services.auth import AuthService
 from ...services.fulfillment_order import FulfillmentOrderService
-from ...utils import get_token_from_header
+from ..utils import get_token_from_header
 
 
 @dataclass(frozen=True)

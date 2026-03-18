@@ -9,15 +9,15 @@ from ..domain.entities.users import User
 from ..services.auth import AuthService
 from ..services.interfaces import DBGateway
 from ..services.users import UsersService
-from ..utils import get_token_from_header
+from .utils import get_token_from_header
 
-router = APIRouter(prefix="/users", tags=["users"])
+router: APIRouter = APIRouter(prefix="/users", tags=["users"])
 
 
 db: DBGateway = DB()
 
-users_service = UsersService(db)
-auth_service = AuthService(db)
+users_service: UsersService = UsersService(db)
+auth_service: AuthService = AuthService(db)
 
 
 @router.get("")

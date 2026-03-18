@@ -1,7 +1,7 @@
 __all__ = ["encode", "decode"]
 
 from ...domain.entities.auth import AuthUser, AuthUserType
-from ...utils.jwt_utils import decode_jwt, encode_jwt
+from .jwt_utils import decode_jwt, encode_jwt
 
 
 def encode(auth_user: AuthUser) -> str:

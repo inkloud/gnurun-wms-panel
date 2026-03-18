@@ -9,15 +9,15 @@ from ..domain.entities.auth import AuthPayload, AuthUserType
 from ..services.auth import AuthService
 from ..services.interfaces import DBGateway
 from ..services.users import UsersService
-from ..utils import get_token_from_header
+from .utils import get_token_from_header
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router: APIRouter = APIRouter(prefix="/auth", tags=["auth"])
 
 
 db: DBGateway = DB()
 
-auth_service = AuthService(db)
-users_service = UsersService(db)
+auth_service: AuthService = AuthService(db)
+users_service: UsersService = UsersService(db)
 
 
 class AuthRequest(BaseModel):
