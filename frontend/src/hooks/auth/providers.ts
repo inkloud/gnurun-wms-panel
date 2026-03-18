@@ -16,16 +16,16 @@ export const FakeAuthProvider: AuthProvider = (function () {
     const resToken: AuthResponse = {
         access_token: 'AAABBBCCC',
         auth_user: {
-            name: 'Luca Bacchi',
-            username: 'bacchilu@gmail.com',
-            warehouse: 'GnuRun 101',
+            name: 'Warehouse Manager',
+            username: 'manager@gnu000.com',
+            warehouse: 'Life365 - Forli - Gnu000',
             type: UserType.MANAGER
         }
     };
 
     return {
         authenticate: async function (credentials: Credentials): Promise<AuthResponse | null> {
-            if (credentials.username === 'bacchilu@gmail.com' && credentials.password === 'bacchilu') return resToken;
+            if (credentials.username === 'manager@gnu000.com' && credentials.password === 'manager') return resToken;
             return null;
         },
         verifyToken: async function (accessToken: string): Promise<AuthResponse | null> {

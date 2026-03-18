@@ -1,49 +1,49 @@
 {
     "warehouse": {
         "id": 1,
-        "name": "Gnu000 Test"
+        "name": "Life365 - Forli - Gnu000"
     },
     "users": [
         {
-            "username": "bacchilu@gmail.com",
-            "pwd": "bacchilu",
-            "name": "Luca Bacchi",
+            "username": "manager@gnu000.com",
+            "pwd": "manager",
+            "name": "Warehouse Manager",
             "type": "MANAGER"
         },
         {
-            "username": "alice.porter@gnurun.example",
+            "username": "alice.porter@gnu000.com",
             "pwd": "alice.porter",
             "name": "Alice Porter",
             "type": "OPERATOR"
         },
         {
-            "username": "marco.jimenez@gnurun.example",
+            "username": "marco.jimenez@gnu000.com",
             "pwd": "marco.jimenez",
             "name": "Marco Jimenez",
             "type": "OPERATOR"
         },
         {
-            "username": "priya.desai@gnurun.example",
+            "username": "priya.desai@gnu000.com",
             "pwd": "priya.desai",
             "name": "Priya Desai",
             "type": "OPERATOR"
         },
         {
-            "username": "ethan.wright@gnurun.example",
+            "username": "ethan.wright@gnu000.com",
             "pwd": "ethan.wright",
             "name": "Ethan Wright",
             "type": "OPERATOR"
         },
         {
-            "username": "sofia.conti@gnurun.example",
+            "username": "sofia.conti@gnu000.com",
             "pwd": "sofia.conti",
             "name": "Sofia Conti",
             "type": "OPERATOR"
         },
         {
-            "username": "luca@life365.eu",
-            "pwd": "luca",
-            "name": "Luca Bacchi",
+            "username": "davide@gnu000.com",
+            "pwd": "davide",
+            "name": "Davide Della Bella",
             "type": "OPERATOR"
         }
     ]
