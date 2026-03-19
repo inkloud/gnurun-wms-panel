@@ -1,6 +1,21 @@
-import {useFulfillmentOrderPicks} from '../../../../hooks/fulfillment-orders';
+import {useFulfillmentOrderPicks, useFulfillmentOrdersPicks} from '../../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderLinePick, FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
 import {AssignmentBadge} from '../../ui';
+
+const ProgressBadge: React.FC<{pickedQuantity: number; totalQuantity: number}> = function ({
+    pickedQuantity,
+    totalQuantity
+}) {
+    const isCompleted = totalQuantity > 0 && pickedQuantity >= totalQuantity;
+    const isPartial = pickedQuantity > 0 && !isCompleted;
+    const badgeClass = isCompleted
+        ? 'bg-success-subtle text-success-emphasis border border-success-subtle'
+        : isPartial
+          ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
+          : 'text-bg-light text-body-emphasis';
+
+    return <span className={`badge ${badgeClass}`}>{`${pickedQuantity}/${totalQuantity}`}</span>;
+};
 
 const Picks: React.FC<{picks: FulfillmentOrderLinePick[]}> = function ({picks}) {
     if (picks.length === 0) return null;
@@ -26,18 +41,16 @@ export const TableRow: React.FC<{
     rowSpan: number;
     totalUnits: number;
 }> = function ({isFirst, position, orderId, quantity, rowSpan, totalUnits}) {
+    const positionOrderIds = position.orders.map((order) => order.id);
+    const positionPicksData = useFulfillmentOrdersPicks(positionOrderIds);
     const {data} = useFulfillmentOrderPicks(orderId);
     const allPicks: FulfillmentOrderLinePick[] = data === undefined ? [] : data;
     const picks: FulfillmentOrderLinePick[] = allPicks.filter((lp) => lp.position_code === position.position);
     const pickedQuantity = picks.reduce((sum, pick) => sum + pick.quantity_picked, 0);
-    const isCompleted = quantity > 0 && pickedQuantity >= quantity;
-    const isPartial = pickedQuantity > 0 && !isCompleted;
-    const orderBadgeClass = isCompleted
-        ? 'bg-success-subtle text-success-emphasis border border-success-subtle'
-        : isPartial
-          ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
-          : 'text-bg-light text-body-emphasis';
-    const statusLabel = `${pickedQuantity}/${quantity}`;
+    const allPositionPicks: FulfillmentOrderLinePick[] = positionPicksData === undefined ? [] : positionPicksData;
+    const pickedPositionQuantity = allPositionPicks
+        .filter((lp) => lp.position_code === position.position)
+        .reduce((sum, pick) => sum + pick.quantity_picked, 0);
 
     return (
         <tr>
@@ -49,7 +62,7 @@ export const TableRow: React.FC<{
                             <span className="text-muted small">{position.orders.length} orders</span>
                             <div className="d-flex w-100 justify-content-between align-items-center gap-2">
                                 <span className="fw-semibold font-monospace small">{position.product.sku}</span>
-                                <span className="fw-semibold text-body-secondary">×{totalUnits}</span>
+                                <ProgressBadge pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
                             </div>
                             <span className="text-muted small">{position.product.name}</span>
                         </div>
@@ -57,10 +70,10 @@ export const TableRow: React.FC<{
                 </>
             ) : null}
             <td>
-                <span className={`badge ${orderBadgeClass}`}>
-                    {orderId}
-                    {` · ${statusLabel}`}
-                </span>
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <span className="badge text-bg-light text-body-emphasis">{orderId}</span>
+                    <ProgressBadge pickedQuantity={pickedQuantity} totalQuantity={quantity} />
+                </div>
                 <Picks picks={picks} />
             </td>
         </tr>

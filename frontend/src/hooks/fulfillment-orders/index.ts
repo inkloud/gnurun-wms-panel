@@ -148,3 +148,22 @@ export const useFulfillmentOrderPicks = function (orderId: string): {
     };
     return {data, actions: {pick}};
 };
+
+export const useFulfillmentOrdersPicks = function (orderIds: string[]): FulfillmentOrderLinePick[] | undefined {
+    type KEY = ['FULFILLMENT_ORDER_PICKS_LIST', string, string];
+
+    const {data: authData} = useAuth();
+
+    const token = authData!.access_token;
+    const ids = [...orderIds].sort();
+
+    const fetcher = async function ([, token, joined]: KEY) {
+        const res = await Promise.all(joined.split(',').map((orderId) => getFulfillmentOrderPicks(token, orderId)));
+        return res.flat();
+    };
+
+    const key: KEY | null = ids.length === 0 ? null : ['FULFILLMENT_ORDER_PICKS_LIST', token, ids.join(',')];
+    const {data} = useSWR(key, fetcher, {dedupingInterval: 60000});
+
+    return data;
+};
