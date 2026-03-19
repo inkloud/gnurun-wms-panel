@@ -1,16 +1,24 @@
 import {useFulfillmentOrderPicks} from '../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderLinePick, FulfillmentOrderPosition} from '../../../hooks/fulfillment-orders/types';
+import {AssignmentBadge} from '../ui';
 
 const Picks: React.FC<{orderId: string; position: FulfillmentOrderPosition}> = function ({orderId, position}) {
     const {data} = useFulfillmentOrderPicks(orderId);
 
     const d: FulfillmentOrderLinePick[] = data === undefined ? [] : data;
     const e: FulfillmentOrderLinePick[] = d.filter((lp) => lp.position_code === position.position);
-    return e.map((lp: FulfillmentOrderLinePick, idx: number) => (
-        <span key={`${lp.operator_id}-${idx}`} className="badge text-bg-secondary">
-            {lp.operator_id} - {lp.quantity_picked}
-        </span>
-    ));
+
+    return (
+        <div className="d-flex flex-wrap gap-2 mt-2">
+            {e.map((lp: FulfillmentOrderLinePick, idx: number) => (
+                <AssignmentBadge
+                    key={`${lp.operator_id}-${idx}`}
+                    username={lp.operator_id}
+                    quantity={lp.quantity_picked}
+                />
+            ))}
+        </div>
+    );
 };
 
 const TableRow: React.FC<{
@@ -43,9 +51,7 @@ const TableRow: React.FC<{
             ) : null}
             <td>
                 <span className="badge text-bg-light text-body-emphasis">{orderId}</span>
-                <p>
-                    <Picks orderId={orderId} position={position} />
-                </p>
+                <Picks orderId={orderId} position={position} />
             </td>
             <td className="text-end fw-semibold">×{quantity}</td>
         </tr>

@@ -3,15 +3,20 @@ import {useFulfillmentOrders} from '../../hooks/fulfillment-orders';
 import type {FulfillmentOrder} from '../../hooks/fulfillment-orders/types';
 import {formatOrderDate} from '../../util';
 
-export const UserBadge: React.FC<{username: string}> = function ({username}) {
+export const AssignmentBadge: React.FC<{username: string; quantity?: number}> = function ({username, quantity}) {
     const {data: authData} = useAuth();
 
     const currentLogged = authData!.auth_user.username;
-    const badgeClass = username === currentLogged ? 'badge bg-success' : 'badge bg-secondary';
+    const badgeClass =
+        username === currentLogged
+            ? 'bg-success-subtle text-success-emphasis border-success-subtle'
+            : 'bg-light text-body-secondary border-secondary-subtle';
     const label = username === currentLogged ? 'ME' : username;
+
     return (
-        <span key={username} className={badgeClass}>
-            {label}
+        <span className={`d-inline-flex align-items-center gap-1 rounded-pill border px-2 ${badgeClass}`}>
+            <span className="fw-semibold">{label}</span>
+            {quantity !== undefined && <span className="border-start ps-1">×{quantity}</span>}
         </span>
     );
 };
@@ -44,7 +49,7 @@ export const FulfillmentCard: React.FC<{item: FulfillmentOrder; actions?: Fulfil
     item,
     actions
 }) {
-    const assigned_to = item.assigned_to.map((username) => <UserBadge key={username} username={username} />);
+    const assigned_to = item.assigned_to.map((username) => <AssignmentBadge key={username} username={username} />);
 
     return (
         <div className="col" key={item.id}>
