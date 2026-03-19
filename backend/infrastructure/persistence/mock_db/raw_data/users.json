@@ -11,33 +11,33 @@
             "type": "MANAGER"
         },
         {
-            "username": "alice.porter@gnu000.com",
-            "pwd": "alice.porter",
-            "name": "Alice Porter",
+            "username": "roberto.buffali@gnu000.com",
+            "pwd": "roberto",
+            "name": "Roberto Buffali",
             "type": "OPERATOR"
         },
         {
-            "username": "marco.jimenez@gnu000.com",
-            "pwd": "marco.jimenez",
-            "name": "Marco Jimenez",
+            "username": "giancarlo.spadini@gnu000.com",
+            "pwd": "giancarlo",
+            "name": "Giancarlo Spadini",
             "type": "OPERATOR"
         },
         {
-            "username": "priya.desai@gnu000.com",
-            "pwd": "priya.desai",
-            "name": "Priya Desai",
+            "username": "maria.tsoneva@gnu000.com",
+            "pwd": "maria",
+            "name": "Maria Tsoneva",
             "type": "OPERATOR"
         },
         {
-            "username": "ethan.wright@gnu000.com",
-            "pwd": "ethan.wright",
-            "name": "Ethan Wright",
+            "username": "leonardo.zhou@gnu000.com",
+            "pwd": "leonardo",
+            "name": "Leonardo Zhou",
             "type": "OPERATOR"
         },
         {
-            "username": "sofia.conti@gnu000.com",
-            "pwd": "sofia.conti",
-            "name": "Sofia Conti",
+            "username": "elena.chen@gnu000.com",
+            "pwd": "elena",
+            "name": "Elena Chen",
             "type": "OPERATOR"
         },
         {
