@@ -28,19 +28,10 @@ export const PositionsTable: React.FC<{positions: FulfillmentOrderPosition[]}> =
                 <thead>
                     <tr>
                         <th scope="col" className="text-uppercase text-muted small">
-                            Position
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            SKU
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small">
                             Product
                         </th>
                         <th scope="col" className="text-uppercase text-muted small">
                             Order
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small text-end">
-                            Quantity
                         </th>
                     </tr>
                 </thead>

@@ -14,7 +14,7 @@ export const AssignmentBadge: React.FC<{username: string; quantity?: number}> = 
     const label = username === currentLogged ? 'ME' : username;
 
     return (
-        <span className={`d-inline-flex align-items-center gap-1 rounded-pill border px-2 ${badgeClass}`}>
+        <span className={`small d-inline-flex align-items-center gap-1 rounded-pill border px-2 ${badgeClass}`}>
             <span className="fw-semibold">{label}</span>
             {quantity !== undefined && <span className="border-start ps-1">×{quantity}</span>}
         </span>

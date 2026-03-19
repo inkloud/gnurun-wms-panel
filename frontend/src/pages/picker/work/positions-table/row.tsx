@@ -37,7 +37,7 @@ export const TableRow: React.FC<{
         : isPartial
           ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
           : 'text-bg-light text-body-emphasis';
-    const statusLabel = isPartial ? `${pickedQuantity}/${quantity}` : null;
+    const statusLabel = `${pickedQuantity}/${quantity}`;
 
     return (
         <tr>
@@ -46,27 +46,23 @@ export const TableRow: React.FC<{
                     <td rowSpan={rowSpan} className="align-top" style={{width: '200px'}}>
                         <div className="d-flex flex-column gap-1">
                             <span className="badge text-bg-secondary px-3 py-2 fs-6">{position.position}</span>
-                            <span className="text-muted small">
-                                {position.orders.length} orders · {totalUnits} units
-                            </span>
+                            <span className="text-muted small">{position.orders.length} orders</span>
+                            <div className="d-flex w-100 justify-content-between align-items-center gap-2">
+                                <span className="fw-semibold font-monospace small">{position.product.sku}</span>
+                                <span className="fw-semibold text-body-secondary">×{totalUnits}</span>
+                            </div>
+                            <span className="text-muted small">{position.product.name}</span>
                         </div>
-                    </td>
-                    <td rowSpan={rowSpan} className="fw-semibold font-monospace">
-                        {position.product.sku}
-                    </td>
-                    <td rowSpan={rowSpan} className="text-muted">
-                        {position.product.name}
                     </td>
                 </>
             ) : null}
             <td>
                 <span className={`badge ${orderBadgeClass}`}>
                     {orderId}
-                    {statusLabel !== null ? ` · ${statusLabel}` : ''}
+                    {` · ${statusLabel}`}
                 </span>
                 <Picks picks={picks} />
             </td>
-            <td className="text-end fw-semibold">×{quantity}</td>
         </tr>
     );
 };
