@@ -1,4 +1,4 @@
-.PHONY: update clean codex build up down
+.PHONY: update clean codex build up down clean-all
 
 update:
 	python3 -m venv .venv
@@ -18,6 +18,13 @@ build:
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
+
+clean-all:
+	find . -name "*.pyc" -delete
+	find . -name "__pycache__" -delete
+	rm -rf .venv
+	rm -rf frontend/node_modules
+	rm -rf node_modules
 
 codex:
 	npm install @openai/codex --save-dev
