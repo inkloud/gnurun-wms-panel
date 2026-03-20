@@ -6,13 +6,14 @@ export type FulfillmentOrderLine = {
     position_code: string;
     quantity_required: number;
     name: string;
+    requires_serial_tracking: boolean;
 };
 
 export type OrderType = {id: string; quantity: number};
 
 export type FulfillmentOrderPosition = {
     position: string;
-    product: {sku: string; name: string};
+    product: {sku: string; name: string; requires_serial_tracking: boolean};
     orders: OrderType[];
 };
 
@@ -22,5 +23,6 @@ export type FulfillmentOrderLinePick = {
     sku: string;
     position_code: string;
     quantity_picked: number;
+    serial_numbers: string[];
     picked_at: Date;
 };

@@ -52,6 +52,9 @@ def _load_products() -> list[ProductRow]:
                 id=product_id,
                 sku=sku,
                 name=raw_product["name"],
+                requires_serial_tracking=raw_product.get(
+                    "requires_serial_tracking", False
+                ),
                 where=locations,
             )
         )

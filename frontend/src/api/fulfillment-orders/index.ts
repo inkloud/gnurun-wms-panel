@@ -16,7 +16,8 @@ const FulfillmentOrderLineSchema = z.object({
     name: z.string(),
     fulfillment_order_id: z.string(),
     position_code: z.string(),
-    quantity_required: z.number()
+    quantity_required: z.number(),
+    requires_serial_tracking: z.boolean()
 });
 type FulfillmentOrderLineInput = z.input<typeof FulfillmentOrderLineSchema>;
 type FulfillmentOrderLineOutput = z.output<typeof FulfillmentOrderLineSchema>;
@@ -27,7 +28,8 @@ const toFulfillmentOrderLine = function (item: FulfillmentOrderLineInput): Fulfi
         name: parsed.name,
         fulfillment_order_id: parsed.fulfillment_order_id,
         position_code: parsed.position_code,
-        quantity_required: parsed.quantity_required
+        quantity_required: parsed.quantity_required,
+        requires_serial_tracking: parsed.requires_serial_tracking
     };
 };
 
@@ -46,7 +48,11 @@ export const getFulfillmentOrderLines = async function (
 
 const FulfillmentOrderPositionSchema = z.object({
     position: z.string(),
-    product: z.object({sku: z.string(), name: z.string()}),
+    product: z.object({
+        sku: z.string(),
+        name: z.string(),
+        requires_serial_tracking: z.boolean()
+    }),
     orders: z.array(z.object({id: z.string(), quantity: z.number()}))
 });
 type FulfillmentOrderPositionInput = z.input<typeof FulfillmentOrderPositionSchema>;

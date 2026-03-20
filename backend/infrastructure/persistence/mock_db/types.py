@@ -37,6 +37,7 @@ class ProductRow:
     id: int
     sku: str
     name: str
+    requires_serial_tracking: bool
     where: list[LocationInfo]
 
     def get_stock(self) -> int:
@@ -65,6 +66,7 @@ class FulfillmentOrderLineRow:
     position_code: str
     quantity_required: int
     name: str
+    requires_serial_tracking: bool
 
 
 @dataclass(frozen=True)
@@ -73,6 +75,7 @@ class FulfillmentOrderLinePickRow:
     fulfillment_order_session_id: int
     fulfillment_order_line_id: int
     quantity_picked: int
+    serial_numbers: list[str]
     picked_at: datetime
 
 

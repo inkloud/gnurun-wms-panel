@@ -222,6 +222,7 @@
             "fulfillment_order_session_id": 1,
             "fulfillment_order_line_id": 1,
             "quantity_picked": 1,
+            "serial_numbers": [],
             "picked_at": "2026-03-10T08:50:00"
         },
         {
@@ -229,6 +230,7 @@
             "fulfillment_order_session_id": 2,
             "fulfillment_order_line_id": 3,
             "quantity_picked": 5,
+            "serial_numbers": [],
             "picked_at": "2026-03-10T08:55:00"
         },
         {
@@ -236,6 +238,7 @@
             "fulfillment_order_session_id": 1,
             "fulfillment_order_line_id": 2,
             "quantity_picked": 1,
+            "serial_numbers": [],
             "picked_at": "2026-03-10T09:02:00"
         },
         {
@@ -243,6 +246,7 @@
             "fulfillment_order_session_id": 3,
             "fulfillment_order_line_id": 5,
             "quantity_picked": 4,
+            "serial_numbers": [],
             "picked_at": "2026-03-11T09:40:00"
         },
         {
@@ -250,6 +254,7 @@
             "fulfillment_order_session_id": 3,
             "fulfillment_order_line_id": 9,
             "quantity_picked": 2,
+            "serial_numbers": [],
             "picked_at": "2026-03-11T09:45:00"
         },
         {
@@ -257,6 +262,7 @@
             "fulfillment_order_session_id": 4,
             "fulfillment_order_line_id": 16,
             "quantity_picked": 2,
+            "serial_numbers": [],
             "picked_at": "2026-03-13T08:20:00"
         },
         {
@@ -264,6 +270,7 @@
             "fulfillment_order_session_id": 5,
             "fulfillment_order_line_id": 21,
             "quantity_picked": 3,
+            "serial_numbers": [],
             "picked_at": "2026-03-14T11:40:00"
         },
         {
@@ -271,6 +278,7 @@
             "fulfillment_order_session_id": 1,
             "fulfillment_order_line_id": 1,
             "quantity_picked": 2,
+            "serial_numbers": [],
             "picked_at": "2026-03-10T09:10:00"
         },
         {
@@ -278,6 +286,9 @@
             "fulfillment_order_session_id": 2,
             "fulfillment_order_line_id": 4,
             "quantity_picked": 1,
+            "serial_numbers": [
+                "SN-SKU010-G1040104-0001"
+            ],
             "picked_at": "2026-03-10T09:12:00"
         },
         {
@@ -285,6 +296,7 @@
             "fulfillment_order_session_id": 3,
             "fulfillment_order_line_id": 6,
             "quantity_picked": 3,
+            "serial_numbers": [],
             "picked_at": "2026-03-11T09:50:00"
         }
     ]

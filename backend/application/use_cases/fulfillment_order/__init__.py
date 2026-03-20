@@ -10,6 +10,7 @@ from backend.application.entities.fulfillment_order import (
     SimpleProduct,
 )
 from backend.application.ports.data_gateway import DBGateway
+
 from .optimizer import order_by_position
 
 
@@ -46,11 +47,13 @@ class FulfillmentOrderService:
         fulfillment_order_session_id: str,
         fulfillment_order_line_id: str,
         quantity_picked: int,
+        serial_numbers: list[str],
     ) -> FulfillmentOrderLinePick:
         return self.data_mapper.fulfillment.new_pick(
             fulfillment_order_session_id=fulfillment_order_session_id,
             fulfillment_order_line_id=fulfillment_order_line_id,
             quantity_picked=quantity_picked,
+            serial_numbers=serial_numbers,
         )
 
     def get_picks(self) -> list[FulfillmentOrderLinePick]:
@@ -69,7 +72,11 @@ class FulfillmentOrderService:
             [
                 FulfillmentOrderPosition(
                     position=position,
-                    product=SimpleProduct(sku=items[0].sku, name=items[0].name),
+                    product=SimpleProduct(
+                        sku=items[0].sku,
+                        name=items[0].name,
+                        requires_serial_tracking=items[0].requires_serial_tracking,
+                    ),
                     orders=[
                         SimpleOrder(
                             id=item.fulfillment_order_id,

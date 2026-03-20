@@ -156,6 +156,7 @@ def _load_fulfillment_data() -> tuple[
                 position_code=position_code,
                 quantity_required=quantity_required,
                 name=product.name,
+                requires_serial_tracking=product.requires_serial_tracking,
             )
         )
 
@@ -201,12 +202,28 @@ def _load_fulfillment_data() -> tuple[
                 f"Pick '{pick_id}' happens before session '{session_id}' starts"
             )
 
+        serial_numbers = list(raw_pick.get("serial_numbers", []))
+        if any(serial_number.strip() == "" for serial_number in serial_numbers):
+            raise ValueError(f"Pick '{pick_id}' contains an empty serial number")
+        if len(set(serial_numbers)) != len(serial_numbers):
+            raise ValueError(f"Pick '{pick_id}' contains duplicate serial numbers")
+        if line.requires_serial_tracking:
+            if len(serial_numbers) != quantity_picked:
+                raise ValueError(
+                    f"Pick '{pick_id}' serial count does not match picked quantity"
+                )
+        elif len(serial_numbers) > 0:
+            raise ValueError(
+                f"Pick '{pick_id}' provides serial numbers for a non-tracked sku"
+            )
+
         picks.append(
             FulfillmentOrderLinePickRow(
                 id=pick_id,
                 fulfillment_order_session_id=session_id,
                 fulfillment_order_line_id=line_id,
                 quantity_picked=quantity_picked,
+                serial_numbers=serial_numbers,
                 picked_at=picked_at,
             )
         )

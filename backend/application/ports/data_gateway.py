@@ -45,6 +45,7 @@ class FulfillmentGateway(Protocol):
         fulfillment_order_session_id: str,
         fulfillment_order_line_id: str,
         quantity_picked: int,
+        serial_numbers: list[str],
     ) -> FulfillmentOrderLinePick: ...
 
     @staticmethod

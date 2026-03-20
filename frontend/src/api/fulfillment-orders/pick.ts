@@ -12,6 +12,7 @@ const FulfillmentOrderLinePickSchema = z.object({
     sku: z.string(),
     position_code: z.string(),
     quantity_picked: z.number(),
+    serial_numbers: z.array(z.string()),
     picked_at: z.preprocess((value: string) => new Date(value), z.date())
 });
 type FulfillmentOrderLinePickInput = z.input<typeof FulfillmentOrderLinePickSchema>;
@@ -25,6 +26,7 @@ const toFulfillmentOrderLinePick = function (item: FulfillmentOrderLinePickInput
         sku: parsed.sku,
         position_code: parsed.position_code,
         quantity_picked: parsed.quantity_picked,
+        serial_numbers: parsed.serial_numbers,
         picked_at: new Date(parsed.picked_at)
     };
 };
@@ -42,7 +44,12 @@ export const getFulfillmentOrderPicks = async function (
 
 export const createFulfillmentOrderPick = async function (
     token: string,
-    payload: {position_code: string; fulfillment_order_id: string; qty: number}
+    payload: {
+        position_code: string;
+        fulfillment_order_id: string;
+        qty: number;
+        serial_numbers?: string[];
+    }
 ): Promise<FulfillmentOrderLinePick> {
     const response = await axios.post<FulfillmentOrderLinePickInput>(`${API_BASE_URL}/picker/pick`, payload, {
         headers: {Accept: 'application/json', Authorization: `Bearer ${token}`}

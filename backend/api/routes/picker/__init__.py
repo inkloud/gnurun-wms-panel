@@ -14,6 +14,7 @@ from backend.application.ports import DBGateway
 from backend.application.use_cases.auth import AuthService
 from backend.application.use_cases.fulfillment_order import FulfillmentOrderService
 from backend.infrastructure.persistence.mock_db import DB
+
 from .utils import (
     FulfillmentOrderPickDetail,
     FulfillmentOrderResponse,
@@ -114,6 +115,7 @@ class PickRequest(BaseModel):
     position_code: str
     fulfillment_order_id: str
     qty: int
+    serial_numbers: list[str] = []
 
 
 @router.post("/pick")
@@ -125,6 +127,16 @@ async def create_pick(
     if payload.qty <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="qty must be > 0"
+        )
+    if any(serial_number.strip() == "" for serial_number in payload.serial_numbers):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="serial_numbers cannot contain empty values",
+        )
+    if len(set(payload.serial_numbers)) != len(payload.serial_numbers):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="serial_numbers cannot contain duplicates",
         )
 
     try:
@@ -142,11 +154,22 @@ async def create_pick(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
         ) from exc
+    if line.requires_serial_tracking and len(payload.serial_numbers) != payload.qty:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="serial_numbers count must match qty for serial-tracked products",
+        )
+    if not line.requires_serial_tracking and len(payload.serial_numbers) > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="serial_numbers are allowed only for serial-tracked products",
+        )
 
     pick: FulfillmentOrderLinePick = fulfillment_order_service.new_pick(
         fulfillment_order_session_id=session.id,
         fulfillment_order_line_id=line.id,
         quantity_picked=payload.qty,
+        serial_numbers=payload.serial_numbers,
     )
     return FulfillmentOrderPickDetail(
         operator_id=session.operator_id,
@@ -154,5 +177,6 @@ async def create_pick(
         sku=line.sku,
         position_code=line.position_code,
         quantity_picked=pick.quantity_picked,
+        serial_numbers=pick.serial_numbers,
         picked_at=pick.picked_at,
     )

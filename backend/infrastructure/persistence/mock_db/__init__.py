@@ -14,6 +14,7 @@ from backend.application.ports.data_gateway import (
     FulfillmentGateway,
     UserGateway,
 )
+
 from .fulfillment_orders import (
     FULFILLMENT_ORDER_LINE_PICKS,
     FULFILLMENT_ORDER_SESSIONS,
@@ -144,6 +145,7 @@ class _FulfillmentGateway(FulfillmentGateway):
                 position_code=e.position_code,
                 quantity_required=e.quantity_required,
                 name=e.name,
+                requires_serial_tracking=e.requires_serial_tracking,
             )
             for e in FULFILLMENT_ORDERS_PRODUCTS
             if e.fulfillment_order_id == id
@@ -154,6 +156,7 @@ class _FulfillmentGateway(FulfillmentGateway):
         fulfillment_order_session_id: str,
         fulfillment_order_line_id: str,
         quantity_picked: int,
+        serial_numbers: list[str],
     ) -> FulfillmentOrderLinePick:
         if quantity_picked <= 0:
             raise ValueError("quantity_picked must be > 0")
@@ -180,6 +183,7 @@ class _FulfillmentGateway(FulfillmentGateway):
             fulfillment_order_session_id=session_id,
             fulfillment_order_line_id=line_id,
             quantity_picked=quantity_picked,
+            serial_numbers=list(serial_numbers),
             picked_at=datetime.now(),
         )
         FULFILLMENT_ORDER_LINE_PICKS.append(pick_row)
@@ -189,6 +193,7 @@ class _FulfillmentGateway(FulfillmentGateway):
             fulfillment_order_session_id=fulfillment_order_session_id,
             fulfillment_order_line_id=fulfillment_order_line_id,
             quantity_picked=pick_row.quantity_picked,
+            serial_numbers=list(pick_row.serial_numbers),
             picked_at=pick_row.picked_at,
         )
 
@@ -204,6 +209,7 @@ class _FulfillmentGateway(FulfillmentGateway):
                     "FO-LINE", row.fulfillment_order_line_id
                 ),
                 quantity_picked=row.quantity_picked,
+                serial_numbers=list(row.serial_numbers),
                 picked_at=row.picked_at,
             )
             for row in FULFILLMENT_ORDER_LINE_PICKS

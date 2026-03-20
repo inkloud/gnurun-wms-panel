@@ -53,7 +53,7 @@ export const BottomNavbar: React.FC<{
                 </div>
                 <form className="mt-2 w-100" onSubmit={handleSubmit}>
                     <label className="visually-hidden" htmlFor="picker-input">
-                        Scan or type SKU/serial
+                        Scan or type SKU
                     </label>
                     <div className="input-group input-group-lg">
                         <input
@@ -63,7 +63,7 @@ export const BottomNavbar: React.FC<{
                             className={`form-control border-2 ${
                                 isFocused ? 'border-primary text-primary shadow-sm' : ''
                             }`}
-                            placeholder="Scan or type SKU / serial number"
+                            placeholder="Scan or type SKU"
                             autoComplete="off"
                             value={scanValue}
                             onChange={handleChange}

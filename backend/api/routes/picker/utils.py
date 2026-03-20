@@ -21,6 +21,7 @@ from backend.application.entities.fulfillment_order import (
 )
 from backend.application.use_cases.auth import AuthService
 from backend.application.use_cases.fulfillment_order import FulfillmentOrderService
+
 from ..utils import get_token_from_header
 
 
@@ -52,6 +53,7 @@ class FulfillmentOrderPickDetail:
     sku: str
     position_code: str
     quantity_picked: int
+    serial_numbers: list[str]
     picked_at: datetime
 
 
@@ -129,6 +131,7 @@ def get_fulfillment_order_pick_details(
             sku=line_by_id[pick.fulfillment_order_line_id].sku,
             position_code=line_by_id[pick.fulfillment_order_line_id].position_code,
             quantity_picked=pick.quantity_picked,
+            serial_numbers=pick.serial_numbers,
             picked_at=pick.picked_at,
         )
         for pick in picks

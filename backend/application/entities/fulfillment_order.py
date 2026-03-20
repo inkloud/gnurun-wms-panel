@@ -34,6 +34,7 @@ class FulfillmentOrderLine:
     position_code: str
     quantity_required: int
     name: str
+    requires_serial_tracking: bool
 
 
 @dataclass(frozen=True)
@@ -42,6 +43,7 @@ class FulfillmentOrderLinePick:
     fulfillment_order_session_id: str
     fulfillment_order_line_id: str
     quantity_picked: int
+    serial_numbers: list[str]
     picked_at: datetime
 
 
@@ -49,6 +51,7 @@ class FulfillmentOrderLinePick:
 class SimpleProduct:
     sku: str
     name: str
+    requires_serial_tracking: bool
 
 
 @dataclass(frozen=True)

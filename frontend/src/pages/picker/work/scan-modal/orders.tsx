@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {useFulfillmentOrderPicks} from '../../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
+import {CurrentOrder} from './current-order';
 
 const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({order, onClick}) {
     return (
@@ -20,56 +20,6 @@ const OrderCard: React.FC<{order: OrderType; onClick: () => void}> = function ({
     );
 };
 
-const CurrentOrder: React.FC<{order: OrderType; position: string}> = function ({order, position}) {
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    React.useEffect(() => {
-        inputRef.current!.select();
-    }, [inputRef]);
-    const [quantity, setQuantity] = React.useState<number>(order.quantity);
-    React.useEffect(() => {
-        setQuantity(order.quantity);
-    }, [order.id, order.quantity]);
-    const {actions} = useFulfillmentOrderPicks(order.id);
-
-    const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
-        setQuantity(e.target.value === '' ? 0 : Number(e.target.value));
-    };
-
-    const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        actions.pick(position, order.id, quantity);
-    };
-
-    return (
-        <div className="d-flex flex-column gap-3">
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        ref={inputRef}
-                        type="number"
-                        min={0}
-                        max={order.quantity}
-                        step={1}
-                        className="form-control form-control-lg text-center fs-1 fw-bold mx-auto"
-                        style={{maxWidth: 180}}
-                        value={quantity}
-                        onChange={handleChange}
-                        onFocus={(e) => e.currentTarget.select()}
-                        autoFocus
-                    />
-                    <button
-                        type="submit"
-                        className="btn btn-success btn-lg mt-3 d-flex justify-content-center align-items-center gap-2 mx-auto"
-                        style={{maxWidth: 180}}
-                    >
-                        {order.id}
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
-};
-
 export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
     const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
 
@@ -82,7 +32,7 @@ export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function (
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position.position} />}
+            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position} />}
         </div>
     );
 };

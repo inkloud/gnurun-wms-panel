@@ -107,7 +107,9 @@ export const useFulfillmentOrderPositions = function (
 
 export const useFulfillmentOrderPicks = function (orderId: string): {
     data: FulfillmentOrderLinePick[] | undefined;
-    actions: {pick: (position_code: string, fulfillment_order_id: string, qty: number) => void};
+    actions: {
+        pick: (position_code: string, fulfillment_order_id: string, qty: number, serial_numbers?: string[]) => void;
+    };
 } {
     type KEY = ['FULFILLMENT_ORDER_PICKS', string, string];
 
@@ -122,7 +124,12 @@ export const useFulfillmentOrderPicks = function (orderId: string): {
     const key: KEY = ['FULFILLMENT_ORDER_PICKS', token, orderId];
     const {data, mutate} = useSWR(key, fetcher, {dedupingInterval: 60000});
 
-    const pick = async function (position_code: string, fulfillment_order_id: string, qty: number) {
+    const pick = async function (
+        position_code: string,
+        fulfillment_order_id: string,
+        qty: number,
+        serial_numbers: string[] = []
+    ) {
         // console.log({
         //     operator_id: authData!.auth_user.username,
         //     fulfillment_order_id,
@@ -135,7 +142,8 @@ export const useFulfillmentOrderPicks = function (orderId: string): {
             const res: FulfillmentOrderLinePick = await createFulfillmentOrderPick(token, {
                 position_code,
                 fulfillment_order_id,
-                qty
+                qty,
+                serial_numbers
             });
             return [...data!, res];
         };
