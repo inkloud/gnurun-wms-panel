@@ -61,7 +61,12 @@ export const TableRow: React.FC<{
                             <span className="badge text-bg-secondary px-3 py-2 fs-6">{position.position}</span>
                             <span className="text-muted small">{position.orders.length} orders</span>
                             <div className="d-flex w-100 justify-content-between align-items-center gap-2">
-                                <span className="fw-semibold font-monospace small">{position.product.sku}</span>
+                                <span className="d-inline-flex align-items-center gap-1">
+                                    <span className="fw-semibold font-monospace small">{position.product.sku}</span>
+                                    {position.product.requires_serial_tracking ? (
+                                        <span className="fw-semibold text-warning-emphasis">*</span>
+                                    ) : null}
+                                </span>
                                 <ProgressBadge pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
                             </div>
                             <span className="text-muted small">{position.product.name}</span>
