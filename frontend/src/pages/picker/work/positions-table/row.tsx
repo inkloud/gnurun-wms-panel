@@ -1,12 +1,34 @@
 import {useFulfillmentOrdersPicks} from '../../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderLinePick, FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
 import {PositionOrderRow} from './position-order-row';
-import {ProgressBadge} from './progress-badge';
 
 const getCardAccentClass = function (pickedQuantity: number, totalQuantity: number): string {
     if (totalQuantity > 0 && pickedQuantity >= totalQuantity) return 'border-success-subtle';
     if (pickedQuantity > 0) return 'border-warning-subtle';
     return '';
+};
+
+const PositionProgress: React.FC<{pickedQuantity: number; totalQuantity: number}> = function ({
+    pickedQuantity,
+    totalQuantity,
+}) {
+    const safePickedQuantity = Math.min(pickedQuantity, totalQuantity);
+    const pickedPercent = totalQuantity > 0 ? (safePickedQuantity / totalQuantity) * 100 : 0;
+    const remainingPercent = Math.max(0, 100 - pickedPercent);
+
+    return (
+        <div className="d-flex flex-column gap-1">
+            <div className="progress-stacked" style={{height: '0.5rem'}}>
+                <div className="progress" style={{width: `${pickedPercent}%`}}>
+                    <div className="progress-bar bg-success" />
+                </div>
+                <div className="progress" style={{width: `${remainingPercent}%`}}>
+                    <div className="progress-bar bg-secondary-subtle" />
+                </div>
+            </div>
+            <div className="small text-muted text-end">{`${safePickedQuantity}/${totalQuantity} picked`}</div>
+        </div>
+    );
 };
 
 export const PositionCard: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
@@ -46,7 +68,9 @@ export const PositionCard: React.FC<{position: FulfillmentOrderPosition}> = func
                         </div>
                         <span className="text-muted small">{position.product.name}</span>
                     </div>
-                    <ProgressBadge pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
+                    <div className="flex-grow-1" style={{maxWidth: 220}}>
+                        <PositionProgress pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
+                    </div>
                 </div>
                 {position.orders.length === 0 ? (
                     <div className="text-muted small">No order lines for this position.</div>
