@@ -1,86 +1,68 @@
-import {useFulfillmentOrderPicks, useFulfillmentOrdersPicks} from '../../../../hooks/fulfillment-orders';
+import {useFulfillmentOrdersPicks} from '../../../../hooks/fulfillment-orders';
 import type {FulfillmentOrderLinePick, FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
-import {AssignmentBadge} from '../../ui';
+import {PositionOrderRow} from './position-order-row';
+import {ProgressBadge} from './progress-badge';
 
-const ProgressBadge: React.FC<{pickedQuantity: number; totalQuantity: number}> = function ({
-    pickedQuantity,
-    totalQuantity
-}) {
-    const isCompleted = totalQuantity > 0 && pickedQuantity >= totalQuantity;
-    const isPartial = pickedQuantity > 0 && !isCompleted;
-    const badgeClass = isCompleted
-        ? 'bg-success-subtle text-success-emphasis border border-success-subtle'
-        : isPartial
-          ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'
-          : 'text-bg-light text-body-emphasis';
-
-    return <span className={`badge ${badgeClass}`}>{`${pickedQuantity}/${totalQuantity}`}</span>;
+const getCardAccentClass = function (pickedQuantity: number, totalQuantity: number): string {
+    if (totalQuantity > 0 && pickedQuantity >= totalQuantity) return 'border-success-subtle';
+    if (pickedQuantity > 0) return 'border-warning-subtle';
+    return '';
 };
 
-const Picks: React.FC<{picks: FulfillmentOrderLinePick[]}> = function ({picks}) {
-    if (picks.length === 0) return null;
-
-    return (
-        <div className="d-flex flex-wrap gap-2 mt-2">
-            {picks.map((lp: FulfillmentOrderLinePick, idx: number) => (
-                <AssignmentBadge
-                    key={`${lp.operator_id}-${idx}`}
-                    username={lp.operator_id}
-                    quantity={lp.quantity_picked}
-                />
-            ))}
-        </div>
-    );
-};
-
-export const TableRow: React.FC<{
-    isFirst: boolean;
-    position: FulfillmentOrderPosition;
-    orderId: string;
-    quantity: number;
-    rowSpan: number;
-    totalUnits: number;
-}> = function ({isFirst, position, orderId, quantity, rowSpan, totalUnits}) {
+export const PositionCard: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
     const positionOrderIds = position.orders.map((order) => order.id);
     const positionPicksData = useFulfillmentOrdersPicks(positionOrderIds);
-    const {data} = useFulfillmentOrderPicks(orderId);
-    const allPicks: FulfillmentOrderLinePick[] = data === undefined ? [] : data;
-    const picks: FulfillmentOrderLinePick[] = allPicks.filter((lp) => lp.position_code === position.position);
-    const pickedQuantity = picks.reduce((sum, pick) => sum + pick.quantity_picked, 0);
     const allPositionPicks: FulfillmentOrderLinePick[] = positionPicksData === undefined ? [] : positionPicksData;
     const pickedPositionQuantity = allPositionPicks
         .filter((lp) => lp.position_code === position.position)
         .reduce((sum, pick) => sum + pick.quantity_picked, 0);
+    const totalUnits = position.orders.reduce((sum, order) => sum + order.quantity, 0);
+    const cardAccentClass = getCardAccentClass(pickedPositionQuantity, totalUnits);
 
     return (
-        <tr>
-            {isFirst ? (
-                <>
-                    <td rowSpan={rowSpan} className="align-top" style={{width: '200px'}}>
-                        <div className="d-flex flex-column gap-1">
+        <div className={`card shadow-sm ${cardAccentClass}`}>
+            <div className="card-body d-flex flex-column gap-3">
+                <div className="d-flex justify-content-between align-items-start gap-3">
+                    <div className="d-flex flex-column gap-1">
+                        <div className="d-flex flex-wrap align-items-center gap-2">
                             <span className="badge text-bg-secondary px-3 py-2 fs-6">{position.position}</span>
-                            <span className="text-muted small">{position.orders.length} orders</span>
-                            <div className="d-flex w-100 justify-content-between align-items-center gap-2">
-                                <span className="d-inline-flex align-items-center gap-1">
-                                    <span className="fw-semibold font-monospace small">{position.product.sku}</span>
-                                    {position.product.requires_serial_tracking ? (
-                                        <span className="fw-semibold text-warning-emphasis">*</span>
-                                    ) : null}
-                                </span>
-                                <ProgressBadge pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
-                            </div>
-                            <span className="text-muted small">{position.product.name}</span>
+                            <span className="text-muted small">
+                                {position.orders.length} order{position.orders.length === 1 ? '' : 's'}
+                            </span>
                         </div>
-                    </td>
-                </>
-            ) : null}
-            <td>
-                <div className="d-flex flex-wrap align-items-center gap-2">
-                    <span className="badge text-bg-light text-body-emphasis">{orderId}</span>
-                    <ProgressBadge pickedQuantity={pickedQuantity} totalQuantity={quantity} />
+                        <div className="d-flex flex-wrap align-items-center gap-2">
+                            <span className="d-inline-flex align-items-center gap-1">
+                                <span className="fw-semibold font-monospace small">{position.product.sku}</span>
+                                {position.product.requires_serial_tracking ? (
+                                    <span
+                                        className="fw-semibold text-warning-emphasis"
+                                        title="Serial number required"
+                                        aria-label="Serial number required"
+                                    >
+                                        *
+                                    </span>
+                                ) : null}
+                            </span>
+                        </div>
+                        <span className="text-muted small">{position.product.name}</span>
+                    </div>
+                    <ProgressBadge pickedQuantity={pickedPositionQuantity} totalQuantity={totalUnits} />
                 </div>
-                <Picks picks={picks} />
-            </td>
-        </tr>
+                {position.orders.length === 0 ? (
+                    <div className="text-muted small">No order lines for this position.</div>
+                ) : (
+                    <div className="d-flex flex-column">
+                        {position.orders.map((order, idx) => (
+                            <PositionOrderRow
+                                key={`${position.position}-${order.id}-${idx}`}
+                                position={position}
+                                order={order}
+                                isFirst={idx === 0}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };

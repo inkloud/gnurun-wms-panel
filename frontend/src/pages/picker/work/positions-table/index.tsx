@@ -1,42 +1,15 @@
 import type {FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
-import {TableRow} from './row';
+import {PositionCard} from './row';
 
 export const PositionsTable: React.FC<{positions: FulfillmentOrderPosition[]}> = function ({positions}) {
     if (positions.length === 0)
         return <div className="text-muted text-center py-4">No positions assigned to your orders yet.</div>;
 
-    const rows = positions.flatMap((position) => {
-        const orders = position.orders.length > 0 ? position.orders : [{id: '—', quantity: 0}];
-        const totalUnits = position.orders.reduce((sum, order) => sum + order.quantity, 0);
-        const rowSpan = orders.length;
-        return orders.map((order, idx) => (
-            <TableRow
-                key={`${position.position}-${order.id}-${idx}`}
-                isFirst={idx === 0}
-                position={position}
-                orderId={order.id}
-                quantity={order.quantity}
-                rowSpan={rowSpan}
-                totalUnits={totalUnits}
-            />
-        ));
-    });
-
     return (
-        <div className="table-responsive mt-4">
-            <table className="table align-middle">
-                <thead>
-                    <tr>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            Product
-                        </th>
-                        <th scope="col" className="text-uppercase text-muted small">
-                            Order
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </table>
+        <div className="d-flex flex-column gap-3 mt-4">
+            {positions.map((position) => (
+                <PositionCard key={position.position} position={position} />
+            ))}
         </div>
     );
 };
