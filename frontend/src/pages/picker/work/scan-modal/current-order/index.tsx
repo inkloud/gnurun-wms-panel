@@ -5,10 +5,11 @@ import type {FulfillmentOrderPosition, OrderType} from '../../../../../hooks/ful
 import {QuantityStep} from './quantity-step';
 import {SerialScanStep} from './serial-scan-step';
 
-export const CurrentOrder: React.FC<{order: OrderType; position: FulfillmentOrderPosition}> = function ({
-    order,
-    position
-}) {
+export const CurrentOrder: React.FC<{
+    order: OrderType;
+    position: FulfillmentOrderPosition;
+    onBackToOrders: () => void;
+}> = function ({order, position, onBackToOrders}) {
     const [quantity, setQuantity] = React.useState<number>(order.quantity);
     const [serialNumbers, setSerialNumbers] = React.useState<string[]>([]);
     const [isSerialStep, setIsSerialStep] = React.useState(false);
@@ -96,6 +97,11 @@ export const CurrentOrder: React.FC<{order: OrderType; position: FulfillmentOrde
                     onConfirm={handleConfirmSerials}
                 />
             )}
+            <div className="d-flex justify-content-start">
+                <button type="button" className="btn btn-outline-secondary btn-sm" onClick={onBackToOrders}>
+                    Back to orders
+                </button>
+            </div>
         </div>
     );
 };

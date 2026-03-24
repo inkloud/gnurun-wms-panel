@@ -55,6 +55,9 @@ const OrderCard: React.FC<{
 export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
     const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
     const pickedByOrderId: Record<string, number> = usePickedByOrderId(position);
+    const handleBackToOrders = function () {
+        setCurrentOrder(null);
+    };
 
     const list = position.orders.map((order) => {
         const handleClick = function () {
@@ -66,7 +69,11 @@ export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function (
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position} />}
+            {currentOrder === null ? (
+                list
+            ) : (
+                <CurrentOrder order={currentOrder} position={position} onBackToOrders={handleBackToOrders} />
+            )}
         </div>
     );
 };
