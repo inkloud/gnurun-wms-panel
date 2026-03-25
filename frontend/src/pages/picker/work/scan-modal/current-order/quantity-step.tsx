@@ -1,13 +1,13 @@
 import React from 'react';
 
 export const QuantityStep: React.FC<{
-    orderId: string;
     maxQuantity: number;
     initialQuantity: number;
+    pickedQuantity: number;
     requiresSerialTracking: boolean;
     error: string | null;
     onSubmit: (quantity: number) => void;
-}> = function ({orderId, maxQuantity, initialQuantity, requiresSerialTracking, error, onSubmit}) {
+}> = function ({maxQuantity, initialQuantity, pickedQuantity, requiresSerialTracking, error, onSubmit}) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [quantity, setQuantity] = React.useState<number>(initialQuantity);
     React.useEffect(() => {
@@ -46,19 +46,15 @@ export const QuantityStep: React.FC<{
                     onFocus={(e) => e.currentTarget.select()}
                     autoFocus
                 />
+                <p className="text-muted small text-center mt-1 mb-0">
+                    Picked {pickedQuantity}/{maxQuantity}
+                </p>
                 {requiresSerialTracking ? (
-                    <p className="text-muted small text-center mt-3 mb-0">
+                    <p className="text-muted small text-center mt-0 mb-0">
                         Scan {quantity} serial number{quantity === 1 ? '' : 's'} in the next step.
                     </p>
                 ) : null}
                 {error !== null ? <div className="alert alert-danger py-2 mt-3 mb-0">{error}</div> : null}
-                <button
-                    type="submit"
-                    className="btn btn-success btn-lg mt-3 d-flex justify-content-center align-items-center gap-2 mx-auto"
-                    style={{maxWidth: 180}}
-                >
-                    {requiresSerialTracking ? 'Continue' : orderId}
-                </button>
             </form>
         </div>
     );

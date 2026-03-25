@@ -1,7 +1,11 @@
 import React from 'react';
 
 import {useFulfillmentOrderPicks} from '../../../../../hooks/fulfillment-orders';
-import type {FulfillmentOrderPosition, OrderType} from '../../../../../hooks/fulfillment-orders/types';
+import type {
+    FulfillmentOrderLinePick,
+    FulfillmentOrderPosition,
+    OrderType
+} from '../../../../../hooks/fulfillment-orders/types';
 import {QuantityStep} from './quantity-step';
 import {SerialScanStep} from './serial-scan-step';
 
@@ -21,7 +25,11 @@ export const CurrentOrder: React.FC<{
         setError(null);
     }, [order.id, order.quantity, position.position]);
 
-    const {actions} = useFulfillmentOrderPicks(order.id);
+    const {data, actions} = useFulfillmentOrderPicks(order.id);
+    const allPicks: FulfillmentOrderLinePick[] = data ?? [];
+    const pickedQuantity = allPicks
+        .filter((pick) => pick.position_code === position.position)
+        .reduce((sum, pick) => sum + pick.quantity_picked, 0);
 
     const handleQuantitySubmit = function (nextQuantity: number) {
         if (nextQuantity <= 0) {
@@ -76,9 +84,9 @@ export const CurrentOrder: React.FC<{
             </div>
             {!isSerialStep ? (
                 <QuantityStep
-                    orderId={order.id}
                     maxQuantity={order.quantity}
                     initialQuantity={quantity}
+                    pickedQuantity={pickedQuantity}
                     requiresSerialTracking={position.product.requires_serial_tracking}
                     error={error}
                     onSubmit={handleQuantitySubmit}
