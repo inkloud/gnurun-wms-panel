@@ -8,8 +8,7 @@ import {SerialScanStep} from './serial-scan-step';
 export const CurrentOrder: React.FC<{
     order: OrderType;
     position: FulfillmentOrderPosition;
-    onBackToOrders: () => void;
-}> = function ({order, position, onBackToOrders}) {
+}> = function ({order, position}) {
     const [quantity, setQuantity] = React.useState<number>(order.quantity);
     const [serialNumbers, setSerialNumbers] = React.useState<string[]>([]);
     const [isSerialStep, setIsSerialStep] = React.useState(false);
@@ -69,9 +68,6 @@ export const CurrentOrder: React.FC<{
     return (
         <div className="d-flex flex-column gap-3">
             <div className="d-flex justify-content-between align-items-start gap-2">
-                <div className="d-flex flex-column">
-                    <span className="badge text-bg-light align-self-start">{order.id}</span>
-                </div>
                 {isSerialStep ? (
                     <span className="badge text-bg-secondary">
                         {serialNumbers.length}/{quantity}
@@ -97,11 +93,6 @@ export const CurrentOrder: React.FC<{
                     onConfirm={handleConfirmSerials}
                 />
             )}
-            <div className="d-flex justify-content-start">
-                <button type="button" className="btn btn-outline-secondary btn-sm" onClick={onBackToOrders}>
-                    Back to orders
-                </button>
-            </div>
         </div>
     );
 };

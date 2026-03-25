@@ -52,16 +52,16 @@ const OrderCard: React.FC<{
     );
 };
 
-export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
-    const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
+export const Orders: React.FC<{
+    position: FulfillmentOrderPosition;
+    currentOrder: OrderType | null;
+    onSelectOrder: (order: OrderType) => void;
+}> = function ({position, currentOrder, onSelectOrder}) {
     const pickedByOrderId: Record<string, number> = usePickedByOrderId(position);
-    const handleBackToOrders = function () {
-        setCurrentOrder(null);
-    };
 
     const list = position.orders.map((order) => {
         const handleClick = function () {
-            setCurrentOrder(order);
+            onSelectOrder(order);
         };
         const pickedQuantity = pickedByOrderId[order.id] ?? 0;
 
@@ -69,11 +69,7 @@ export const Orders: React.FC<{position: FulfillmentOrderPosition}> = function (
     });
     return (
         <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? (
-                list
-            ) : (
-                <CurrentOrder order={currentOrder} position={position} onBackToOrders={handleBackToOrders} />
-            )}
+            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position} />}
         </div>
     );
 };

@@ -1,27 +1,37 @@
 import React from 'react';
 
-import type {FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
+import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
 import {Orders} from './orders';
 import {PositionSelector} from './position-selector';
-
-const PositionBadge: React.FC<{children: React.ReactNode}> = function ({children}) {
-    return (
-        <span className="badge text-bg-secondary px-3 py-2 fs-6 text-center" style={{display: 'inline-block'}}>
-            {children}
-        </span>
-    );
-};
+import {TitleBreadcrumb} from './title-breadcrumb';
 
 export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; positions: FulfillmentOrderPosition[]}> =
     function ({handleHide, scanValue, positions}) {
         const [currentPosition, setCurrentPosition] = React.useState<FulfillmentOrderPosition | null>(null);
-        const positionResults: FulfillmentOrderPosition[] = positions.filter(
-            (value) => value.product.sku.trim().toLocaleLowerCase() === scanValue.trim().toLocaleLowerCase()
+        const [currentOrder, setCurrentOrder] = React.useState<OrderType | null>(null);
+        const positionResults: FulfillmentOrderPosition[] = React.useMemo(
+            () =>
+                positions.filter(
+                    (value) => value.product.sku.trim().toLocaleLowerCase() === scanValue.trim().toLocaleLowerCase()
+                ),
+            [positions, scanValue]
         );
         console.assert(positionResults.length > 0);
         React.useEffect(() => {
-            if (positionResults.length === 1) setCurrentPosition(positionResults[0]);
+            if (positionResults.length === 1) {
+                setCurrentPosition(positionResults[0]);
+                setCurrentOrder(null);
+            }
         }, [positionResults]);
+
+        const handleBreadcrumbBackToScan = function () {
+            setCurrentPosition(null);
+            setCurrentOrder(null);
+        };
+
+        const handleBreadcrumbBackToOrders = function () {
+            setCurrentOrder(null);
+        };
 
         return (
             <>
@@ -29,20 +39,31 @@ export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; pos
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title font-monospace">
-                                    {'$>'} <strong>{scanValue}</strong>
-                                </h5>
+                                <TitleBreadcrumb
+                                    scanValue={scanValue}
+                                    currentPosition={currentPosition}
+                                    currentOrder={currentOrder}
+                                    onBackToScan={handleBreadcrumbBackToScan}
+                                    onBackToOrders={handleBreadcrumbBackToOrders}
+                                />
                             </div>
                             <div className="modal-body">
                                 {currentPosition === null ? (
-                                    <PositionSelector positions={positionResults} onClick={setCurrentPosition} />
+                                    <PositionSelector
+                                        positions={positionResults}
+                                        onClick={(position) => {
+                                            setCurrentPosition(position);
+                                            setCurrentOrder(null);
+                                        }}
+                                    />
                                 ) : (
                                     <div className="mb-3">
-                                        <p className="mb-2">
-                                            <PositionBadge>{currentPosition.position}</PositionBadge>
-                                        </p>
                                         <div className="p-2">
-                                            <Orders position={currentPosition} />
+                                            <Orders
+                                                position={currentPosition}
+                                                currentOrder={currentOrder}
+                                                onSelectOrder={setCurrentOrder}
+                                            />
                                         </div>
                                     </div>
                                 )}
