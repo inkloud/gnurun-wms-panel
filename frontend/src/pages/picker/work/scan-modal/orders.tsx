@@ -7,6 +7,7 @@ import type {
     OrderType
 } from '../../../../hooks/fulfillment-orders/types';
 import {CurrentOrder} from './current-order';
+import {ItemCards, type ItemCard} from './item-cards';
 
 const usePickedByOrderId = function (position: FulfillmentOrderPosition): Record<string, number> {
     const orderIds: string[] = position.orders.map((order) => order.id);
@@ -22,36 +23,6 @@ const usePickedByOrderId = function (position: FulfillmentOrderPosition): Record
     return pickedByOrderId;
 };
 
-const OrderCard: React.FC<{
-    order: OrderType;
-    pickedQuantity: number;
-    onClick: () => void;
-}> = function ({order, pickedQuantity, onClick}) {
-    const isDisabled = pickedQuantity >= order.quantity;
-
-    return (
-        <div
-            className={`card ${isDisabled ? 'opacity-50' : ''}`}
-            style={{cursor: isDisabled ? 'default' : 'pointer'}}
-            onClick={isDisabled ? undefined : onClick}
-            aria-disabled={isDisabled}
-        >
-            <div className="card-body d-flex justify-content-between align-items-center py-2">
-                <div className="d-flex flex-column">
-                    <span className="text-uppercase text-muted small fw-semibold">Order</span>
-                    <span className="badge text-bg-light align-self-start">{order.id}</span>
-                </div>
-                <div className="text-end">
-                    <span className="text-uppercase text-muted small d-block">Picked</span>
-                    <span className="fw-semibold fs-5">
-                        {pickedQuantity}/{order.quantity}
-                    </span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 export const Orders: React.FC<{
     position: FulfillmentOrderPosition;
     currentOrder: OrderType | null;
@@ -59,17 +30,27 @@ export const Orders: React.FC<{
 }> = function ({position, currentOrder, onSelectOrder}) {
     const pickedByOrderId: Record<string, number> = usePickedByOrderId(position);
 
-    const list = position.orders.map((order) => {
+    const items: ItemCard[] = position.orders.map((order: OrderType) => {
         const handleClick = function () {
             onSelectOrder(order);
         };
-        const pickedQuantity = pickedByOrderId[order.id] ?? 0;
+        const pickedQuantity: number = pickedByOrderId[order.id] ?? 0;
+        const isDisabled: boolean = pickedQuantity >= order.quantity;
 
-        return <OrderCard key={order.id} order={order} pickedQuantity={pickedQuantity} onClick={handleClick} />;
+        return {
+            id: order.id,
+            title: 'Order',
+            value: order.id,
+            titleRight: 'Picked',
+            valueRight: `${pickedQuantity}/${order.quantity}`,
+            disabled: isDisabled,
+            onClick: handleClick
+        };
     });
-    return (
-        <div className="d-flex flex-column gap-2">
-            {currentOrder === null ? list : <CurrentOrder order={currentOrder} position={position} />}
-        </div>
+
+    return currentOrder === null ? (
+        <ItemCards items={items} />
+    ) : (
+        <CurrentOrder order={currentOrder} position={position} />
     );
 };

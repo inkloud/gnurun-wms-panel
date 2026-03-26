@@ -57,15 +57,11 @@ export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; pos
                                         }}
                                     />
                                 ) : (
-                                    <div className="mb-3">
-                                        <div className="p-2">
-                                            <Orders
-                                                position={currentPosition}
-                                                currentOrder={currentOrder}
-                                                onSelectOrder={setCurrentOrder}
-                                            />
-                                        </div>
-                                    </div>
+                                    <Orders
+                                        position={currentPosition}
+                                        currentOrder={currentOrder}
+                                        onSelectOrder={setCurrentOrder}
+                                    />
                                 )}
                             </div>
                             <div className="modal-footer">
