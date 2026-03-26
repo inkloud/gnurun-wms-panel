@@ -85,7 +85,6 @@ export const CurrentOrder: React.FC<{
             {!isSerialStep ? (
                 <QuantityStep
                     maxQuantity={order.quantity}
-                    initialQuantity={quantity}
                     pickedQuantity={pickedQuantity}
                     requiresSerialTracking={position.product.requires_serial_tracking}
                     error={error}

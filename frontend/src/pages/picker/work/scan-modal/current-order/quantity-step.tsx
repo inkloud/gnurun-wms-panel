@@ -2,17 +2,15 @@ import React from 'react';
 
 export const QuantityStep: React.FC<{
     maxQuantity: number;
-    initialQuantity: number;
     pickedQuantity: number;
     requiresSerialTracking: boolean;
     error: string | null;
     onSubmit: (quantity: number) => void;
-}> = function ({maxQuantity, initialQuantity, pickedQuantity, requiresSerialTracking, error, onSubmit}) {
+}> = function ({maxQuantity, pickedQuantity, requiresSerialTracking, error, onSubmit}) {
+    const remaining: number = maxQuantity - pickedQuantity;
+
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const [quantity, setQuantity] = React.useState<number>(initialQuantity);
-    React.useEffect(() => {
-        setQuantity(initialQuantity);
-    }, [initialQuantity]);
+    const [quantity, setQuantity] = React.useState<number>(remaining);
     React.useEffect(() => {
         inputRef.current?.select();
     }, []);
@@ -37,7 +35,7 @@ export const QuantityStep: React.FC<{
                     ref={inputRef}
                     type="number"
                     min={0}
-                    max={maxQuantity}
+                    max={remaining}
                     step={1}
                     className="form-control form-control-lg text-center fs-1 fw-bold mx-auto"
                     style={{maxWidth: 180}}

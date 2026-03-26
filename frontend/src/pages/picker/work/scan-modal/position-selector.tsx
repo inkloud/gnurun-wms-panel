@@ -8,6 +8,7 @@ export const PositionSelector: React.FC<{
     onClick: (v: FulfillmentOrderPosition) => void;
 }> = function ({positions, onClick}) {
     const items: ItemCard[] = positions.map((result: FulfillmentOrderPosition) => {
+        console.log(result.orders);
         const handleClick = function () {
             onClick(result);
         };
@@ -16,6 +17,8 @@ export const PositionSelector: React.FC<{
             id: `${result.product.sku}-${result.position}`,
             title: 'Position',
             value: result.position,
+            titleRight: 'Orders',
+            valueRight: result.orders.length,
             onClick: handleClick
         };
     });
