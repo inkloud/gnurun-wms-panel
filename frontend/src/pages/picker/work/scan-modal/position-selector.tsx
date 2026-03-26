@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type {FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
-import {ItemCards, type ItemCard} from './item-cards';
+import {ItemCardRow, ItemCards, type ItemCard} from './item-cards';
 
 export const PositionSelector: React.FC<{
     positions: FulfillmentOrderPosition[];
@@ -22,5 +22,11 @@ export const PositionSelector: React.FC<{
         };
     });
 
-    return <ItemCards items={items} />;
+    return (
+        <ItemCards>
+            {items.map((item) => (
+                <ItemCardRow key={item.id} item={item} />
+            ))}
+        </ItemCards>
+    );
 };

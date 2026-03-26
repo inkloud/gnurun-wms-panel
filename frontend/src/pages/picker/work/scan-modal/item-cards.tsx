@@ -10,7 +10,7 @@ export type ItemCard = {
     onClick?: () => void;
 };
 
-const ItemCardRow: React.FC<{item: ItemCard}> = function ({item}) {
+export const ItemCardRow: React.FC<{item: ItemCard}> = function ({item}) {
     const isClickable = item.onClick !== undefined && item.disabled !== true;
 
     return (
@@ -36,12 +36,6 @@ const ItemCardRow: React.FC<{item: ItemCard}> = function ({item}) {
     );
 };
 
-export const ItemCards: React.FC<{items: ItemCard[]}> = function ({items}) {
-    return (
-        <div className="d-flex flex-column gap-2">
-            {items.map((item) => (
-                <ItemCardRow key={item.id} item={item} />
-            ))}
-        </div>
-    );
+export const ItemCards: React.FC<React.PropsWithChildren> = function ({children}) {
+    return <div className="d-flex flex-column gap-2">{children}</div>;
 };

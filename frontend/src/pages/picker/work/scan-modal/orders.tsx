@@ -7,7 +7,7 @@ import type {
     OrderType
 } from '../../../../hooks/fulfillment-orders/types';
 import {CurrentOrder} from './current-order';
-import {ItemCards, type ItemCard} from './item-cards';
+import {ItemCardRow, ItemCards, type ItemCard} from './item-cards';
 
 const usePickedByOrderId = function (position: FulfillmentOrderPosition): Record<string, number> {
     const orderIds: string[] = position.orders.map((order) => order.id);
@@ -21,6 +21,10 @@ const usePickedByOrderId = function (position: FulfillmentOrderPosition): Record
     }
 
     return pickedByOrderId;
+};
+
+const OrderItem: React.FC<{item: ItemCard}> = function ({item}) {
+    return <ItemCardRow item={item} />;
 };
 
 export const Orders: React.FC<{
@@ -49,7 +53,11 @@ export const Orders: React.FC<{
     });
 
     return currentOrder === null ? (
-        <ItemCards items={items} />
+        <ItemCards>
+            {items.map((item) => (
+                <OrderItem key={item.id} item={item} />
+            ))}
+        </ItemCards>
     ) : (
         <CurrentOrder order={currentOrder} position={position} />
     );
