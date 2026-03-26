@@ -34,7 +34,7 @@ export const QuantityStep: React.FC<{
                 <input
                     ref={inputRef}
                     type="number"
-                    min={0}
+                    min={1}
                     max={remaining}
                     step={1}
                     className="form-control form-control-lg text-center fs-1 fw-bold mx-auto"

@@ -130,14 +130,16 @@ export const useFulfillmentOrderPicks = function (orderId: string): {
         qty: number,
         serial_numbers: string[] = []
     ) {
-        // console.log({
-        //     operator_id: authData!.auth_user.username,
-        //     fulfillment_order_id,
-        //     sku: 'TODO',
-        //     position_code,
-        //     quantity_picked: qty,
-        //     picked_at: new Date()
-        // });
+        const optimisticPick: FulfillmentOrderLinePick = {
+            operator_id: authData!.auth_user.username,
+            fulfillment_order_id,
+            sku: '',
+            position_code,
+            quantity_picked: qty,
+            serial_numbers: [...serial_numbers],
+            picked_at: new Date()
+        };
+
         const updateFn = async function () {
             const res: FulfillmentOrderLinePick = await createFulfillmentOrderPick(token, {
                 position_code,
@@ -147,12 +149,8 @@ export const useFulfillmentOrderPicks = function (orderId: string): {
             });
             return [...data!, res];
         };
-        try {
-            mutate(updateFn);
-        } catch (err) {
-            mutate();
-            throw err;
-        }
+
+        await mutate(updateFn, {optimisticData: [...data!, optimisticPick], rollbackOnError: true});
     };
     return {data, actions: {pick}};
 };
