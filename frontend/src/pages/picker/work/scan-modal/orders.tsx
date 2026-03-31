@@ -11,7 +11,7 @@ import {ItemCardRow, ItemCards, type ItemCard} from './item-cards';
 
 const OrderItem: React.FC<{item: ItemCard; position: FulfillmentOrderPosition}> = function ({item, position}) {
     const {data: picks} = useFulfillmentOrderPicks(item.id);
-    if (picks === undefined) return null;
+    if (picks === undefined) return <ItemCardRow item={{...item, valueRight: 'Loading...', disabled: true}} />;
     const pickedQuantity: number = picks
         .filter((pick: FulfillmentOrderLinePick) => pick.position_code === position.position)
         .reduce(
