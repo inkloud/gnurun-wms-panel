@@ -15,6 +15,11 @@ export const QuantityStep: React.FC<{
         inputRef.current?.select();
     }, []);
 
+    React.useEffect(() => {
+        setQuantity(remaining);
+        inputRef.current!.select();
+    }, [pickedQuantity]);
+
     const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
         const rawValue: string = e.target.value;
         const parsedValue: number = rawValue === '' ? 0 : Number(rawValue);
