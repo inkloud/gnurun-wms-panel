@@ -1,5 +1,6 @@
-import {useFulfillmentOrdersPicks} from '../../../../hooks/fulfillment-orders';
-import type {FulfillmentOrderLinePick, FulfillmentOrderPosition} from '../../../../hooks/fulfillment-orders/types';
+import React from 'react';
+
+import type {FulfillmentOrderPosition, OrderType} from '../../../../hooks/fulfillment-orders/types';
 import {PositionOrderRow} from './position-order-row';
 
 const getCardAccentClass = function (pickedQuantity: number, totalQuantity: number): string {
@@ -10,7 +11,7 @@ const getCardAccentClass = function (pickedQuantity: number, totalQuantity: numb
 
 const PositionProgress: React.FC<{pickedQuantity: number; totalQuantity: number}> = function ({
     pickedQuantity,
-    totalQuantity,
+    totalQuantity
 }) {
     const safePickedQuantity = Math.min(pickedQuantity, totalQuantity);
     const pickedPercent = totalQuantity > 0 ? (safePickedQuantity / totalQuantity) * 100 : 0;
@@ -32,12 +33,21 @@ const PositionProgress: React.FC<{pickedQuantity: number; totalQuantity: number}
 };
 
 export const PositionCard: React.FC<{position: FulfillmentOrderPosition}> = function ({position}) {
-    const positionOrderIds = position.orders.map((order) => order.id);
-    const positionPicksData = useFulfillmentOrdersPicks(positionOrderIds);
-    const allPositionPicks: FulfillmentOrderLinePick[] = positionPicksData === undefined ? [] : positionPicksData;
-    const pickedPositionQuantity = allPositionPicks
-        .filter((lp) => lp.position_code === position.position)
-        .reduce((sum, pick) => sum + pick.quantity_picked, 0);
+    const [pickedByOrderId, setPickedByOrderId] = React.useState<Record<string, number>>({});
+    const positionOrderIds: string = position.orders.map((order: OrderType) => order.id).join(',');
+
+    React.useEffect(() => {
+        setPickedByOrderId({});
+    }, [position.position, positionOrderIds]);
+
+    const handlePickedQuantityChange = function (orderId: string, pickedQuantity: number) {
+        setPickedByOrderId((current: Record<string, number>) => {
+            if (current[orderId] === pickedQuantity) return current;
+            return {...current, [orderId]: pickedQuantity};
+        });
+    };
+
+    const pickedPositionQuantity = position.orders.reduce((sum, order) => sum + (pickedByOrderId[order.id] ?? 0), 0);
     const totalUnits = position.orders.reduce((sum, order) => sum + order.quantity, 0);
     const cardAccentClass = getCardAccentClass(pickedPositionQuantity, totalUnits);
 
@@ -82,6 +92,7 @@ export const PositionCard: React.FC<{position: FulfillmentOrderPosition}> = func
                                 position={position}
                                 order={order}
                                 isFirst={idx === 0}
+                                onPickedQuantityChange={handlePickedQuantityChange}
                             />
                         ))}
                     </div>

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {useFulfillmentOrderPicks} from '../../../../hooks/fulfillment-orders';
 import type {
     FulfillmentOrderLinePick,
@@ -27,11 +29,16 @@ export const PositionOrderRow: React.FC<{
     position: FulfillmentOrderPosition;
     order: OrderType;
     isFirst: boolean;
-}> = function ({position, order, isFirst}) {
+    onPickedQuantityChange: (orderId: string, pickedQuantity: number) => void;
+}> = function ({position, order, isFirst, onPickedQuantityChange}) {
     const {data} = useFulfillmentOrderPicks(order.id);
     const allPicks: FulfillmentOrderLinePick[] = data === undefined ? [] : data;
     const picks: FulfillmentOrderLinePick[] = allPicks.filter((lp) => lp.position_code === position.position);
     const pickedQuantity = picks.reduce((sum, pick) => sum + pick.quantity_picked, 0);
+
+    React.useEffect(() => {
+        onPickedQuantityChange(order.id, pickedQuantity);
+    }, [onPickedQuantityChange, order.id, pickedQuantity]);
 
     return (
         <div className={isFirst ? '' : 'border-top pt-3 mt-3'}>
