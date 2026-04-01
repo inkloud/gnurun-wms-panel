@@ -46,6 +46,7 @@ export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; pos
                                     onBackToScan={handleBreadcrumbBackToScan}
                                     onBackToOrders={handleBreadcrumbBackToOrders}
                                 />
+                                <button type="button" className="btn-close" aria-label="Close" onClick={handleHide} />
                             </div>
                             <div className="modal-body">
                                 {currentPosition === null ? (
@@ -63,11 +64,6 @@ export const ScanModal: React.FC<{handleHide: () => void; scanValue: string; pos
                                         onSelectOrder={setCurrentOrder}
                                     />
                                 )}
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={handleHide}>
-                                    Close
-                                </button>
                             </div>
                         </div>
                     </div>
