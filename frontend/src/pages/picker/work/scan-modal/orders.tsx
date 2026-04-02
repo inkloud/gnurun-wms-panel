@@ -9,23 +9,52 @@ import type {
 import {CurrentOrder} from './current-order';
 import {ItemCardRow, ItemCards, type ItemCard} from './item-cards';
 
-const OrderItem: React.FC<{item: ItemCard; position: FulfillmentOrderPosition}> = function ({item, position}) {
-    const {data: picks} = useFulfillmentOrderPicks(item.id);
-    if (picks === undefined) return <ItemCardRow item={{...item, valueRight: 'Loading...', disabled: true}} />;
+const LoadedOrderItem: React.FC<{
+    order: OrderType;
+    position_code: string;
+    picks: FulfillmentOrderLinePick[];
+    onClick: () => void;
+}> = function ({order, position_code, picks, onClick}) {
     const pickedQuantity: number = picks
-        .filter((pick: FulfillmentOrderLinePick) => pick.position_code === position.position)
+        .filter((pick: FulfillmentOrderLinePick) => pick.position_code === position_code)
         .reduce(
             (previousValue: number, currentValue: FulfillmentOrderLinePick) =>
                 previousValue + currentValue.quantity_picked,
             0
         );
-    const order: OrderType | undefined = position.orders.find((order: OrderType) => order.id === item.id);
-    console.assert(order !== undefined);
+    const valueRight: string = `${pickedQuantity}/${order.quantity}`;
+    const disabled: boolean = pickedQuantity >= order.quantity;
 
-    const valueRight: string = `${pickedQuantity}/${order!.quantity}`;
-    const disabled: boolean = pickedQuantity >= order!.quantity;
+    const item: ItemCard = {
+        id: order.id,
+        title: 'Order',
+        value: order.id,
+        titleRight: 'Picked',
+        valueRight,
+        disabled,
+        onClick
+    };
+    return <ItemCardRow item={item} />;
+};
 
-    return <ItemCardRow item={{...item, valueRight, disabled}} />;
+const OrderItem: React.FC<{order: OrderType; position_code: string; onClick: () => void}> = function ({
+    order,
+    position_code,
+    onClick
+}) {
+    const {data: picks} = useFulfillmentOrderPicks(order.id);
+
+    const item: ItemCard = {
+        id: order.id,
+        title: 'Order',
+        value: order.id,
+        titleRight: 'Picked',
+        valueRight: 'Loading...',
+        disabled: true,
+        onClick
+    };
+    if (picks === undefined) return <ItemCardRow item={item} />;
+    return <LoadedOrderItem order={order} position_code={position_code} picks={picks} onClick={onClick} />;
 };
 
 export const Orders: React.FC<{
@@ -33,28 +62,16 @@ export const Orders: React.FC<{
     currentOrder: OrderType | null;
     onSelectOrder: (order: OrderType) => void;
 }> = function ({position, currentOrder, onSelectOrder}) {
-    const items: ItemCard[] = position.orders.map((order: OrderType) => {
+    const items = position.orders.map((order: OrderType) => {
         const handleClick = function () {
             onSelectOrder(order);
         };
 
-        return {
-            id: order.id,
-            title: 'Order',
-            value: order.id,
-            titleRight: 'Picked',
-            valueRight: '',
-            disabled: true,
-            onClick: handleClick
-        };
+        return <OrderItem key={order.id} order={order} position_code={position.position} onClick={handleClick} />;
     });
 
     return currentOrder === null ? (
-        <ItemCards>
-            {items.map((item) => (
-                <OrderItem key={item.id} item={item} position={position} />
-            ))}
-        </ItemCards>
+        <ItemCards>{items}</ItemCards>
     ) : (
         <CurrentOrder order={currentOrder} position={position} />
     );
