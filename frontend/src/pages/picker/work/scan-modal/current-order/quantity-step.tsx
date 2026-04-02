@@ -47,6 +47,7 @@ export const QuantityStep: React.FC<{
                     value={quantity}
                     onChange={handleChange}
                     onFocus={(e) => e.currentTarget.select()}
+                    disabled={quantity === 0}
                     autoFocus
                 />
                 <p className="text-muted small text-center mt-1 mb-0">
