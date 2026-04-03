@@ -1,7 +1,7 @@
 {
     "name": "gnurun-wms-panel-frontend",
     "private": true,
-    "version": "6.0.0",
+    "version": "6.1.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -16,7 +16,7 @@
         "bootstrap": "^5.3.8",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "react-router": "^7.13.2",
+        "react-router": "^7.14.0",
         "swr": "^2.4.1",
         "zod": "^4.3.6"
     },
