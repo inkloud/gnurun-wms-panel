@@ -1,6 +1,6 @@
 __all__ = [
     "authorize_operator",
-    "get_operator_fulfillment_order_session",
+    "get_operator_fulfillment_order_assignment",
     "get_fulfillment_order_line",
     "get_fulfillment_order_pick_details",
     "FulfillmentOrderResponse",
@@ -14,10 +14,10 @@ from fastapi import HTTPException, status
 
 from backend.application.entities.auth import AuthPayload, AuthUserType
 from backend.application.entities.fulfillment_order import (
+    FulfillmentOrderAssignment,
     FulfillmentOrder,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
-    FulfillmentOrderSession,
 )
 from backend.application.use_cases.auth import AuthService
 from backend.application.use_cases.fulfillment_order import FulfillmentOrderService
@@ -35,10 +35,10 @@ class FulfillmentOrderResponse:
     def from_fulfillment_order(
         cls, order: FulfillmentOrder, fulfillment_order_service: FulfillmentOrderService
     ) -> "FulfillmentOrderResponse":
-        sessions: set[FulfillmentOrderSession] = fulfillment_order_service.get_sessions(
-            order.id
+        assignments: set[FulfillmentOrderAssignment] = (
+            fulfillment_order_service.get_assignments(order.id)
         )
-        assigned_to: list[str] = sorted({s.operator_id for s in sessions})
+        assigned_to: list[str] = sorted({a.operator_id for a in assignments})
         return cls(
             id=order.id,
             created_at=order.created_at.isoformat(),
@@ -74,20 +74,24 @@ def authorize_operator(auth_service: AuthService, auth_header: str) -> AuthPaylo
     return auth_payload
 
 
-def get_operator_fulfillment_order_session(
+def get_operator_fulfillment_order_assignment(
     fulfillment_order_service: FulfillmentOrderService,
     fulfillment_order_id: str,
     operator_id: str,
-) -> FulfillmentOrderSession:
-    sessions: set[FulfillmentOrderSession] = fulfillment_order_service.get_sessions(
+) -> FulfillmentOrderAssignment:
+    assignments: set[FulfillmentOrderAssignment] = (
+        fulfillment_order_service.get_assignments(
         fulfillment_order_id
     )
-    session_matches = [
-        session for session in sessions if session.operator_id == operator_id
+    )
+    assignment_matches = [
+        assignment
+        for assignment in assignments
+        if assignment.operator_id == operator_id
     ]
-    if len(session_matches) == 0:
-        raise ValueError("Fulfillment order session not found")
-    return sorted(session_matches, key=lambda item: item.id)[0]
+    if len(assignment_matches) == 0:
+        raise ValueError("Fulfillment order assignment not found")
+    return sorted(assignment_matches, key=lambda item: item.id)[0]
 
 
 def get_fulfillment_order_line(
@@ -107,24 +111,26 @@ def get_fulfillment_order_line(
 def get_fulfillment_order_pick_details(
     fulfillment_order_service: FulfillmentOrderService, fulfillment_order_id: str
 ) -> list[FulfillmentOrderPickDetail]:
-    sessions: list[FulfillmentOrderSession] = list(
-        fulfillment_order_service.get_sessions(fulfillment_order_id)
+    assignments: list[FulfillmentOrderAssignment] = list(
+        fulfillment_order_service.get_assignments(fulfillment_order_id)
     )
     lines: list[FulfillmentOrderLine] = fulfillment_order_service.get_lines(
         fulfillment_order_id
     )
 
-    session_by_id = {session.id: session for session in sessions}
+    assignment_by_id = {assignment.id: assignment for assignment in assignments}
     line_by_id = {line.id: line for line in lines}
     picks: list[FulfillmentOrderLinePick] = [
         pick
         for pick in fulfillment_order_service.get_picks()
-        if pick.fulfillment_order_session_id in session_by_id
+        if pick.fulfillment_order_assignment_id in assignment_by_id
         and pick.fulfillment_order_line_id in line_by_id
     ]
     return [
         FulfillmentOrderPickDetail(
-            operator_id=session_by_id[pick.fulfillment_order_session_id].operator_id,
+            operator_id=assignment_by_id[
+                pick.fulfillment_order_assignment_id
+            ].operator_id,
             fulfillment_order_id=line_by_id[
                 pick.fulfillment_order_line_id
             ].fulfillment_order_id,

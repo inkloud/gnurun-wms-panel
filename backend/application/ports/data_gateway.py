@@ -1,14 +1,20 @@
 from __future__ import annotations
 
-__all__ = ["DBGateway", "UserGateway", "FulfillmentGateway"]
+__all__ = [
+    "DBGateway",
+    "FulfillmentOrderAssignmentGateway",
+    "FulfillmentOrderGateway",
+    "FulfillmentPickGateway",
+    "UserGateway",
+]
 
 from typing import Protocol
 
 from backend.application.entities.fulfillment_order import (
     FulfillmentOrder,
+    FulfillmentOrderAssignment,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
-    FulfillmentOrderSession,
 )
 from backend.application.entities.users import User
 
@@ -21,7 +27,7 @@ class UserGateway(Protocol):
     def get_operators(username: str) -> list[User]: ...
 
 
-class FulfillmentGateway(Protocol):
+class FulfillmentOrderGateway(Protocol):
     @staticmethod
     def get_ready() -> list[FulfillmentOrder]: ...
 
@@ -29,20 +35,24 @@ class FulfillmentGateway(Protocol):
     def get(id: int) -> FulfillmentOrder: ...
 
     @staticmethod
-    def get_sessions(id: int) -> set[FulfillmentOrderSession]: ...
-
-    @staticmethod
-    def assign(id: int, operator: str) -> set[FulfillmentOrderSession]: ...
-
-    @staticmethod
-    def unassign(id: int, operator: str) -> set[FulfillmentOrderSession]: ...
-
-    @staticmethod
     def get_lines(id: int) -> list[FulfillmentOrderLine]: ...
 
+
+class FulfillmentOrderAssignmentGateway(Protocol):
+    @staticmethod
+    def get_assignments(id: int) -> set[FulfillmentOrderAssignment]: ...
+
+    @staticmethod
+    def assign(id: int, operator: str) -> set[FulfillmentOrderAssignment]: ...
+
+    @staticmethod
+    def unassign(id: int, operator: str) -> set[FulfillmentOrderAssignment]: ...
+
+
+class FulfillmentPickGateway(Protocol):
     @staticmethod
     def new_pick(
-        fulfillment_order_session_id: str,
+        fulfillment_order_assignment_id: str,
         fulfillment_order_line_id: str,
         quantity_picked: int,
         serial_numbers: list[str],
@@ -54,4 +64,6 @@ class FulfillmentGateway(Protocol):
 
 class DBGateway(Protocol):
     user: UserGateway
-    fulfillment: FulfillmentGateway
+    fulfillment_order: FulfillmentOrderGateway
+    fulfillment_assignment: FulfillmentOrderAssignmentGateway
+    fulfillment_pick: FulfillmentPickGateway

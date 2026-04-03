@@ -1,8 +1,8 @@
 __all__ = [
+    "FULFILLMENT_ORDER_ASSIGNMENTS",
     "FULFILLMENT_ORDER_LINE_PICKS",
     "FULFILLMENT_ORDERS",
     "FULFILLMENT_ORDERS_PRODUCTS",
-    "FULFILLMENT_ORDER_SESSIONS",
 ]
 
 import json
@@ -11,10 +11,10 @@ from pathlib import Path
 
 from .products import PRODUCTS
 from .types import (
+    FulfillmentOrderAssignmentRow,
     FulfillmentOrderLinePickRow,
     FulfillmentOrderLineRow,
     FulfillmentOrderRow,
-    FulfillmentOrderSessionRow,
     ProductRow,
     UserTypeRow,
 )
@@ -31,7 +31,7 @@ def _parse_datetime(value: str) -> datetime:
 
 def _load_fulfillment_data() -> tuple[
     list[FulfillmentOrderRow],
-    list[FulfillmentOrderSessionRow],
+    list[FulfillmentOrderAssignmentRow],
     list[FulfillmentOrderLineRow],
     list[FulfillmentOrderLinePickRow],
 ]:
@@ -56,34 +56,36 @@ def _load_fulfillment_data() -> tuple[
         )
     orders_by_id = {order.id: order for order in orders}
 
-    sessions: list[FulfillmentOrderSessionRow] = []
-    session_ids: set[int] = set()
-    session_operators_by_order: dict[int, set[str]] = {}
-    for raw_session in payload["sessions"]:
-        session_id = raw_session["id"]
-        if session_id in session_ids:
-            raise ValueError(f"Duplicate fulfillment order session id '{session_id}'")
-        session_ids.add(session_id)
+    assignments: list[FulfillmentOrderAssignmentRow] = []
+    assignment_ids: set[int] = set()
+    assignment_operators_by_order: dict[int, set[str]] = {}
+    for raw_assignment in payload["assignments"]:
+        assignment_id = raw_assignment["id"]
+        if assignment_id in assignment_ids:
+            raise ValueError(
+                f"Duplicate fulfillment order assignment id '{assignment_id}'"
+            )
+        assignment_ids.add(assignment_id)
 
-        fulfillment_order_id = raw_session["fulfillment_order_id"]
+        fulfillment_order_id = raw_assignment["fulfillment_order_id"]
         if fulfillment_order_id not in order_ids:
             raise ValueError(
-                f"Unknown fulfillment order id '{fulfillment_order_id}' for session '{session_id}'"
+                f"Unknown fulfillment order id '{fulfillment_order_id}' for assignment '{assignment_id}'"
             )
-        started_at = _parse_datetime(raw_session["started_at"])
+        started_at = _parse_datetime(raw_assignment["started_at"])
         if started_at < orders_by_id[fulfillment_order_id].date:
             raise ValueError(
-                f"Session '{session_id}' starts before fulfillment order '{fulfillment_order_id}'"
+                f"Assignment '{assignment_id}' starts before fulfillment order '{fulfillment_order_id}'"
             )
 
-        operator_id = raw_session["operator_id"]
+        operator_id = raw_assignment["operator_id"]
         operator = USERS.get(operator_id)
         if operator is None or operator.type != UserTypeRow.OPERATOR:
             raise ValueError(
-                f"Unknown operator '{operator_id}' for session '{session_id}'"
+                f"Unknown operator '{operator_id}' for assignment '{assignment_id}'"
             )
 
-        assigned_operators = session_operators_by_order.setdefault(
+        assigned_operators = assignment_operators_by_order.setdefault(
             fulfillment_order_id, set()
         )
         if operator_id in assigned_operators:
@@ -92,9 +94,9 @@ def _load_fulfillment_data() -> tuple[
             )
         assigned_operators.add(operator_id)
 
-        sessions.append(
-            FulfillmentOrderSessionRow(
-                id=session_id,
+        assignments.append(
+            FulfillmentOrderAssignmentRow(
+                id=assignment_id,
                 operator_id=operator_id,
                 fulfillment_order_id=fulfillment_order_id,
                 started_at=started_at,
@@ -161,7 +163,7 @@ def _load_fulfillment_data() -> tuple[
         )
 
     lines_by_id = {line.id: line for line in lines}
-    sessions_by_id = {session.id: session for session in sessions}
+    assignments_by_id = {assignment.id: assignment for assignment in assignments}
 
     picks: list[FulfillmentOrderLinePickRow] = []
     pick_ids: set[int] = set()
@@ -172,18 +174,20 @@ def _load_fulfillment_data() -> tuple[
             raise ValueError(f"Duplicate fulfillment order pick id '{pick_id}'")
         pick_ids.add(pick_id)
 
-        session_id = raw_pick["fulfillment_order_session_id"]
-        session = sessions_by_id.get(session_id)
-        if session is None:
-            raise ValueError(f"Unknown session id '{session_id}' for pick '{pick_id}'")
+        assignment_id = raw_pick["fulfillment_order_assignment_id"]
+        assignment = assignments_by_id.get(assignment_id)
+        if assignment is None:
+            raise ValueError(
+                f"Unknown assignment id '{assignment_id}' for pick '{pick_id}'"
+            )
 
         line_id = raw_pick["fulfillment_order_line_id"]
         line = lines_by_id.get(line_id)
         if line is None:
             raise ValueError(f"Unknown line id '{line_id}' for pick '{pick_id}'")
-        if line.fulfillment_order_id != session.fulfillment_order_id:
+        if line.fulfillment_order_id != assignment.fulfillment_order_id:
             raise ValueError(
-                f"Pick '{pick_id}' references a line outside session order '{session_id}'"
+                f"Pick '{pick_id}' references a line outside assignment order '{assignment_id}'"
             )
 
         quantity_picked = raw_pick["quantity_picked"]
@@ -197,9 +201,9 @@ def _load_fulfillment_data() -> tuple[
         picked_quantity_by_line[line_id] = total_picked
 
         picked_at = _parse_datetime(raw_pick["picked_at"])
-        if picked_at < session.started_at:
+        if picked_at < assignment.started_at:
             raise ValueError(
-                f"Pick '{pick_id}' happens before session '{session_id}' starts"
+                f"Pick '{pick_id}' happens before assignment '{assignment_id}' starts"
             )
 
         serial_numbers = list(raw_pick.get("serial_numbers", []))
@@ -220,7 +224,7 @@ def _load_fulfillment_data() -> tuple[
         picks.append(
             FulfillmentOrderLinePickRow(
                 id=pick_id,
-                fulfillment_order_session_id=session_id,
+                fulfillment_order_assignment_id=assignment_id,
                 fulfillment_order_line_id=line_id,
                 quantity_picked=quantity_picked,
                 serial_numbers=serial_numbers,
@@ -228,12 +232,12 @@ def _load_fulfillment_data() -> tuple[
             )
         )
 
-    return orders, sessions, lines, picks
+    return orders, assignments, lines, picks
 
 
 (
     FULFILLMENT_ORDERS,
-    FULFILLMENT_ORDER_SESSIONS,
+    FULFILLMENT_ORDER_ASSIGNMENTS,
     FULFILLMENT_ORDERS_PRODUCTS,
     FULFILLMENT_ORDER_LINE_PICKS,
 ) = _load_fulfillment_data()

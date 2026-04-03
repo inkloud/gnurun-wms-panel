@@ -5,10 +5,10 @@ from pydantic import BaseModel
 
 from backend.application.entities.auth import AuthPayload, AuthUserType
 from backend.application.entities.fulfillment_order import (
+    FulfillmentOrderAssignment,
     FulfillmentOrderLine,
     FulfillmentOrderLinePick,
     FulfillmentOrderPosition,
-    FulfillmentOrderSession,
 )
 from backend.application.ports import DBGateway
 from backend.application.use_cases.auth import AuthService
@@ -21,7 +21,7 @@ from .utils import (
     authorize_operator,
     get_fulfillment_order_line,
     get_fulfillment_order_pick_details,
-    get_operator_fulfillment_order_session,
+    get_operator_fulfillment_order_assignment,
 )
 
 router: APIRouter = APIRouter(prefix="/picker", tags=["picker"])
@@ -140,10 +140,12 @@ async def create_pick(
         )
 
     try:
-        session: FulfillmentOrderSession = get_operator_fulfillment_order_session(
+        assignment: FulfillmentOrderAssignment = (
+            get_operator_fulfillment_order_assignment(
             fulfillment_order_service,
             payload.fulfillment_order_id,
             auth_payload.auth_user.username,
+        )
         )
         line: FulfillmentOrderLine = get_fulfillment_order_line(
             fulfillment_order_service,
@@ -166,13 +168,13 @@ async def create_pick(
         )
 
     pick: FulfillmentOrderLinePick = fulfillment_order_service.new_pick(
-        fulfillment_order_session_id=session.id,
+        fulfillment_order_assignment_id=assignment.id,
         fulfillment_order_line_id=line.id,
         quantity_picked=payload.qty,
         serial_numbers=payload.serial_numbers,
     )
     return FulfillmentOrderPickDetail(
-        operator_id=session.operator_id,
+        operator_id=assignment.operator_id,
         fulfillment_order_id=line.fulfillment_order_id,
         sku=line.sku,
         position_code=line.position_code,

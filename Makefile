@@ -25,6 +25,7 @@ clean-all:
 	rm -rf .venv
 	rm -rf frontend/node_modules
 	rm -rf node_modules
+	rm .codex
 
 codex:
 	npm install @openai/codex --save-dev

@@ -1,9 +1,9 @@
 __all__ = [
     "UserRow",
     "FulfillmentOrderRow",
+    "FulfillmentOrderAssignmentRow",
     "FulfillmentOrderLineRow",
     "FulfillmentOrderLinePickRow",
-    "FulfillmentOrderSessionRow",
     "WarehouseRow",
     "UserTypeRow",
     "ProductRow",
@@ -51,7 +51,7 @@ class FulfillmentOrderRow:
 
 
 @dataclass(frozen=True)
-class FulfillmentOrderSessionRow:
+class FulfillmentOrderAssignmentRow:
     id: int
     operator_id: str
     fulfillment_order_id: int
@@ -72,7 +72,7 @@ class FulfillmentOrderLineRow:
 @dataclass(frozen=True)
 class FulfillmentOrderLinePickRow:
     id: int
-    fulfillment_order_session_id: int
+    fulfillment_order_assignment_id: int
     fulfillment_order_line_id: int
     quantity_picked: int
     serial_numbers: list[str]

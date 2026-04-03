@@ -21,7 +21,7 @@
             "date": "2026-03-14T11:10:00"
         }
     ],
-    "sessions": [
+    "assignments": [
         {
             "id": 1,
             "operator_id": "roberto.buffali@gnu000.com",
@@ -219,7 +219,7 @@
     "picks": [
         {
             "id": 1,
-            "fulfillment_order_session_id": 1,
+            "fulfillment_order_assignment_id": 1,
             "fulfillment_order_line_id": 1,
             "quantity_picked": 1,
             "serial_numbers": [],
@@ -227,7 +227,7 @@
         },
         {
             "id": 2,
-            "fulfillment_order_session_id": 2,
+            "fulfillment_order_assignment_id": 2,
             "fulfillment_order_line_id": 3,
             "quantity_picked": 5,
             "serial_numbers": [],
@@ -235,7 +235,7 @@
         },
         {
             "id": 3,
-            "fulfillment_order_session_id": 1,
+            "fulfillment_order_assignment_id": 1,
             "fulfillment_order_line_id": 2,
             "quantity_picked": 1,
             "serial_numbers": [],
@@ -243,7 +243,7 @@
         },
         {
             "id": 4,
-            "fulfillment_order_session_id": 3,
+            "fulfillment_order_assignment_id": 3,
             "fulfillment_order_line_id": 5,
             "quantity_picked": 4,
             "serial_numbers": [],
@@ -251,7 +251,7 @@
         },
         {
             "id": 5,
-            "fulfillment_order_session_id": 3,
+            "fulfillment_order_assignment_id": 3,
             "fulfillment_order_line_id": 9,
             "quantity_picked": 2,
             "serial_numbers": [],
@@ -259,7 +259,7 @@
         },
         {
             "id": 6,
-            "fulfillment_order_session_id": 4,
+            "fulfillment_order_assignment_id": 4,
             "fulfillment_order_line_id": 16,
             "quantity_picked": 2,
             "serial_numbers": [],
@@ -267,7 +267,7 @@
         },
         {
             "id": 7,
-            "fulfillment_order_session_id": 5,
+            "fulfillment_order_assignment_id": 5,
             "fulfillment_order_line_id": 21,
             "quantity_picked": 3,
             "serial_numbers": [],
@@ -275,7 +275,7 @@
         },
         {
             "id": 8,
-            "fulfillment_order_session_id": 1,
+            "fulfillment_order_assignment_id": 1,
             "fulfillment_order_line_id": 1,
             "quantity_picked": 2,
             "serial_numbers": [],
@@ -283,7 +283,7 @@
         },
         {
             "id": 9,
-            "fulfillment_order_session_id": 2,
+            "fulfillment_order_assignment_id": 2,
             "fulfillment_order_line_id": 4,
             "quantity_picked": 1,
             "serial_numbers": [
@@ -293,7 +293,7 @@
         },
         {
             "id": 10,
-            "fulfillment_order_session_id": 3,
+            "fulfillment_order_assignment_id": 3,
             "fulfillment_order_line_id": 6,
             "quantity_picked": 3,
             "serial_numbers": [],

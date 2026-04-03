@@ -1,9 +1,9 @@
 __all__ = [
     "FulfillmentOrder",
+    "FulfillmentOrderAssignment",
     "FulfillmentOrderLine",
     "FulfillmentOrderLinePick",
     "FulfillmentOrderPosition",
-    "FulfillmentOrderSession",
     "SimpleOrder",
     "SimpleProduct",
 ]
@@ -19,7 +19,7 @@ class FulfillmentOrder:
 
 
 @dataclass(frozen=True)
-class FulfillmentOrderSession:
+class FulfillmentOrderAssignment:
     id: str
     operator_id: str
     fulfillment_order_id: str
@@ -40,7 +40,7 @@ class FulfillmentOrderLine:
 @dataclass(frozen=True)
 class FulfillmentOrderLinePick:
     id: str
-    fulfillment_order_session_id: str
+    fulfillment_order_assignment_id: str
     fulfillment_order_line_id: str
     quantity_picked: int
     serial_numbers: list[str]

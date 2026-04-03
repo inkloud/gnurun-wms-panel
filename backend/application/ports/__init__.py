@@ -1,3 +1,15 @@
-__all__ = ["DBGateway", "FulfillmentGateway", "UserGateway"]
+__all__ = [
+    "DBGateway",
+    "FulfillmentOrderAssignmentGateway",
+    "FulfillmentOrderGateway",
+    "FulfillmentPickGateway",
+    "UserGateway",
+]
 
-from .data_gateway import DBGateway, FulfillmentGateway, UserGateway
+from .data_gateway import (
+    DBGateway,
+    FulfillmentOrderAssignmentGateway,
+    FulfillmentOrderGateway,
+    FulfillmentPickGateway,
+    UserGateway,
+)
