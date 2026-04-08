@@ -142,10 +142,10 @@ async def create_pick(
     try:
         assignment: FulfillmentOrderAssignment = (
             get_operator_fulfillment_order_assignment(
-            fulfillment_order_service,
-            payload.fulfillment_order_id,
-            auth_payload.auth_user.username,
-        )
+                fulfillment_order_service,
+                payload.fulfillment_order_id,
+                auth_payload.auth_user.username,
+            )
         )
         line: FulfillmentOrderLine = get_fulfillment_order_line(
             fulfillment_order_service,
