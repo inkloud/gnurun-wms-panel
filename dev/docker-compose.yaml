@@ -13,6 +13,9 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
     volumes:
       - ../backend:/app/backend
+    networks:
+      - internal-life365-net
+      - public
   frontend:
     build:
       context: ../frontend
@@ -29,3 +32,12 @@ services:
       - ../frontend/src:/app/src
     stdin_open: true
     tty: true
+    networks:
+      - internal-life365-net
+      - public
+
+networks:
+  public:
+    external: true
+  internal-life365-net:
+    external: true

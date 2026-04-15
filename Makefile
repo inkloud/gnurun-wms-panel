@@ -1,4 +1,8 @@
-.PHONY: update clean codex build up down clean-all
+.PHONY: update clean codex build up down clean-all ensure-networks networks-clean
+
+ensure-networks:
+	docker network inspect public >/dev/null 2>&1 || docker network create public
+	docker network inspect internal-life365-net >/dev/null 2>&1 || docker network create --internal internal-life365-net
 
 update:
 	python3 -m venv .venv
@@ -32,9 +36,13 @@ codex:
 	rm package.json package-lock.json
 	npx codex
 
-up:
+up: ensure-networks
 	cd dev && . ./env.sh && docker compose up
+	docker image prune -a
 
 down:
 	cd dev && . ./env.sh && docker compose down -v
-	docker image prune -a
+
+networks-clean:
+	if docker network inspect public >/dev/null 2>&1; then docker network rm public; fi
+	if docker network inspect internal-life365-net >/dev/null 2>&1; then docker network rm internal-life365-net; fi
