@@ -61,4 +61,4 @@ From inside `frontend/`:
 From the repository root:
 
 - Build the backend container with `docker build -f backend/Dockerfile --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t gnrwms-dev-backend .`
-- Run the backend container with `docker run --rm -it -p 8000:8000 -v "$(pwd)"/backend:/app/backend gnrwms-dev-backend`
+- Run the backend container with `docker run --rm -it -p 8003:8000 -v "$(pwd)"/backend:/app/backend gnrwms-dev-backend`
