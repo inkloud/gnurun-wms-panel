@@ -29,7 +29,7 @@ clean-all:
 	rm -rf .venv
 	rm -rf frontend/node_modules
 	rm -rf node_modules
-	rm .codex
+	rm -rf .codex
 
 codex:
 	npm install @openai/codex --save-dev
@@ -38,10 +38,10 @@ codex:
 
 up: ensure-networks
 	cd dev && . ./env.sh && docker compose up
-	docker image prune -a
 
 down:
 	cd dev && . ./env.sh && docker compose down -v
+	docker image prune -a
 
 networks-clean:
 	if docker network inspect public >/dev/null 2>&1; then docker network rm public; fi
