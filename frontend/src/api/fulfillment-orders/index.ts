@@ -8,8 +8,7 @@ import type {
 } from '../../hooks/fulfillment-orders/types';
 import {toFulfillmentOrder, type FulfillmentOrderApiInput} from './utils';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-if (!API_BASE_URL) throw new Error('Missing VITE_API_BASE_URL');
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/gws/api';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
 
 const FulfillmentOrderLineSchema = z.object({
