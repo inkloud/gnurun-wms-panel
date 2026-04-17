@@ -5,8 +5,8 @@
 :80 {
     encode gzip
 
-    # Proxy API calls to FastAPI (strip /api prefix)
-    handle_path /api/* {
+    # Proxy API calls to FastAPI (strip /gws/api prefix)
+    handle_path /gws/api/* {
         reverse_proxy backend:8000
     }
 

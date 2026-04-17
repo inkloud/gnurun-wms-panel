@@ -1,4 +1,4 @@
-.PHONY: update clean codex build up down clean-all ensure-networks networks-clean
+.PHONY: update clean codex build up-dev down-dev up-prod down-prod clean-all ensure-networks networks-clean
 
 ensure-networks:
 	docker network inspect public >/dev/null 2>&1 || docker network create public
@@ -36,11 +36,18 @@ codex:
 	rm package.json package-lock.json
 	npx codex
 
-up: ensure-networks
+up-dev: ensure-networks
 	cd dev && . ./env.sh && docker compose up
 
-down:
+down-dev:
 	cd dev && . ./env.sh && docker compose down -v
+	docker image prune -a
+
+up-prod: ensure-networks
+	cd prod && . ./env.sh && docker compose up
+
+down-prod:
+	cd prod && . ./env.sh && docker compose down -v
 	docker image prune -a
 
 networks-clean:
