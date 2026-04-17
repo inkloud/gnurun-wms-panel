@@ -7,7 +7,8 @@ import {useWHOperators} from '../../hooks/wh-operators';
 import type {OperatorUser} from '../../hooks/wh-operators/types';
 import {Header} from '../../ui/header';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+if (!API_BASE_URL) throw new Error('Missing VITE_API_BASE_URL');
 
 const authenticateAsOperator = async (username: string, token: string) => {
     const response = await axios.get<AuthResponse>(`${API_BASE_URL}/auth/as/${encodeURIComponent(username)}`, {
