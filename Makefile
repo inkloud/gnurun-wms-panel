@@ -1,4 +1,4 @@
-.PHONY: update clean codex build up-dev down-dev up-prod down-prod clean-all ensure-networks networks-clean
+.PHONY: update clean codex build up-dev up-prod down clean-all ensure-networks networks-clean
 
 ensure-networks:
 	docker network inspect public >/dev/null 2>&1 || docker network create public
@@ -37,17 +37,27 @@ codex:
 	npx codex
 
 up-dev: ensure-networks
-	cd dev && . ./env.sh && docker compose up
-
-down-dev:
-	cd dev && . ./env.sh && docker compose down -v
-	docker image prune -a
+	@set -e; \
+	user_id="$$(id -u)"; \
+	group_id="$$(id -g)"; \
+	cd dev; \
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose up
 
 up-prod: ensure-networks
-	cd prod && . ./env.sh && docker compose up
+	@set -e; \
+	user_id="$$(id -u)"; \
+	group_id="$$(id -g)"; \
+	cd prod; \
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose up -d
 
-down-prod:
-	cd prod && . ./env.sh && docker compose down -v
+down:
+	@set -e; \
+	user_id="$$(id -u)"; \
+	group_id="$$(id -g)"; \
+	cd dev; \
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v; \
+	cd ../prod; \
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v; \
 	docker image prune -a
 
 networks-clean:
