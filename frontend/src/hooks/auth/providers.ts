@@ -36,7 +36,7 @@ export const FakeAuthProvider: AuthProvider = (function () {
 })();
 
 export const RemoteAuthProvider: AuthProvider = (function () {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/gws/api';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/wms/api';
 
     const fromRemoteAuthResponse = function (payload: RemoteAuthResponse): AuthResponse {
         return {
