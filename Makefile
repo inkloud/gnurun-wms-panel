@@ -55,10 +55,9 @@ down:
 	user_id="$$(id -u)"; \
 	group_id="$$(id -g)"; \
 	cd dev; \
-	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v; \
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v --rmi local; \
 	cd ../prod; \
-	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v; \
-	docker image prune -a
+	USER_ID="$$user_id" GROUP_ID="$$group_id" docker compose down -v --rmi local
 
 networks-clean:
 	if docker network inspect public >/dev/null 2>&1; then docker network rm public; fi
