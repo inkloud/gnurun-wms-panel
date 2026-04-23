@@ -2,8 +2,8 @@ import axios from 'axios';
 import {z} from 'zod';
 
 import type {OperatorUser} from '../hooks/wh-operators/types';
+import {API_BASE_URL} from './config';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/wms/api';
 const USERS_ENDPOINT = `${API_BASE_URL}/users`;
 
 const UsersApiSchema = z.object({

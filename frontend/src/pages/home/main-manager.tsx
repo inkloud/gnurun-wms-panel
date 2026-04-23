@@ -1,13 +1,12 @@
 import axios from 'axios';
 import React from 'react';
 
+import {API_BASE_URL} from '../../api/config';
 import {useAuth} from '../../hooks/auth';
 import type {AuthResponse} from '../../hooks/auth/types';
 import {useWHOperators} from '../../hooks/wh-operators';
 import type {OperatorUser} from '../../hooks/wh-operators/types';
 import {Header} from '../../ui/header';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/wms/api';
 
 const authenticateAsOperator = async (username: string, token: string) => {
     const response = await axios.get<AuthResponse>(`${API_BASE_URL}/auth/as/${encodeURIComponent(username)}`, {

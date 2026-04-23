@@ -1,16 +1,16 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 
-export default defineConfig({
-    base: '/wms/',
+export default defineConfig(({mode}) => ({
+    base: mode === 'production' ? '/wms/' : '/',
     plugins: [react()],
     server: {
         proxy: {
-            '/wms/api': {
+            '/api': {
                 target: 'http://backend:8000',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/wms\/api/, '')
+                rewrite: (path) => path.replace(/^\/api/, '')
             }
         }
     }
-});
+}));

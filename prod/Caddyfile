@@ -1,0 +1,20 @@
+{
+    auto_https off
+}
+
+:80 {
+    encode gzip
+
+    redir / /wms/
+    redir /wms /wms/
+
+    # Proxy API calls to FastAPI under the public /wms prefix
+    handle_path /wms/api/* {
+        reverse_proxy backend:8000
+    }
+
+    # Everything else under /wms goes to the frontend
+    handle_path /wms/* {
+        reverse_proxy frontend:5173
+    }
+}

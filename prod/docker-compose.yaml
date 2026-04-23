@@ -13,7 +13,6 @@ services:
       - PYTHONDONTWRITEBYTECODE=0
     networks:
       - internal-life365-net
-      - public
     restart: unless-stopped
   frontend:
     build:
@@ -28,6 +27,21 @@ services:
     expose:
       - "5173"
     networks:
+      - internal-life365-net
+    restart: unless-stopped
+  gnurun-wms-panel-web:
+    image: caddy:2.11.2
+    depends_on:
+      - backend
+      - frontend
+    # ports:
+    #   - "8080:80"
+    expose:
+      - "80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - public
       - internal-life365-net
     restart: unless-stopped
 

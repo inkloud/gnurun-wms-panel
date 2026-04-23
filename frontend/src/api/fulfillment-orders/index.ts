@@ -6,9 +6,9 @@ import type {
     FulfillmentOrderLine,
     FulfillmentOrderPosition
 } from '../../hooks/fulfillment-orders/types';
+import {API_BASE_URL} from '../config';
 import {toFulfillmentOrder, type FulfillmentOrderApiInput} from './utils';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/wms/api';
 const FULFILLMENT_ORDERS_ENDPOINT = `${API_BASE_URL}/picker/fulfillment_orders`;
 
 const FulfillmentOrderLineSchema = z.object({

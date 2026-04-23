@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import {API_BASE_URL} from '../../api/config';
 import {UserType, type AuthProvider, type AuthResponse, type Credentials} from './types';
 
 type RemoteAuthResponse = {
@@ -36,8 +37,6 @@ export const FakeAuthProvider: AuthProvider = (function () {
 })();
 
 export const RemoteAuthProvider: AuthProvider = (function () {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/wms/api';
-
     const fromRemoteAuthResponse = function (payload: RemoteAuthResponse): AuthResponse {
         return {
             access_token: payload.access_token,
