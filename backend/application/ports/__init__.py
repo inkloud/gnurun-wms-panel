@@ -1,4 +1,5 @@
 __all__ = [
+    "APIGateway",
     "DBGateway",
     "FulfillmentOrderAssignmentGateway",
     "FulfillmentOrderGateway",
@@ -6,6 +7,7 @@ __all__ = [
     "UserGateway",
 ]
 
+from .api_gateway import APIGateway
 from .data_gateway import (
     DBGateway,
     FulfillmentOrderAssignmentGateway,

@@ -1,1 +1,1 @@
-__all__ = ["persistence"]
+__all__ = ["api_gateway", "persistence"]
