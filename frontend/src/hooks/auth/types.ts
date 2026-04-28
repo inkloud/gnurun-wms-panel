@@ -10,7 +10,7 @@ export enum UserType {
 
 export interface AuthResponse {
     access_token: string;
-    auth_user: {username: string; name: string; warehouse: string; type: UserType};
+    auth_user: {username: string; name: string; warehouse: {name: string}; type: UserType};
 }
 
 export interface AuthStore {

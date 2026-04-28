@@ -8,7 +8,7 @@ type RemoteAuthResponse = {
     auth_user: {
         username: string;
         name: string;
-        warehouse: string;
+        warehouse: {name: string};
         type: 'MANAGER' | 'OPERATOR';
     };
 };
@@ -19,7 +19,7 @@ export const FakeAuthProvider: AuthProvider = (function () {
         auth_user: {
             name: 'Warehouse Manager',
             username: 'manager@gnu000.com',
-            warehouse: 'Life365 - Forli - Gnu000',
+            warehouse: {name: 'Life365 - Forli - Gnu000'},
             type: UserType.MANAGER
         }
     };

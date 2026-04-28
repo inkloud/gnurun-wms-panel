@@ -1,6 +1,11 @@
 __all__ = ["AuthService"]
 
-from backend.application.entities.auth import AuthPayload, AuthUser, AuthUserType
+from backend.application.entities.auth import (
+    AuthPayload,
+    AuthUser,
+    AuthUserType,
+    Warehouse,
+)
 from backend.application.entities.users import User
 from backend.application.ports.data_gateway import DBGateway
 from .jwt_encoder import decode, encode
@@ -16,7 +21,7 @@ class AuthService:
             auth_user = AuthUser(
                 username=username,
                 name=user_data.name,
-                warehouse=user_data.warehouse.name,
+                warehouse=Warehouse(id=user_data.warehouse.id, name=user_data.warehouse.name),
                 type=AuthUserType(user_data.type.value),
             )
             token: str = encode(auth_user)
@@ -31,7 +36,7 @@ class AuthService:
         fresh_auth_user = AuthUser(
             username=auth_user.username,
             name=user_data.name,
-            warehouse=user_data.warehouse.name,
+            warehouse=Warehouse(id=user_data.warehouse.id, name=user_data.warehouse.name),
             type=AuthUserType(user_data.type.value),
         )
         return AuthPayload(access_token=token, auth_user=fresh_auth_user)

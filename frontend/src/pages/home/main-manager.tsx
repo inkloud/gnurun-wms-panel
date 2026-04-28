@@ -53,7 +53,7 @@ export const MainManager: React.FC<{authData: AuthResponse}> = function ({authDa
                 title={`Welcome back, ${authData.auth_user.name.split(' ')[0]}!`}
                 subtitle="Choose an operator below to authenticate with and step into their workspace."
             />
-            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
+            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse.name}</p>
 
             {error !== undefined && (
                 <div className="alert alert-danger" role="alert">

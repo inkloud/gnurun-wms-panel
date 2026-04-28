@@ -15,7 +15,7 @@ export const MainOperator: React.FC<{authData: AuthResponse}> = function ({authD
                 title={`Welcome back, ${authData.auth_user.name.split(' ')[0]}!`}
                 subtitle="Choose an operation below to manage your workspace."
             />
-            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse}</p>
+            <p className="text-secondary fw-medium mb-2">{authData.auth_user.warehouse.name}</p>
 
             <div className="row g-4">
                 {operations.map((operation) => (
