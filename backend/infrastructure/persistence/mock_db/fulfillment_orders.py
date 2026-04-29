@@ -52,6 +52,7 @@ def _load_fulfillment_data() -> tuple[
             FulfillmentOrderRow(
                 id=order_id,
                 date=created_at,
+                warehouse_id=raw_order["warehouse_id"],
             )
         )
     orders_by_id = {order.id: order for order in orders}

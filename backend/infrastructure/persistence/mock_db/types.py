@@ -49,6 +49,7 @@ class ProductRow:
 class FulfillmentOrderRow:
     id: int
     date: datetime
+    warehouse_id: int
 
 
 @dataclass(frozen=True)
