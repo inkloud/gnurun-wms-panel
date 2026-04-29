@@ -38,3 +38,6 @@ class AuthUser:
 class AuthPayload:
     access_token: str
     auth_user: AuthUser
+
+    def get_warehouse_id(self) -> int:
+        return self.auth_user.warehouse.id

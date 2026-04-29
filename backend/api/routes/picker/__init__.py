@@ -46,7 +46,7 @@ async def list_fulfillment_orders(
     auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrderResponse]:
     auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
-    warehouse_id: int = auth_payload.auth_user.warehouse.id
+    warehouse_id: int = auth_payload.get_warehouse_id()
     return [
         FulfillmentOrderResponse.from_fulfillment_order(
             order, fulfillment_order_service
@@ -59,7 +59,15 @@ async def list_fulfillment_orders(
 async def list_fulfillment_order_products(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
 ) -> list[FulfillmentOrderLine]:
-    authorize_operator(auth_service, auth_header)
+    auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
+    warehouse_id: int = auth_payload.get_warehouse_id()
+    if not fulfillment_order_service.is_part_of_warehouse(
+        fulfillment_order_id, warehouse_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fulfillment order not found",
+        )
     return fulfillment_order_service.get_lines(fulfillment_order_id)
 
 
@@ -68,9 +76,21 @@ async def list_fulfillment_order_positions(
     fulfillment_order_id_list: str,
     auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrderPosition]:
-    authorize_operator(auth_service, auth_header)
+    auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
+    warehouse_id: int = auth_payload.get_warehouse_id()
+    fulfillment_order_ids = fulfillment_order_id_list.split(",")
+    if not all(
+        fulfillment_order_service.is_part_of_warehouse(
+            fulfillment_order_id, warehouse_id
+        )
+        for fulfillment_order_id in fulfillment_order_ids
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fulfillment order not found",
+        )
     return fulfillment_order_service.get_products_by_positions_list(
-        fulfillment_order_id_list.split(",")
+        fulfillment_order_ids
     )
 
 
@@ -78,7 +98,15 @@ async def list_fulfillment_order_positions(
 async def list_fulfillment_order_picks(
     fulfillment_order_id: str, auth_header: str = Header(..., alias="Authorization")
 ) -> list[FulfillmentOrderPickDetail]:
-    authorize_operator(auth_service, auth_header)
+    auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
+    warehouse_id: int = auth_payload.get_warehouse_id()
+    if not fulfillment_order_service.is_part_of_warehouse(
+        fulfillment_order_id, warehouse_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fulfillment order not found",
+        )
     return get_fulfillment_order_pick_details(
         fulfillment_order_service, fulfillment_order_id
     )
@@ -90,6 +118,14 @@ async def assign_fulfillment_order(
 ) -> FulfillmentOrderResponse:
     auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
+    warehouse_id: int = auth_payload.get_warehouse_id()
+    if not fulfillment_order_service.is_part_of_warehouse(
+        fulfillment_order_id, warehouse_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fulfillment order not found",
+        )
     operator: str = auth_payload.auth_user.username
     fulfillment_order_service.assign(fulfillment_order_id, operator)
     return FulfillmentOrderResponse.from_fulfillment_order(
@@ -104,6 +140,14 @@ async def unassign_fulfillment_order(
 ) -> FulfillmentOrderResponse:
     auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
     assert auth_payload.auth_user.type == AuthUserType.OPERATOR
+    warehouse_id: int = auth_payload.get_warehouse_id()
+    if not fulfillment_order_service.is_part_of_warehouse(
+        fulfillment_order_id, warehouse_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fulfillment order not found",
+        )
     operator: str = auth_payload.auth_user.username
     fulfillment_order_service.unassign(fulfillment_order_id, operator)
     return FulfillmentOrderResponse.from_fulfillment_order(

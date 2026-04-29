@@ -25,6 +25,9 @@ class FulfillmentOrderService:
     def get_ready(self, warehouse_id: int) -> list[FulfillmentOrder]:
         return self.data_mapper.fulfillment_order.get_ready(warehouse_id)
 
+    def is_part_of_warehouse(self, id: str, warehouse_id: int) -> bool:
+        return any(order.id == id for order in self.get_ready(warehouse_id))
+
     def get(self, id: str) -> FulfillmentOrder:
         return self.data_mapper.fulfillment_order.get(_decode_id("FO", id))
 
