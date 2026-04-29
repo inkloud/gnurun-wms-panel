@@ -1,50 +1,51 @@
-{
-    "warehouse": {
-        "id": 1,
-        "name": "Life365 - Forli - Gnu000"
+[
+    {
+        "username": "manager@gnu000.com",
+        "pwd": "manager",
+        "name": "Warehouse Manager",
+        "type": "MANAGER",
+        "warehouses_id": 1
     },
-    "users": [
-        {
-            "username": "manager@gnu000.com",
-            "pwd": "manager",
-            "name": "Warehouse Manager",
-            "type": "MANAGER"
-        },
-        {
-            "username": "roberto.buffali@gnu000.com",
-            "pwd": "roberto",
-            "name": "Roberto Buffali",
-            "type": "OPERATOR"
-        },
-        {
-            "username": "giancarlo.spadini@gnu000.com",
-            "pwd": "giancarlo",
-            "name": "Giancarlo Spadini",
-            "type": "OPERATOR"
-        },
-        {
-            "username": "maria.tsoneva@gnu000.com",
-            "pwd": "maria",
-            "name": "Maria Tsoneva",
-            "type": "OPERATOR"
-        },
-        {
-            "username": "leonardo.zhou@gnu000.com",
-            "pwd": "leonardo",
-            "name": "Leonardo Zhou",
-            "type": "OPERATOR"
-        },
-        {
-            "username": "elena.chen@gnu000.com",
-            "pwd": "elena",
-            "name": "Elena Chen",
-            "type": "OPERATOR"
-        },
-        {
-            "username": "davide@gnu000.com",
-            "pwd": "davide",
-            "name": "Davide Della Bella",
-            "type": "OPERATOR"
-        }
-    ]
-}
+    {
+        "username": "roberto.buffali@gnu000.com",
+        "pwd": "roberto",
+        "name": "Roberto Buffali",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    },
+    {
+        "username": "giancarlo.spadini@gnu000.com",
+        "pwd": "giancarlo",
+        "name": "Giancarlo Spadini",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    },
+    {
+        "username": "maria.tsoneva@gnu000.com",
+        "pwd": "maria",
+        "name": "Maria Tsoneva",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    },
+    {
+        "username": "leonardo.zhou@gnu000.com",
+        "pwd": "leonardo",
+        "name": "Leonardo Zhou",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    },
+    {
+        "username": "elena.chen@gnu000.com",
+        "pwd": "elena",
+        "name": "Elena Chen",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    },
+    {
+        "username": "davide@gnu000.com",
+        "pwd": "davide",
+        "name": "Davide Della Bella",
+        "type": "OPERATOR",
+        "warehouses_id": 1
+    }
+]

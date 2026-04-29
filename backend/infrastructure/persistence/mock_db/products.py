@@ -15,7 +15,7 @@ def _load_products() -> list[ProductRow]:
     used_skus: set[str] = set()
     used_positions: set[str] = set()
 
-    for raw_product in payload["products"]:
+    for raw_product in payload:
         product_id = raw_product["id"]
         if product_id in used_ids:
             raise ValueError(f"Duplicate product id '{product_id}'")
@@ -56,6 +56,7 @@ def _load_products() -> list[ProductRow]:
                     "requires_serial_tracking", False
                 ),
                 where=locations,
+                warehouse_id=raw_product["warehouse_id"],
             )
         )
 

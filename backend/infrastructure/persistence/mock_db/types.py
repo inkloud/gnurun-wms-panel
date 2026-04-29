@@ -39,6 +39,7 @@ class ProductRow:
     name: str
     requires_serial_tracking: bool
     where: list[LocationInfo]
+    warehouse_id: int
 
     def get_stock(self) -> int:
         return sum(p.stock for p in self.where)
