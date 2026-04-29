@@ -45,12 +45,13 @@ async def hello_picker(
 async def list_fulfillment_orders(
     auth_header: str = Header(..., alias="Authorization"),
 ) -> list[FulfillmentOrderResponse]:
-    authorize_operator(auth_service, auth_header)
+    auth_payload: AuthPayload = authorize_operator(auth_service, auth_header)
+    warehouse_id: int = auth_payload.auth_user.warehouse.id
     return [
         FulfillmentOrderResponse.from_fulfillment_order(
             order, fulfillment_order_service
         )
-        for order in fulfillment_order_service.get_ready()
+        for order in fulfillment_order_service.get_ready(warehouse_id)
     ]
 
 

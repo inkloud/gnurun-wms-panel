@@ -17,13 +17,11 @@ def _get_fulfillment_order_row(id: int) -> FulfillmentOrderRow:
 
 class MockFulfillmentOrderGateway(FulfillmentOrderGateway):
     @staticmethod
-    def get_ready() -> list[FulfillmentOrder]:
+    def get_ready(warehouse_id: int) -> list[FulfillmentOrder]:
         data: list[FulfillmentOrder] = [
-            FulfillmentOrder(
-                id=encode_id("FO", f.id),
-                created_at=f.date,
-            )
+            FulfillmentOrder(id=encode_id("FO", f.id), created_at=f.date)
             for f in FULFILLMENT_ORDERS
+            if f.warehouse_id == warehouse_id
         ]
         return sorted(data, key=lambda order: order.created_at)
 

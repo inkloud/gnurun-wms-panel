@@ -22,8 +22,8 @@ class FulfillmentOrderService:
     def __init__(self, data_mapper: DBGateway):
         self.data_mapper = data_mapper
 
-    def get_ready(self) -> list[FulfillmentOrder]:
-        return self.data_mapper.fulfillment_order.get_ready()
+    def get_ready(self, warehouse_id: int) -> list[FulfillmentOrder]:
+        return self.data_mapper.fulfillment_order.get_ready(warehouse_id)
 
     def get(self, id: str) -> FulfillmentOrder:
         return self.data_mapper.fulfillment_order.get(_decode_id("FO", id))
