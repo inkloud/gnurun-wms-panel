@@ -8,8 +8,14 @@ import './index.css';
 import NotFound from './pages/not-found';
 import Picker from './pages/picker/home';
 import PickerWorker from './pages/picker/work';
+import StockProducts from './pages/stock-products';
+import StockProductsPrint from './pages/stock-products/print';
 
 const PickerRoutes = function () {
+    return <Outlet />;
+};
+
+const StockProductsRoutes = function () {
     return <Outlet />;
 };
 
@@ -21,6 +27,10 @@ const Root = function () {
                 <Route path="/picker" element={<PickerRoutes />}>
                     <Route index element={<Picker />} />
                     <Route path="work" element={<PickerWorker />} />
+                </Route>
+                <Route path="/stock-products" element={<StockProductsRoutes />}>
+                    <Route index element={<StockProducts />} />
+                    <Route path="label" element={<StockProductsPrint />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
