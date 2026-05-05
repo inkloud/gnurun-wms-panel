@@ -1,7 +1,7 @@
 {
     "name": "gnurun-wms-panel-frontend",
     "private": true,
-    "version": "8.1.0",
+    "version": "8.1.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -32,7 +32,7 @@
         "npm-check-updates": "^22.1.0",
         "serve": "^14.2.6",
         "typescript": "~6.0.3",
-        "typescript-eslint": "^8.59.1",
+        "typescript-eslint": "^8.59.2",
         "vite": "^8.0.10"
     },
     "prettier": {
