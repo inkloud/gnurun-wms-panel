@@ -7,6 +7,11 @@ const operations: Operation[] = [
         id: 'picker'
     },
     {
+        name: 'Stock Products',
+        description: 'Search, locate, and manage warehouse product stock.',
+        id: 'stock-products'
+    },
+    {
         name: 'Dummy Template',
         description: 'Spin up a sandbox template to prototype new workflows quickly.',
         id: 'dummy-template'
