@@ -30,7 +30,7 @@ services:
       - internal-life365-net
     restart: unless-stopped
   gnurun-wms-panel-web:
-    image: caddy:2.11.2
+    image: caddy:2.11.3
     depends_on:
       - backend
       - frontend
