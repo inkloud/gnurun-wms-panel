@@ -5,10 +5,11 @@ from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel
 
 from backend.application.entities.auth import AuthPayload, AuthUserType
-from backend.infrastructure.persistence.mock_db import DB
 from backend.application.ports import DBGateway
 from backend.application.use_cases.auth import AuthService
 from backend.application.use_cases.users import UsersService
+from backend.infrastructure.persistence.mock_db import DB
+
 from .utils import get_token_from_header
 
 router: APIRouter = APIRouter(prefix="/auth", tags=["auth"])
